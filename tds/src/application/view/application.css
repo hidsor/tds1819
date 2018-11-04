@@ -1,1 +1,13 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.parent{
+	-fx-background-color: #f4837d
+}
+
+.sidebar{
+	-fx-background-color: #2A363B
+}
+
+.label{
+	-fx-text-fill:  #d2d2d2
+}
