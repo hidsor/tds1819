@@ -1,13 +1,36 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 
 .parent{
-	-fx-background-color: #f4837d
+	-fx-background-color: #EDEEEE
 }
 
 .sidebar{
-	-fx-background-color: #2A363B
+	-fx-background-color: #273238
 }
 
-.label{
-	-fx-text-fill:  #d2d2d2
+.sidebarlabel{
+	-fx-text-fill: #EDEEEE
+}
+
+.sideseparator{
+	 -fx-background: #425058
+}
+
+.jfxbutton .jfx-rippler{
+	-jfx-rippler-fill: #81d4fa;
+}
+.jfxbutton:hover {
+	-fx-background-color:  #20292e;
+}
+
+.topbar{
+	-fx-background-color:  #1c2428
+}
+
+.topjfxbutton:hover{
+	-fx-background-color: #006a9b
+}
+
+.removebutton:hover{
+	-fx-background-color: #9b0000
 }
