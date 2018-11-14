@@ -60,8 +60,16 @@
 	-fx-background-color: #efefef
 }
 
+.topjfxbutton .jfx-rippler{
+	-jfx-rippler-fill: #cfcfcf
+}
+
 .removebutton:hover{
-	-fx-background-color: #f6444f;
-	/*-fx-graphic: url('../../resources/close_hover.png');*/
+	-fx-background-color: #fb7a80;
+	-fx-graphic: url('../../resources/close_hover.png');
 	
+}
+
+.removebutton .jfx-rippler{
+	-jfx-rippler-fill: #f51827
 }

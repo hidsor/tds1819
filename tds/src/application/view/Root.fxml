@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="parent" stylesheets="@applicationred.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.AppVideo">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="parent" stylesheets="@applicationred.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.AppVideo">
    <left>
       <VBox prefHeight="600.0" prefWidth="136.0" styleClass="sidebar">
          <children>
@@ -156,18 +156,12 @@
             <DropShadow color="#0000001a" height="9.02" radius="6.2625" width="18.03" />
          </effect></VBox>
    </left>
-   <center>
-      <Pane BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets />
-         </BorderPane.margin></Pane>
-   </center>
    <top>
-      <AnchorPane prefWidth="800.0" styleClass="topbar">
+      <FlowPane alignment="TOP_RIGHT" rowValignment="TOP" styleClass="topbar" BorderPane.alignment="CENTER">
          <children>
-            <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <HBox alignment="CENTER_RIGHT">
                <children>
-                  <JFXButton id="minimize" fx:id="minimize" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" onAction="#minimizeWindow" styleClass="topjfxbutton" text="">
+                  <JFXButton id="minimize" fx:id="minimize1" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" onAction="#minimizeWindow" styleClass="topjfxbutton" text="">
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -176,7 +170,7 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
-                  <JFXButton id="maximize" fx:id="maximize" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" onAction="#maximizeWindow" styleClass="topjfxbutton" text="">
+                  <JFXButton id="maximize" fx:id="maximize1" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" onAction="#maximizeWindow" styleClass="topjfxbutton" text="">
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -185,7 +179,7 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
-                  <JFXButton id="close" fx:id="close" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" layoutX="46.0" layoutY="10.0" onAction="#closeWindow" ripplerFill="RED" styleClass="removebutton" text="">
+                  <JFXButton id="close" fx:id="close1" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" layoutX="46.0" layoutY="10.0" onAction="#closeWindow" ripplerFill="RED" styleClass="removebutton" text="">
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -196,6 +190,7 @@
                   </JFXButton>
                </children>
             </HBox>
-         </children></AnchorPane>
+         </children>
+      </FlowPane>
    </top>
 </BorderPane>

@@ -1,8 +1,8 @@
 VLAD:
-30/10/2018 - 15 minutos (Añadir esqueleto)
+30/10/2018 - 15 minutos (Anadir esqueleto)
 05/11/2018 - 1h 30 min (Trasteando con JavaFX y JFoenix)
-06/11/2018 - 1h 30 min (Avances en la vista con la librería JFoenix)
-08/11/2018 - 1h 30 min (Avances en la vista con la librería JFoenix)
+06/11/2018 - 1h 30 min (Avances en la vista con la libreria JFoenix)
+08/11/2018 - 1h 30 min (Avances en la vista con la libreria JFoenix)
 12/11/2018 - 1h (Cambio de paleta de colores, sorry not sorry)
 ENRIQUE:
 -
