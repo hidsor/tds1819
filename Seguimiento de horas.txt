@@ -4,5 +4,6 @@ VLAD:
 06/11/2018 - 1h 30 min (Avances en la vista con la libreria JFoenix)
 08/11/2018 - 1h 30 min (Avances en la vista con la libreria JFoenix)
 12/11/2018 - 1h (Cambio de paleta de colores, sorry not sorry)
+16/11/2018 - 2h (Avances en la vista: login)
 ENRIQUE:
 -

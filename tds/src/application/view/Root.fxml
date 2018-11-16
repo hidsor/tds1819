@@ -12,12 +12,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="parent" stylesheets="@applicationred.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.AppVideo">
+<BorderPane id="rootborderpane" fx:id="rootborderpane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="parent" stylesheets="@applicationred.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.AppVideo">
    <left>
       <VBox prefHeight="600.0" prefWidth="136.0" styleClass="sidebar">
          <children>
             <Separator disable="true" prefWidth="200.0" styleClass="sideseparator" />
-            <JFXButton id="login" fx:id="login" alignment="TOP_LEFT" focusTraversable="false" prefHeight="40.0" prefWidth="200.0" text="Log in">
+            <JFXButton id="login" fx:id="login" alignment="TOP_LEFT" focusTraversable="false" onAction="#openlogin" prefHeight="40.0" prefWidth="200.0" text="Log in">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -41,7 +41,7 @@
                </VBox.margin>
             </JFXButton>
             <Separator prefWidth="200.0" styleClass="sideseparator" />
-            <JFXButton id="explorar" fx:id="explorar" alignment="TOP_LEFT" focusTraversable="false" prefHeight="40.0" prefWidth="200.0" text="Explorar">
+            <JFXButton id="explorar" fx:id="explorar" alignment="TOP_LEFT" focusTraversable="false" onAction="#openexplorar" prefHeight="40.0" prefWidth="200.0" text="Explorar">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -62,7 +62,7 @@
                </styleClass>
             </JFXButton>
             <Separator prefWidth="200.0" styleClass="sideseparator" />
-            <JFXButton id="mislistas" fx:id="mislistas" alignment="TOP_LEFT" focusTraversable="false" prefHeight="40.0" prefWidth="200.0" text="Mis listas">
+            <JFXButton id="mislistas" fx:id="mislistas" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openmislistas" prefHeight="40.0" prefWidth="200.0" text="Mis listas">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -83,7 +83,7 @@
                </styleClass>
             </JFXButton>
             <Separator prefWidth="200.0" styleClass="sideseparator" />
-            <JFXButton id="recientes" fx:id="recientes" alignment="TOP_LEFT" focusTraversable="false" prefHeight="40.0" prefWidth="200.0" text="Recientes">
+            <JFXButton id="recientes" fx:id="recientes" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openrecientes" prefHeight="40.0" prefWidth="200.0" text="Recientes">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -104,7 +104,7 @@
                </styleClass>
             </JFXButton>
             <Separator prefWidth="200.0" styleClass="sideseparator" />
-            <JFXButton id="nuevalista" fx:id="nuevalista" alignment="TOP_LEFT" focusTraversable="false" prefHeight="40.0" prefWidth="200.0" text="Nueva lista">
+            <JFXButton id="nuevalista" fx:id="nuevalista" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#opennuevalista" prefHeight="40.0" prefWidth="200.0" text="Nueva lista">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -128,7 +128,7 @@
                </styleClass>
             </JFXButton>
             <Separator layoutX="10.0" layoutY="199.0" prefWidth="200.0" styleClass="sideseparator" />
-            <JFXButton id="premium" fx:id="premium" alignment="TOP_LEFT" focusTraversable="false" prefHeight="40.0" prefWidth="200.0" text="Premium">
+            <JFXButton id="premium" fx:id="premium" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openpremium" prefHeight="40.0" prefWidth="200.0" text="Premium">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -193,4 +193,40 @@
          </children>
       </FlowPane>
    </top>
+   <center>
+      <StackPane id="stackpane" fx:id="stackpane" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <AnchorPane id="testwindow" fx:id="testwindow" disable="true" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label alignment="CENTER_RIGHT" text="test" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="300.0">
+                     <font>
+                        <Font size="62.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <VBox id="loginview" fx:id="loginview" alignment="CENTER" spacing="25.0">
+               <children>
+                  <JFXTextField id="login_nick" fx:id="login_nick" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="350.0" promptText="Nickname">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </JFXTextField>
+                  <JFXPasswordField id="login_pass" fx:id="login_pass" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="350.0" promptText="Password" />
+                  <JFXButton id="login_button" fx:id="login_button" onAction="#login_enter" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" style="-fx-background-color: #f6444f;" text="LOG IN" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </JFXButton>
+               </children>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </VBox>
+         </children>
+      </StackPane>
+   </center>
 </BorderPane>
