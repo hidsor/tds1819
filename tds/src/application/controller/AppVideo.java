@@ -165,7 +165,7 @@ public class AppVideo {
             });
             dialog.show();
     	} else {
-    		//TODO: la parte graciosa
+    		//TODO: la parte graciosa jeje
     	}
     }
     	
