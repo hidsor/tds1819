@@ -1,4 +1,7 @@
 package application.controller;
+import java.util.List;
+import java.util.Set;
+
 import com.jfoenix.controls.JFXAlert;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
@@ -6,6 +9,11 @@ import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
+import application.model.CatalogoUsuarios;
+import application.model.CatalogoVideos;
+import application.model.Etiqueta;
+import application.model.ListaVideos;
+import application.model.Usuario;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,7 +30,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 public class AppVideo {
-
+	/* ATRIBUTOS DEL MODELO */
+	private CatalogoUsuarios catalogoUsuarios;
+	private CatalogoVideos catalogoVideos;
+	private Set<Etiqueta> conjuntoEtiquetas;
+	private List<ListaVideos> topTen;
+	private Usuario usuarioActual;
+	
+	
 	private double oldheight = 0;
 	private double oldwidth = 0;
 	
