@@ -1,28 +1,54 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 
 .parent{
-	-fx-background-color: #FFFFFF
+	-fx-background-color: #FFFFFF;
+}
+
+.registerlabel{
+	-fx-underline: true;
+	-fx-text-fill: #000000;
+}
+
+.registerlabel:hover{
+	-fx-text-fill: #f51827;
+}
+
+.registerlabel:pressed{
+	-fx-text-fill: #fb7a80;
+}
+
+.jfxtextfield{
+	-jfx-focus-color: #f51827;
+	-jfx-unfocus-color: #4d4d4d;
+}
+
+.jfxbutton{
+	-fx-background-color: #f6444f;
+}
+
+.sidebarjfxbutton .jfx-rippler{
+	-jfx-rippler-fill: #FFFFFF;
 }
 
 .sidebar{
-	-fx-background-color: #fbfbfb
+	-fx-background-color: #fbfbfb;
 }
 
 .sidebarlabel{
-	-fx-text-fill: #000000
+	-fx-text-fill: #000000;
 }
 
 .sideseparator{
-	 -fx-background: #FFFFFF
+	 -fx-background: #FFFFFF;
 }
 
-.jfxbutton .jfx-rippler{
-	-jfx-rippler-fill: #f51827
+.sidebarjfxbutton .jfx-rippler{
+	-jfx-rippler-fill: #f51827;
 }
-.jfxbutton:hover {
-	-fx-background-color: #fdc7c3
+.sidebarjfxbutton:hover {
+	-fx-background-color: #fdc7c3;
 }
-.jfxbutton:pressed {
+.sidebarjfxbutton:pressed {
 	-fx-text-fill: #FFFFFF;
 }
 
@@ -50,18 +76,16 @@
 	-fx-graphic: url('../../resources/recientes_pressed.png');
 }
 
-
-
 .topbar{
-	-fx-background-color: #f6f6f6
+	-fx-background-color: #f6f6f6;
 }
 
 .topjfxbutton:hover{
-	-fx-background-color: #efefef
+	-fx-background-color: #efefef;
 }
 
 .topjfxbutton .jfx-rippler{
-	-jfx-rippler-fill: #cfcfcf
+	-jfx-rippler-fill: #cfcfcf;
 }
 
 .removebutton:hover{

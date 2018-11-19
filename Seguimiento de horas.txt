@@ -5,5 +5,7 @@ VLAD:
 08/11/2018 - 1h 30 min (Avances en la vista con la libreria JFoenix)
 12/11/2018 - 1h (Cambio de paleta de colores, sorry not sorry)
 16/11/2018 - 2h (Avances en la vista: login)
+17/11/2018 - 15 min (Refactorizada estructura de la interfaz)
+19/11/2018 - 2h (Agregada ventana de registro, controlador ventana FXML separado del controlador real)
 ENRIQUE:
 -

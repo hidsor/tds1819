@@ -1,232 +1,296 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.paint.*?>
-<?import com.jfoenix.controls.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane id="rootborderpane" fx:id="rootborderpane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="parent" stylesheets="@applicationred.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.AppVideo">
-   <left>
-      <VBox prefHeight="600.0" prefWidth="136.0" styleClass="sidebar">
-         <children>
-            <Separator disable="true" prefWidth="200.0" styleClass="sideseparator" />
-            <JFXButton id="login" fx:id="login" alignment="TOP_LEFT" focusTraversable="false" onAction="#openlogin" prefHeight="40.0" prefWidth="200.0" text="Log in">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-               <padding>
-                  <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
-               </padding>
-               <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../resources/login.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <styleClass>
-                  <String fx:value="sidebarlabel" />
-                  <String fx:value="jfxbutton" />
-                  <String fx:value="login" />
-               </styleClass>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </JFXButton>
-            <Separator prefWidth="200.0" styleClass="sideseparator" />
-            <JFXButton id="explorar" fx:id="explorar" alignment="TOP_LEFT" focusTraversable="false" onAction="#openexplorar" prefHeight="40.0" prefWidth="200.0" text="Explorar">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-               <padding>
-                  <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
-               </padding>
-               <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../resources/explorar.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <styleClass>
-                  <String fx:value="sidebarlabel" />
-                  <String fx:value="jfxbutton" />
-                  <String fx:value="explorar" />
-               </styleClass>
-            </JFXButton>
-            <Separator prefWidth="200.0" styleClass="sideseparator" />
-            <JFXButton id="mislistas" fx:id="mislistas" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openmislistas" prefHeight="40.0" prefWidth="200.0" text="Mis listas">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-               <padding>
-                  <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
-               </padding>
-               <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../resources/listas.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <styleClass>
-                  <String fx:value="sidebarlabel" />
-                  <String fx:value="jfxbutton" />
-                  <String fx:value="listas" />
-               </styleClass>
-            </JFXButton>
-            <Separator prefWidth="200.0" styleClass="sideseparator" />
-            <JFXButton id="recientes" fx:id="recientes" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openrecientes" prefHeight="40.0" prefWidth="200.0" text="Recientes">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-               <padding>
-                  <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
-               </padding>
-               <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../resources/recientes.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <styleClass>
-                  <String fx:value="sidebarlabel" />
-                  <String fx:value="jfxbutton" />
-                  <String fx:value="recientes" />
-               </styleClass>
-            </JFXButton>
-            <Separator prefWidth="200.0" styleClass="sideseparator" />
-            <JFXButton id="nuevalista" fx:id="nuevalista" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#opennuevalista" prefHeight="40.0" prefWidth="200.0" text="Nueva lista">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-               <padding>
-                  <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
-               </padding>
-               <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../resources/nuevalista.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-               <styleClass>
-                  <String fx:value="sidebarlabel" />
-                  <String fx:value="jfxbutton" />
-                  <String fx:value="nuevalista" />
-               </styleClass>
-            </JFXButton>
-            <Separator layoutX="10.0" layoutY="199.0" prefWidth="200.0" styleClass="sideseparator" />
-            <JFXButton id="premium" fx:id="premium" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openpremium" prefHeight="40.0" prefWidth="200.0" text="Premium">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-               <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../resources/premium.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-               <padding>
-                  <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
-               </padding>
-               <styleClass>
-                  <String fx:value="sidebarlabel" />
-                  <String fx:value="jfxbutton" />
-                  <String fx:value="premium" />
-               </styleClass>
-            </JFXButton>
-         </children>
-         <effect>
-            <DropShadow color="#0000001a" height="9.02" radius="6.2625" width="18.03" />
-         </effect></VBox>
-   </left>
-   <top>
-      <FlowPane alignment="TOP_RIGHT" rowValignment="TOP" styleClass="topbar" BorderPane.alignment="CENTER">
-         <children>
-            <HBox alignment="CENTER_RIGHT">
+<StackPane id="rootStackPane" fx:id="rootStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="parent" stylesheets="@applicationred.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.view.ViewController">
+   <children>
+      <BorderPane id="rootBorderPane" fx:id="rootBorderPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0">
+         <center>
+            <StackPane id="stackpane" fx:id="stackpane" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <JFXButton id="minimize" fx:id="minimize1" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" onAction="#minimizeWindow" styleClass="topjfxbutton" text="">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../resources/minimize.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </JFXButton>
-                  <JFXButton id="maximize" fx:id="maximize1" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" onAction="#maximizeWindow" styleClass="topjfxbutton" text="">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../resources/maximize.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </JFXButton>
-                  <JFXButton id="close" fx:id="close1" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" layoutX="46.0" layoutY="10.0" onAction="#closeWindow" ripplerFill="RED" styleClass="removebutton" text="">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../resources/close.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </JFXButton>
+                  <VBox id="loginView" fx:id="loginView" alignment="CENTER" spacing="20.0">
+                     <children>
+                        <JFXTextField id="loginNick" fx:id="loginNick" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="350.0" promptText="Usuario" styleClass="jfxtextfield">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </JFXTextField>
+                        <JFXPasswordField id="loginPassword" fx:id="loginPassword" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="350.0" promptText="Contraseña" styleClass="jfxtextfield" />
+                        <JFXButton id="loginButton" fx:id="loginButton" onAction="#loginEnter" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="LOG IN" textFill="WHITE">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </JFXButton>
+                        <Label id="registerLabel" fx:id="registerLabel" onMouseReleased="#openRegisterView" styleClass="registerlabel" text="No tienes cuenta? Regístrate">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Label>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox id="registerView" fx:id="registerView" alignment="CENTER" disable="true" prefHeight="200.0" spacing="50.0" visible="false">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                           <children>
+                              <VBox alignment="CENTER_RIGHT" spacing="20.0">
+                                 <children>
+                                    <JFXTextField id="registerNick" fx:id="registerNick" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="*Usuario" styleClass="jfxtextfield" />
+                                    <JFXPasswordField id="registerPassword" fx:id="registerPassword" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="*Contraseña" styleClass="jfxtextfield" />
+                                    <JFXPasswordField id="registerPasswordRepeat" fx:id="registerPasswordRepeat" focusColor="#f51827" layoutX="10.0" layoutY="296.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="*Repetir contraseña" styleClass="jfxtextfield" />
+                                 </children>
+                              </VBox>
+                              <VBox layoutX="217.0" layoutY="10.0" spacing="20.0">
+                                 <children>
+                                    <JFXTextField id="registerName" fx:id="registerName" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="*Nombre" styleClass="jfxtextfield" />
+                                    <JFXTextField id="registerSurname" fx:id="registerSurname" focusColor="#f51827" layoutX="10.0" layoutY="284.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="Apellidos" styleClass="jfxtextfield" />
+                                    <JFXDatePicker id="registerDatePicker" fx:id="registerDatePicker" defaultColor="#f51827" prefWidth="258.0" promptText="*Fecha de nacimiento" />
+                                    <JFXTextField id="registerEmail" fx:id="registerEmail" focusColor="#f51827" layoutX="10.0" layoutY="284.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="Apellidos" styleClass="jfxtextfield" text="Email" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" spacing="20.0">
+                           <children>
+                              <JFXButton id="registerRegister" fx:id="registerRegister" onAction="#registerUser" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Registrar" textFill="WHITE">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </JFXButton>
+                              <JFXButton id="registerCancel" fx:id="registerCancel" onAction="#registerCancel" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Cancelar" textFill="WHITE">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </JFXButton>
+                           </children>
+                        </HBox>
+                     </children>
+                     <StackPane.margin>
+                        <Insets />
+                     </StackPane.margin>
+                  </VBox>
+                  <AnchorPane id="testwindow" fx:id="testwindow" disable="true" prefHeight="200.0" prefWidth="200.0" visible="false">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" text="test" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="300.0">
+                           <font>
+                              <Font size="62.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
                </children>
-            </HBox>
-         </children>
-      </FlowPane>
-   </top>
-   <center>
-      <StackPane id="stackpane" fx:id="stackpane" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <AnchorPane id="testwindow" fx:id="testwindow" disable="true" prefHeight="200.0" prefWidth="200.0" visible="false">
+            </StackPane>
+         </center>
+         <left>
+            <VBox minWidth="-Infinity" prefWidth="136.0" styleClass="sidebar">
                <children>
-                  <Label alignment="CENTER_RIGHT" text="test" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="300.0">
+                  <Separator disable="true" prefWidth="200.0" styleClass="sideseparator" />
+                  <JFXButton id="login" fx:id="login" alignment="TOP_LEFT" focusTraversable="false" onAction="#openLoginView" prefHeight="40.0" prefWidth="200.0" text="Log in">
                      <font>
-                        <Font size="62.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
-                  </Label>
-               </children>
-            </AnchorPane>
-            <VBox id="loginview" fx:id="loginview" alignment="CENTER" spacing="25.0">
-               <children>
-                  <JFXTextField id="login_nick" fx:id="login_nick" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="350.0" promptText="Nickname">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../resources/login.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
+                     </padding>
+                     <styleClass>
+                        <String fx:value="sidebarlabel" />
+                        <String fx:value="sidebarjfxbutton" />
+                        <String fx:value="login" />
+                     </styleClass>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
-                  </JFXTextField>
-                  <JFXPasswordField id="login_pass" fx:id="login_pass" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="350.0" promptText="Password" />
-                  <JFXButton id="login_button" fx:id="login_button" onAction="#login_enter" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" style="-fx-background-color: #f6444f;" text="LOG IN" textFill="WHITE">
+                  </JFXButton>
+                  <Separator prefWidth="200.0" styleClass="sideseparator" />
+                  <JFXButton id="explorar" fx:id="explorar" alignment="TOP_LEFT" focusTraversable="false" onAction="#openExplorarView" prefHeight="40.0" prefWidth="200.0" text="Explorar">
                      <font>
-                        <Font size="18.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../resources/explorar.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
+                     </padding>
+                     <styleClass>
+                        <String fx:value="sidebarlabel" />
+                        <String fx:value="sidebarjfxbutton" />
+                        <String fx:value="explorar" />
+                     </styleClass>
+                  </JFXButton>
+                  <Separator prefWidth="200.0" styleClass="sideseparator" />
+                  <JFXButton id="mislistas" fx:id="mislistas" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openMislistasView" prefHeight="40.0" prefWidth="200.0" text="Mis listas">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../resources/listas.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
+                     </padding>
+                     <styleClass>
+                        <String fx:value="sidebarlabel" />
+                        <String fx:value="sidebarjfxbutton" />
+                        <String fx:value="listas" />
+                     </styleClass>
+                  </JFXButton>
+                  <Separator prefWidth="200.0" styleClass="sideseparator" />
+                  <JFXButton id="recientes" fx:id="recientes" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openRecientesView" prefHeight="40.0" prefWidth="200.0" text="Recientes">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../resources/recientes.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
+                     </padding>
+                     <styleClass>
+                        <String fx:value="sidebarlabel" />
+                        <String fx:value="sidebarjfxbutton" />
+                        <String fx:value="recientes" />
+                     </styleClass>
+                  </JFXButton>
+                  <Separator prefWidth="200.0" styleClass="sideseparator" />
+                  <JFXButton id="nuevalista" fx:id="nuevalista" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openNuevalistaView" prefHeight="40.0" prefWidth="200.0" text="Nueva lista">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../resources/nuevalista.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
+                     </padding>
+                     <styleClass>
+                        <String fx:value="sidebarlabel" />
+                        <String fx:value="sidebarjfxbutton" />
+                        <String fx:value="nuevalista" />
+                     </styleClass>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </JFXButton>
+                  <Separator layoutX="10.0" layoutY="199.0" prefWidth="200.0" styleClass="sideseparator" />
+                  <JFXButton id="premium" fx:id="premium" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openPremiumView" prefHeight="40.0" prefWidth="200.0" text="Premium">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../resources/premium.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
+                     </padding>
+                     <styleClass>
+                        <String fx:value="sidebarlabel" />
+                        <String fx:value="sidebarjfxbutton" />
+                        <String fx:value="premium" />
+                     </styleClass>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                   </JFXButton>
                </children>
-               <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </padding>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
+               <effect>
+                  <DropShadow color="#0000001a" height="9.02" radius="6.2625" width="18.03" />
+               </effect>
             </VBox>
-         </children>
-      </StackPane>
-   </center>
-</BorderPane>
+         </left>
+         <top>
+            <FlowPane alignment="TOP_RIGHT" rowValignment="TOP" styleClass="topbar" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox alignment="CENTER_RIGHT">
+                     <children>
+                        <Region prefHeight="26.0" prefWidth="690.0">
+                           <HBox.margin>
+                              <Insets left="4.0" top="2.0" />
+                           </HBox.margin>
+                        </Region>
+                        <JFXButton id="minimize" fx:id="minimizeButton" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" onAction="#minimizeWindow" styleClass="topjfxbutton" text="">
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../resources/minimize.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                        <JFXButton id="maximize" fx:id="maximizeButton" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" onAction="#maximizeWindow" styleClass="topjfxbutton" text="">
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../resources/maximize.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                        <JFXButton id="close" fx:id="closeButton" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" layoutX="46.0" layoutY="10.0" onAction="#closeWindow" ripplerFill="RED" styleClass="removebutton" text="">
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../resources/close.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+               </children>
+            </FlowPane>
+         </top>
+      </BorderPane>
+   </children>
+</StackPane>
