@@ -6,6 +6,7 @@ import java.util.Set;
 
 public class ListaVideos {
 	// ATRIBUTOS
+	private int codigo;
 	private String nombreLista;
 	// private int numVideos;	<- Atributo calculado
 	private List<Video> videos;	
@@ -17,7 +18,17 @@ public class ListaVideos {
 	}
 	
 	
+
+
 	// MÉTODOS DE CONSULTA Y MODIFICADO
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
+	}
+	
 	public String getNombreLista() {
 		return nombreLista;
 	}

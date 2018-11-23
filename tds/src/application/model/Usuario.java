@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Usuario {
 	// ATRIBUTOS
+	private int codigo; // Necesario para rescatar un usuario del servidor de persistencia
 	private String login;
 	private String password;
 	private String nombre;
@@ -20,6 +21,7 @@ public class Usuario {
 	
 	// CONSTRUCTORES
 	public Usuario(String login, String password, String nombre, String apellidos, LocalDate fechaNac, String email) {
+		codigo = 0;
 		this.login = login;
 		this.password = password;
 		this.nombre = nombre;
@@ -37,6 +39,14 @@ public class Usuario {
 	
 	
 	// MÉTODOS DE CONSULTA Y MODIFICACION
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
+	}
+
 	public String getPassword() {
 		return password;
 	}
@@ -100,23 +110,23 @@ public class Usuario {
 	}
 
 	// FUNCIONALIDAD
-	void obtenerPremium() {
+	public void obtenerPremium() {
 		premium = new RolPremium();
 	}
 	
-	boolean addListaVideos(ListaVideos listaVideos) {
+	public boolean addListaVideos(ListaVideos listaVideos) {
 		return listas.add(listaVideos);
 	}
 	
-	boolean removeListaVideos(ListaVideos listaVideos) {
+	public boolean removeListaVideos(ListaVideos listaVideos) {
 		return listas.remove(listaVideos);
 	}
 	
-	boolean addListaVideosReciente(ListaVideos listaVideos) {
+	public boolean addListaVideosReciente(ListaVideos listaVideos) {
 		return listaRecientes.add(listaVideos);
 	}
 	
-	boolean removeListaVideosReciente(ListaVideos listaVideos) {
+	public boolean removeListaVideosReciente(ListaVideos listaVideos) {
 		return listaRecientes.remove(listaVideos);
 	}
 }

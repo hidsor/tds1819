@@ -6,11 +6,13 @@ import java.util.Set;
 
 public class RolPremium {
 	// ATRIBUTOS
+	private int codigo;
 	private Filtro filtroPremium;
 	
 	
 	// CONSTRUCTOR
 	public RolPremium(Filtro filtroPremium) {
+		setCodigo(0);
 		this.filtroPremium = filtroPremium;
 	}
 	
@@ -20,6 +22,13 @@ public class RolPremium {
 
 
 	// MÉTODO DE OBTENCIÓN
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
+	}
 	public Filtro getFiltro() {
 		return filtroPremium;
 	}
