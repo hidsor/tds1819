@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Video {
+	private int codigo;
 	private String URL;
 	private String titulo;
 	private int numReproducciones;
@@ -13,12 +14,22 @@ public class Video {
 	
 	public Video(String URL, String titulo, int numReproducciones) {
 		super();
+		this.setCodigo(0);
 		this.URL = URL;
 		this.titulo = titulo;
 		this.numReproducciones = numReproducciones;
 		etiquetas = new HashSet<Etiqueta>();
 	}
 
+	
+
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
+	}
 
 	public String getURL() {
 		return URL;

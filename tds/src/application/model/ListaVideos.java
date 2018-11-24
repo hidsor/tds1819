@@ -7,14 +7,14 @@ import java.util.Set;
 public class ListaVideos {
 	// ATRIBUTOS
 	private int codigo;
-	private String nombreLista;
+	private String nombre;
 	// private int numVideos;	<- Atributo calculado
 	private List<Video> videos;	
 	
 	
 	// CONSTRUCTORES
-	public ListaVideos(String nombreLista) {
-		this.nombreLista = nombreLista;
+	public ListaVideos(String nombre) {
+		this.nombre = nombre;
 	}
 	
 	
@@ -29,12 +29,12 @@ public class ListaVideos {
 		this.codigo = codigo;
 	}
 	
-	public String getNombreLista() {
-		return nombreLista;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setNombreLista(String nombreLista) {
-		this.nombreLista = nombreLista;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	public int getNumVideos() {
@@ -47,15 +47,15 @@ public class ListaVideos {
 	
 	
 	// FUNCIONALIDAD
-	boolean addVideo(Video video) {
+	public boolean addVideo(Video video) {
 		return videos.add(video);
 	}
 	
-	boolean removeVideo(Video video) {
+	public boolean removeVideo(Video video) {
 		return videos.remove(video);
 	}
 	
-	void reproducirLista() {
+	public void reproducirLista() {
 		for (Video i : videos) {
 			// TODO
 			// reproducirVideo();
