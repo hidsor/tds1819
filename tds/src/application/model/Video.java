@@ -14,7 +14,7 @@ public class Video {
 	
 	public Video(String URL, String titulo, int numReproducciones) {
 		super();
-		this.setCodigo(0);
+		this.codigo = 0;
 		this.URL = URL;
 		this.titulo = titulo;
 		this.numReproducciones = numReproducciones;

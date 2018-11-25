@@ -4,15 +4,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.StringTokenizer;
 
-import application.model.ListaVideos;
-import application.model.RolPremium;
-import application.model.Usuario;
+import application.model.*;
 import beans.*;
 import tds.driver.*;
 
@@ -84,20 +80,20 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 
 		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
 
+		// Estas variables simplifican el codigo
+		String premium = String.valueOf(usuario.isPremium());
+		String listas = obtenerCodigosListasVideos(usuario.getListas());
+		String listaRecientes = obtenerCodigosListasVideos(usuario.getListaRecientes());
+		
+		// Actualizamos las propiedades
 		actualizarPropiedadEntidad(eUsuario, "login", usuario.getLogin());
 		actualizarPropiedadEntidad(eUsuario, "password", usuario.getPassword());		
 		actualizarPropiedadEntidad(eUsuario, "nombre", usuario.getNombre());		
 		actualizarPropiedadEntidad(eUsuario, "apellidos", usuario.getApellidos());		
 		actualizarPropiedadEntidad(eUsuario, "fecha nacimiento", localDateToString(usuario.getFechaNac()));		
 		actualizarPropiedadEntidad(eUsuario, "email", usuario.getEmail());
-		
-		String premium = getCodigoSiPremium(usuario);
 		actualizarPropiedadEntidad(eUsuario, "premium", premium);
-
-		String listas = obtenerCodigosListasVideos(usuario.getListas());
-		actualizarPropiedadEntidad(eUsuario, "listas", listas);
-		
-		String listaRecientes = obtenerCodigosListasVideos(usuario.getListaRecientes());
+		actualizarPropiedadEntidad(eUsuario, "listas", listas);		
 		actualizarPropiedadEntidad(eUsuario, "lista recientes", listaRecientes);
 	}
 
@@ -109,46 +105,37 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 
 		// si no, la recupera de la base de datos
 		Entidad eUsuario;
-		String login;
-		String password;
-		String nombre;
-		String apellidos;
-		LocalDate fechaNac;
-		String email;
-		RolPremium premium;
-		List<ListaVideos> listas = new LinkedList<ListaVideos>();
-		List<ListaVideos> listaRecientes = new LinkedList<ListaVideos>();
 
 		// recuperar entidad
 		eUsuario = servPersistencia.recuperarEntidad(codigo);
 
-		// recuperar propiedades para construir el usuario
-		login = servPersistencia.recuperarPropiedadEntidad(eUsuario, "login");
-		password = servPersistencia.recuperarPropiedadEntidad(eUsuario, "password");		
-		nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");		
-		apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuario, "apellidos");		
-		fechaNac = stringToLocalDate(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha nacimiento"));	
-		email = servPersistencia.recuperarPropiedadEntidad(eUsuario, "email");
-
+		// recuperar propiedades para construir el usuario y que no necesitan adaptadores
+		String login = servPersistencia.recuperarPropiedadEntidad(eUsuario, "login");
+		String password = servPersistencia.recuperarPropiedadEntidad(eUsuario, "password");		
+		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");		
+		String apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuario, "apellidos");		
+		LocalDate fechaNac = stringToLocalDate(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha nacimiento"));	
+		String email = servPersistencia.recuperarPropiedadEntidad(eUsuario, "email");
+		
 		Usuario usuario = new Usuario(login, password, nombre, apellidos, fechaNac, email);
 		usuario.setCodigo(codigo);
+		// Si es premium, le asignamos un rol premium
+		if (Boolean.parseBoolean(servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium"))) {
+			usuario.setPremium();
+		}
 
-		// IMPORTANTE:añadir el usuario al pool antes de llamar a otros
-		// adaptadores
+		// IMPORTANTE:añadir el usuario al pool antes de llamar a otros adaptadores
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, usuario);
 
 		// recuperar propiedades que son objetos llamando a adaptadores
-		// premium 
-		premium = getRolPremium(servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium"));
-		usuario.setPremium(premium);
 		
 		// listas
-		listas = obtenerListasVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "listas"));
+		List<ListaVideos> listas = obtenerListasVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "listas"));
 		for (ListaVideos l : listas)
 			usuario.addListaVideos(l);
 		
 		// lista de recientes
-		listaRecientes = obtenerListasVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "lista recientes"));
+		List<ListaVideos> listaRecientes = obtenerListasVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "lista recientes"));
 		for (ListaVideos l : listaRecientes)
 			usuario.addListaVideos(l);
 
@@ -188,24 +175,6 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 		return listasVideos;
 	}
 	
-	private String getCodigoSiPremium(Usuario usuario) {
-		String premium = null;
-		if (usuario.getPremium() != null) {
-			premium = "";
-			premium += usuario.getPremium().getCodigo();
-		}
-		return premium;
-	}
-	
-	private RolPremium getRolPremium(String premium) {
-		// si no es premium (es null), devolvemos null
-		if (premium == null) return null;
-		
-		// Si no, buscamos el RolPremium en el servidor de persistencia y lo devolvemos
-		int codigoPremium = Integer.parseInt(premium);
-		return recuperarRolPremium(codigoPremium);
-	
-}
 	
 	private LocalDate stringToLocalDate(String fecha) {
 		return LocalDate.parse(fecha, formatoFecha);

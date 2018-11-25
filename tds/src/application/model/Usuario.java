@@ -87,12 +87,13 @@ public class Usuario {
 		this.email = email;
 	}
 
-	public RolPremium getPremium() {
-		return premium;
+	public boolean isPremium() {
+		return premium != null;
 	}
-
-	public void setPremium(RolPremium premium) {
-		this.premium = premium;
+	
+	// hacemos premium al usuario asignandole un rol premium
+	public void setPremium() {
+		this.premium = new RolPremium();
 	}
 
 	public String getLogin() {

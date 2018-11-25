@@ -16,13 +16,7 @@ import beans.Entidad;
 import beans.Propiedad;
 
 public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
-	// Usa un pool para evitar problemas doble referencia con cliente
-
 	private static ServicioPersistencia servPersistencia;
-
-	private SimpleDateFormat dateFormat; // para formatear la fecha de venta en
-											// la base de datos
-
 	private static AdaptadorListaVideos unicaInstancia;
 
 	public static AdaptadorListaVideos getUnicaInstancia() { // patron singleton
@@ -34,7 +28,6 @@ public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
 
 	private AdaptadorListaVideos() { 
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
-		dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	}
 
 	/* cuando se registra una listaVideos se le asigna un identificador unico */
@@ -158,7 +151,7 @@ public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
 		StringTokenizer strTok = new StringTokenizer(lineas, " ");
 		AdaptadorVideo adaptadorV = AdaptadorVideo.getUnicaInstancia();
 		while (strTok.hasMoreTokens()) {
-			videos.add(adaptadorV.recuperarLineaVenta(Integer.valueOf((String) strTok.nextElement())));
+			videos.add(adaptadorV.recuperarVideo(Integer.valueOf((String) strTok.nextElement())));
 		}
 		return videos;
 	}
