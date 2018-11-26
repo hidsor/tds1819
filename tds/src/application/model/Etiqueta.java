@@ -1,9 +1,19 @@
 package application.model;
 
 public class Etiqueta {
+	// ATRIBUTOS
+	private String nombre;
+	
+	
+	// CONSTRUCTOR
+	public Etiqueta(String nombre) {
+		this.nombre = nombre;
+	}
 
-	public Etiqueta() {
-		// TODO Apéndice de constructor generado automáticamente
+	
+	// MÉTODOS DE CONSULTA
+	public String getNombre() {
+		return nombre;
 	}
 
 }

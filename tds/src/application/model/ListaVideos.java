@@ -1,9 +1,67 @@
 package application.model;
 
-public class ListaVideos {
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
-	public ListaVideos() {
-		// TODO Apéndice de constructor generado automáticamente
+public class ListaVideos {
+	// ATRIBUTOS
+	private int codigo;
+	private String nombre;
+	// private int numVideos;	<- Atributo calculado
+	private List<Video> videos;	
+	
+	
+	// CONSTRUCTORES
+	public ListaVideos(String nombre) {
+		this.nombre = nombre;
 	}
+	
+	
+
+
+	// MÉTODOS DE CONSULTA Y MODIFICADO
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
+	}
+	
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public int getNumVideos() {
+		return videos.size();
+	}
+
+	public List<Video> getVideos() {
+		return Collections.unmodifiableList(videos);
+	}
+	
+	
+	// FUNCIONALIDAD
+	public boolean addVideo(Video video) {
+		return videos.add(video);
+	}
+	
+	public boolean removeVideo(Video video) {
+		return videos.remove(video);
+	}
+	
+	public void reproducirLista() {
+		for (Video i : videos) {
+			// TODO
+			// reproducirVideo();
+		}
+	}
+	
+
 
 }
