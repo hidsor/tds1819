@@ -2,7 +2,6 @@ package application.model;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 public class ListaVideos {
 	// ATRIBUTOS
@@ -49,6 +48,10 @@ public class ListaVideos {
 	// FUNCIONALIDAD
 	public boolean addVideo(Video video) {
 		return videos.add(video);
+	}
+	
+	public Video removeVideo(int index) {
+		return videos.remove(index);
 	}
 	
 	public boolean removeVideo(Video video) {

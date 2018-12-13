@@ -16,7 +16,7 @@ public class Usuario {
 	private String email;
 	private RolPremium premium;
 	private List<ListaVideos> listas;
-	private List<ListaVideos> listaRecientes;
+	private ListaVideos listaRecientes;
 	
 	
 	// CONSTRUCTORES
@@ -30,7 +30,7 @@ public class Usuario {
 		this.email = email;
 		this.premium = null;
 		listas = new LinkedList<ListaVideos>();
-		listaRecientes = new LinkedList<ListaVideos>();
+		listaRecientes = new ListaVideos("Reciente");
 	}
 	
 	public Usuario(String login, String password) {
@@ -95,6 +95,10 @@ public class Usuario {
 	public void setPremium() {
 		this.premium = new RolPremium();
 	}
+	
+	public void removePremium() {
+		this.premium = null;
+	}
 
 	public String getLogin() {
 		return login;
@@ -106,9 +110,15 @@ public class Usuario {
 		return Collections.unmodifiableList(listas);
 	}
 
-	public List<ListaVideos> getListaRecientes() {
-		return Collections.unmodifiableList(listaRecientes);
+	public ListaVideos getListaRecientes() {
+		return listaRecientes;
 	}
+	
+	public void setListaRecientes(ListaVideos listaRecientes) {
+		this.listaRecientes = listaRecientes;
+	}
+	
+	
 
 	// FUNCIONALIDAD
 	public void obtenerPremium() {
@@ -123,11 +133,11 @@ public class Usuario {
 		return listas.remove(listaVideos);
 	}
 	
-	public boolean addListaVideosReciente(ListaVideos listaVideos) {
-		return listaRecientes.add(listaVideos);
-	}
-	
-	public boolean removeListaVideosReciente(ListaVideos listaVideos) {
-		return listaRecientes.remove(listaVideos);
+	public boolean addVideoReciente(Video video) {
+		// Si hay 5 o más videos, quitamos el primero (el que hace más tiempo que reprodujimos)
+		if (listaRecientes.getNumVideos() >= 5) {
+			listaRecientes.removeVideo(0);
+		}		
+		return listaRecientes.addVideo(video);
 	}
 }
