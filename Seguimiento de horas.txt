@@ -7,8 +7,12 @@ VLAD:
 16/11/2018 - 2h (Avances en la vista: login)
 17/11/2018 - 15 min (Refactorizada estructura de la interfaz)
 19/11/2018 - 2h (Agregada ventana de registro, controlador ventana FXML separado del controlador real)
+
 ENRIQUE:
 - 17/11/2018 - 1 hora (Hacer UML)
 - 18/11/2018 - 3 horas (Hacer UML)
 - 19/11/2018 - 30 minutos (Implementar la búsqueda en la clase CatálogoVideos)
 - 23/11/2018 - 3 horas (Entender persistencia e implementada para el usuario)
+- 25/11/2018 - 3 horas implementar el resto de persistencia
+- 13/12/2018 - 1h 30 min (pulir la persistencia)
+- 14/12/2018 - 1h (integrar persistencia en el modelo)

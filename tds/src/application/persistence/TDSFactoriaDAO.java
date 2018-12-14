@@ -13,5 +13,10 @@ public class TDSFactoriaDAO extends FactoriaDAO {
 	public IAdaptadorListaVideosDAO getListaVideosDAO() {
 		return AdaptadorListaVideos.getUnicaInstancia();
 	}
+	
+	@Override
+	public IAdaptadorVideoDAO getVideoDAO() {
+		return AdaptadorVideo.getUnicaInstancia();
+	}
 
 }

@@ -13,7 +13,17 @@ import beans.*;
 import tds.driver.*;
 
 public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
-	// CONSTANTE
+	// CONSTANTES
+	public static final String propLogin = "login";
+	public static final String propPassword = "password";
+	public static final String propNombre = "nombre";
+	public static final String propApellidos = "apellidos ";
+	public static final String propFecNac = "fecha nacimiento";
+	public static final String propEmail = "email";
+	public static final String propPremium = "premium";
+	public static final String propListas = "listas";
+	public static final String propRecientes = "lista recientes";
+	
 	private final static DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	
 	private static ServicioPersistencia servPersistencia;
@@ -45,22 +55,28 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 
 		// registrar primero los atributos que son objetos
 		// TODO ¿Esto es necesario hacerlo? Por que el usuario se creo sin una lista
-		/*
-		AdaptadorVentaTDS adaptadorVenta = AdaptadorVentaTDS.getUnicaInstancia();
-		for (Venta v : usuario.getVentas())
-			adaptadorVenta.registrarVenta(v);
-		*/
+		
+		AdaptadorListaVideos adaptadorLV = AdaptadorListaVideos.getUnicaInstancia();
+		for (ListaVideos lv : usuario.getListas())
+			adaptadorLV.registrarListaVideos(lv);
+		
+		adaptadorLV.registrarListaVideos(usuario.getListaRecientes());
+		
 
 		// crear entidad Usuario
 		eUsuario = new Entidad();
 		eUsuario.setNombre("usuario");
 		eUsuario.setPropiedades(new ArrayList<Propiedad>(
-				Arrays.asList(new Propiedad("login", usuario.getLogin()), new Propiedad("password", usuario.getPassword()),
-						new Propiedad("nombre", usuario.getNombre()), new Propiedad("apellidos", usuario.getApellidos()),
-						new Propiedad("fecha nacimiento", localDateToString(usuario.getFechaNac())),
-						new Propiedad("email", usuario.getEmail()), new Propiedad("premium", null),
-						new Propiedad("listas", ""), new Propiedad("lista recientes", "")
-						)));
+				Arrays.asList(new Propiedad(propLogin, usuario.getLogin()),
+						new Propiedad(propPassword, usuario.getPassword()),
+						new Propiedad(propNombre, usuario.getNombre()),
+						new Propiedad(propApellidos, usuario.getApellidos()),
+						new Propiedad(propFecNac, localDateToString(usuario.getFechaNac())),
+						new Propiedad(propEmail, usuario.getEmail()),
+						new Propiedad(propPremium, String.valueOf(usuario.isPremium())),
+						new Propiedad(propListas, obtenerCodigosListasVideos(usuario.getListas())),
+						new Propiedad(propRecientes, String.valueOf(usuario.getListaRecientes().getCodigo()))
+					)));
 		
 		// registrar entidad usuario
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
@@ -70,9 +86,16 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 	}
 
 	public void borrarUsuario(Usuario usuario) {
-		// No se comprueban restricciones de integridad con las listas
-		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
+		// Eliminamos las listas de reproduccion del usuario.
+		AdaptadorListaVideos adaptadorLV = AdaptadorListaVideos.getUnicaInstancia();
+		for (ListaVideos LV : usuario.getListas()) {
+			adaptadorLV.borrarListaVideos(LV);
+		}
 		
+		// Y eliminamos también su lista de videos recientes
+		adaptadorLV.borrarListaVideos(usuario.getListaRecientes());
+		
+		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
 		servPersistencia.borrarEntidad(eUsuario);
 	}
 
@@ -83,18 +106,18 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 		// Estas variables simplifican el codigo
 		String premium = String.valueOf(usuario.isPremium());
 		String listas = obtenerCodigosListasVideos(usuario.getListas());
-		String listaRecientes = obtenerCodigosListasVideos(usuario.getListaRecientes());
+		String listaRecientes = String.valueOf(usuario.getListaRecientes().getCodigo());
 		
 		// Actualizamos las propiedades
-		actualizarPropiedadEntidad(eUsuario, "login", usuario.getLogin());
-		actualizarPropiedadEntidad(eUsuario, "password", usuario.getPassword());		
-		actualizarPropiedadEntidad(eUsuario, "nombre", usuario.getNombre());		
-		actualizarPropiedadEntidad(eUsuario, "apellidos", usuario.getApellidos());		
-		actualizarPropiedadEntidad(eUsuario, "fecha nacimiento", localDateToString(usuario.getFechaNac()));		
-		actualizarPropiedadEntidad(eUsuario, "email", usuario.getEmail());
-		actualizarPropiedadEntidad(eUsuario, "premium", premium);
-		actualizarPropiedadEntidad(eUsuario, "listas", listas);		
-		actualizarPropiedadEntidad(eUsuario, "lista recientes", listaRecientes);
+		actualizarPropiedadEntidad(eUsuario, propLogin, usuario.getLogin());
+		actualizarPropiedadEntidad(eUsuario, propPassword, usuario.getPassword());		
+		actualizarPropiedadEntidad(eUsuario, propNombre, usuario.getNombre());		
+		actualizarPropiedadEntidad(eUsuario, propApellidos, usuario.getApellidos());		
+		actualizarPropiedadEntidad(eUsuario, propFecNac, localDateToString(usuario.getFechaNac()));		
+		actualizarPropiedadEntidad(eUsuario, propEmail, usuario.getEmail());
+		actualizarPropiedadEntidad(eUsuario, propPremium, premium);
+		actualizarPropiedadEntidad(eUsuario, propListas, listas);		
+		actualizarPropiedadEntidad(eUsuario, propRecientes, listaRecientes);
 	}
 
 	public Usuario recuperarUsuario(int codigo) {
@@ -110,17 +133,17 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 		eUsuario = servPersistencia.recuperarEntidad(codigo);
 
 		// recuperar propiedades para construir el usuario y que no necesitan adaptadores
-		String login = servPersistencia.recuperarPropiedadEntidad(eUsuario, "login");
-		String password = servPersistencia.recuperarPropiedadEntidad(eUsuario, "password");		
-		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");		
-		String apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuario, "apellidos");		
-		LocalDate fechaNac = stringToLocalDate(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha nacimiento"));	
-		String email = servPersistencia.recuperarPropiedadEntidad(eUsuario, "email");
+		String login = servPersistencia.recuperarPropiedadEntidad(eUsuario, propLogin);
+		String password = servPersistencia.recuperarPropiedadEntidad(eUsuario, propPassword);		
+		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, propNombre);		
+		String apellidos = servPersistencia.recuperarPropiedadEntidad(eUsuario, propApellidos);		
+		LocalDate fechaNac = stringToLocalDate(servPersistencia.recuperarPropiedadEntidad(eUsuario, propFecNac));	
+		String email = servPersistencia.recuperarPropiedadEntidad(eUsuario, propEmail);
 		
 		Usuario usuario = new Usuario(login, password, nombre, apellidos, fechaNac, email);
 		usuario.setCodigo(codigo);
 		// Si es premium, le asignamos un rol premium
-		if (Boolean.parseBoolean(servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium"))) {
+		if (Boolean.parseBoolean(servPersistencia.recuperarPropiedadEntidad(eUsuario, propPremium))) {
 			usuario.setPremium();
 		}
 
@@ -130,15 +153,15 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 		// recuperar propiedades que son objetos llamando a adaptadores
 		
 		// listas
-		List<ListaVideos> listas = obtenerListasVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "listas"));
+		List<ListaVideos> listas = obtenerListasVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, propListas));
 		for (ListaVideos l : listas)
 			usuario.addListaVideos(l);
 		
 		// lista de recientes
-		List<ListaVideos> listaRecientes = obtenerListasVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "lista recientes"));
-		for (ListaVideos l : listaRecientes)
-			usuario.addListaVideos(l);
-
+		AdaptadorListaVideos adaptadorLV = AdaptadorListaVideos.getUnicaInstancia();
+		int codigoLR = Integer.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, propRecientes));
+		usuario.setListaRecientes(adaptadorLV.recuperarListaVideos(codigoLR));
+		
 		return usuario;
 	}
 

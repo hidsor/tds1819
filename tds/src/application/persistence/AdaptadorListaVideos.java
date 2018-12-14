@@ -1,10 +1,7 @@
 package application.persistence;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -16,6 +13,11 @@ import beans.Entidad;
 import beans.Propiedad;
 
 public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
+	// CONSTANTES
+	private static final String propNombre = "nombre";
+	private static final String propNum = "numero de videos";
+	private static final  String propVideos = "videos";
+	
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorListaVideos unicaInstancia;
 
@@ -41,29 +43,19 @@ public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
 			existe = false;
 		}
 		if (existe) return;
-
-		// TODO ¿Hace falta hacer esto?
-		// registrar primero los atributos que son objetos
-		// registrar lineas de listaVideos
-		/*
-		AdaptadorLineaListaVideos adaptadorLV = AdaptadorLineaListaVideos.getUnicaInstancia();
-		for (LineaListaVideos ldv : listaVideos.getLineasListaVideos())
-			adaptadorLV.registrarLineaListaVideos(ldv);
-		// registrar cliente
-		AdaptadorClienteTDS adaptadorCliente = AdaptadorClienteTDS.getUnicaInstancia();
-		adaptadorCliente.registrarCliente(listaVideos.getCliente());
-		 */
+		
 		
 		// Crear entidad listaVideos
 		eListaVideos = new Entidad();
 
 		eListaVideos.setNombre("listaVideos");
 		eListaVideos.setPropiedades(new ArrayList<Propiedad>(
-				Arrays.asList(new Propiedad("nombre", listaVideos.getNombre()),
+				Arrays.asList(new Propiedad(propNombre, listaVideos.getNombre()),
 						new Propiedad("numero de video", String.valueOf(listaVideos.getNumVideos())),
-						new Propiedad("videos", obtenerCodigosVideos(listaVideos.getVideos())))));
+						new Propiedad(propVideos, obtenerCodigosVideos(listaVideos.getVideos())))));
 		// registrar entidad listaVideos
 		eListaVideos = servPersistencia.registrarEntidad(eListaVideos);
+		
 		// asignar identificador unico
 		// Se aprovecha el que genera el servicio de persistencia
 		listaVideos.setCodigo(eListaVideos.getId()); 	
@@ -72,14 +64,7 @@ public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
 	
 	public void borrarListaVideos(ListaVideos listaVideos) {
 		
-		// Esto no hace falta hacerlo, porque al eliminar una lista, no se borran los videos que la componen
-		/*
-		AdaptadorVideo adaptadorV = AdaptadorVideo.getUnicaInstancia();
-
-		for (Video video : listaVideos.getVideos()) {
-			adaptadorV.borrarVideo(video);
-		}
-		*/
+		// No hay que borrar los videos de la lista.
 		
 		Entidad eListaVideos = servPersistencia.recuperarEntidad(listaVideos.getCodigo());
 		servPersistencia.borrarEntidad(eListaVideos);
@@ -90,9 +75,9 @@ public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
 		Entidad eListaVideos;
 
 		eListaVideos = servPersistencia.recuperarEntidad(listaVideos.getCodigo());
-		actualizarPropiedadEntidad(eListaVideos, "nombre",listaVideos.getNombre());
-		actualizarPropiedadEntidad(eListaVideos, "numero de videos", String.valueOf(listaVideos.getNumVideos()));
-		actualizarPropiedadEntidad(eListaVideos, "videos", obtenerCodigosVideos(listaVideos.getVideos()));
+		actualizarPropiedadEntidad(eListaVideos, propNombre,listaVideos.getNombre());
+		actualizarPropiedadEntidad(eListaVideos, propNum, String.valueOf(listaVideos.getNumVideos()));
+		actualizarPropiedadEntidad(eListaVideos, propVideos, obtenerCodigosVideos(listaVideos.getVideos()));
 	}
 
 	public ListaVideos recuperarListaVideos(int codigo) {
@@ -106,7 +91,7 @@ public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
 
 		// recuperar propiedades que no son objetos
 		// nombre
-		String nombre = servPersistencia.recuperarPropiedadEntidad(eListaVideos, "nombre");
+		String nombre = servPersistencia.recuperarPropiedadEntidad(eListaVideos, propNombre);
 		
 		
 		ListaVideos listaVideos = new ListaVideos(nombre);
@@ -117,7 +102,7 @@ public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
 
 		// recuperar propiedades que son objetos llamando a adaptadores
 		// videos
-		List<Video> videos = obtenerVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eListaVideos, "videos"));
+		List<Video> videos = obtenerVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eListaVideos, propVideos));
 		for (Video video : videos)
 			listaVideos.addVideo(video);
 
