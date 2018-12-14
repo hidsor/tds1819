@@ -1,15 +1,14 @@
 package application.model;
 
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import application.persistence.*;
 
 public class CatalogoUsuarios {
 	// ATRIBUTOS
-	private Set<Usuario> conjuntoUsuarios;
+	private Map<String, Usuario> usuarios;
 	private static CatalogoUsuarios unicaInstancia = null;
 	
 	// necesarios para la persistencia
@@ -29,7 +28,7 @@ public class CatalogoUsuarios {
 		try {
 			dao = FactoriaDAO.getInstancia();
 			adaptadorUsuario = dao.getUsuarioDAO();
-			conjuntoUsuarios = new HashSet<Usuario>();
+			usuarios = new HashMap<String, Usuario>();
 			this.cargarCatalogo();
 		} catch (DAOException eDAO) {
 			eDAO.printStackTrace();
@@ -37,24 +36,25 @@ public class CatalogoUsuarios {
 	}
 	
 	// MÉTODOS GET
-	public Set<Usuario> getConjuntoUsuarios() {
-		return Collections.unmodifiableSet(conjuntoUsuarios);
+	
+	public Usuario getUsuario(String login) {
+		return usuarios.get(login);
 	}
 
 
 	//FUNCIONALIDAD
-	boolean addUsuario(Usuario usuario) {
-		return conjuntoUsuarios.add(usuario);
+	public void addUsuario(Usuario usuario) {
+		usuarios.put(usuario.getLogin(), usuario);
 	}
 	
-	boolean removeUsuario(Usuario usuario) {
-		return conjuntoUsuarios.remove(usuario);
+	public void removeUsuario(Usuario usuario) {
+		usuarios.remove(usuario.getLogin());
 	}
 	
 	private void cargarCatalogo() throws DAOException {
 		List<Usuario> usuariosBD = adaptadorUsuario.recuperarTodosUsuarios();
 		for (Usuario u : usuariosBD)
-			conjuntoUsuarios.add(u);
+			usuarios.put(u.getLogin(), u);
 	}
 	
 
