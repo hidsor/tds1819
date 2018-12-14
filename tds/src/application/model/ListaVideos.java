@@ -58,6 +58,10 @@ public class ListaVideos {
 		return videos.remove(video);
 	}
 	
+	public boolean containsVideo(Video video) {
+		return videos.contains(video);
+	}
+	
 	public void reproducirLista() {
 		for (Video i : videos) {
 			// TODO

@@ -140,4 +140,25 @@ public class Usuario {
 		}		
 		return listaRecientes.addVideo(video);
 	}
+	
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null) 
+			return false;
+		if (this.getClass() != obj.getClass())
+			return false;
+		
+		Usuario otro = (Usuario) obj;
+		
+		return login.equals(otro.login);		
+	}
+	
+	@Override
+	public int hashCode() {
+		return login.hashCode();
+	}
 }

@@ -59,6 +59,23 @@ public class Video {
 	
 	
 	
-
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null) 
+			return false;
+		if (this.getClass() != obj.getClass())
+			return false;
+		
+		Video otro = (Video) obj;
+		
+		return URL.equals(otro.URL);		
+	}
+	
+	@Override
+	public int hashCode() {
+		return URL.hashCode();
+	}
 
 }
