@@ -104,6 +104,12 @@ public class Usuario {
 		return login;
 	}
 	
+	public Filtro getFiltro() {
+		if (premium == null)
+			return new NoFiltro();
+		return premium.getFiltro();
+	}
+	
 	
 	
 	public List<ListaVideos> getListas() {

@@ -1,8 +1,10 @@
 package application.model;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import application.persistence.DAOException;
@@ -12,7 +14,7 @@ import application.persistence.IAdaptadorVideoDAO;
 public class CatalogoVideos {
 
 	// ATRIBUTOSç
-	private Set<Video> conjuntoVideos;
+	private Map<String, Video> videos;
 	static private CatalogoVideos unicaInstancia = null;
 	
 	// necesarios para la persistencia
@@ -32,7 +34,7 @@ public class CatalogoVideos {
 		try {
 			dao = FactoriaDAO.getInstancia();
 			adaptadorVideo = dao.getVideoDAO();
-			conjuntoVideos = new HashSet<Video>();
+			videos = new HashMap<String, Video>();
 			cargarCatalogo();
 		} catch (DAOException eDAO) {
 			eDAO.printStackTrace();
@@ -41,14 +43,14 @@ public class CatalogoVideos {
 	
 	
 	// MÉTODOS DE CONSULTA
-	public Set<Video> getConjuntoVideos() {
-		return Collections.unmodifiableSet(conjuntoVideos);
+	public Map<String, Video> getVideos() {
+		return Collections.unmodifiableMap(videos);
 	}
 
 
 	//FUNCIONALIDAD
-	boolean addVideo(Video video) {
-		return conjuntoVideos.add(video);
+	public boolean addVideo(Video video) {
+		return videos.put(video.getURL(), video) != null;
 	}
 	
 	public boolean addAllVideos(List<Video> videos) {
@@ -59,33 +61,15 @@ public class CatalogoVideos {
 	}
 	
 	boolean removeVideo(Video video) {
-		return conjuntoVideos.remove(video);
-	}
-	
-	Set<Video> buscarVideo(Usuario usuario, String cadena, Filtro filtro) {
-		if (filtro == null) {
-			System.err.println("Debe pasar un filtro como parámetro");
-			throw new IllegalArgumentException();
-		}
-		Set<Video> videosEncontrados = new HashSet<Video>();
-		for (Video i : conjuntoVideos) {
-			if (i.getTitulo().contains(cadena) && filtro.filtrarVideo(usuario, i)) {
-				videosEncontrados.add(i);
-			}
-		}
-		return Collections.unmodifiableSet(videosEncontrados);
-	}
-	
-	Set<Video> buscarVideo(Usuario usuario, String cadena) {
-		return this.buscarVideo(usuario, cadena, new NoFiltro());
+		return videos.remove(video.getURL()) != null;
 	}
 	
 	
 	// Carga los videos de la base de datos en el conjunto;
 	private void cargarCatalogo() throws DAOException {
 		List<Video> videosBD = adaptadorVideo.recuperarTodosVideos();
-		for (Video u : videosBD)
-			conjuntoVideos.add(u);
+		for (Video v : videosBD)
+			videos.put(v.getURL(), v);
 	}
 
 

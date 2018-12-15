@@ -78,4 +78,10 @@ public class Video {
 		return URL.hashCode();
 	}
 
+
+	public Object compareRep(Video otro) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
