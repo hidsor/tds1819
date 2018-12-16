@@ -29,6 +29,7 @@ public class ViewController {
 	private double xOffset = 0; 
 	private double yOffset = 0;
 	private AppVideo controller = AppVideo.getUnicaInstancia();
+	boolean isProfileOpen = false;
 	
 	/* STACKPANE EXTERIOR PARA JFXDIALOG */
     @FXML
@@ -145,6 +146,36 @@ public class ViewController {
     @FXML
     private JFXButton registerCancel;
    
+    /* VENTANA DE PERFIL */
+    
+    @FXML
+    private GridPane profileView; // Contenedor de la vista de perfil
+
+    @FXML
+    private Label profileNick;
+
+    @FXML
+    private JFXTextField profileEmail;
+
+    @FXML
+    private Label profileTitle;
+
+    @FXML
+    private JFXDatePicker profileDatePicker;
+    
+    @FXML
+    private JFXPasswordField profilePassword;
+
+    @FXML
+    private JFXPasswordField profilePassRepeat;
+
+
+    @FXML
+    private JFXButton profileUpdate;
+
+    @FXML
+    private JFXButton profileLogout;
+
     
     // Manejo de eventos
     
@@ -154,12 +185,18 @@ public class ViewController {
     	oldFront.setDisable(true);
     	oldFront.setVisible(false);
     	
-    	loginView.setDisable(false);
-    	loginView.setVisible(true);
-    	loginView.toFront();
-    	
-    	loginLabelNick.setVisible(false);
-    	loginLabelPassword.setVisible(false);
+    	if (!isProfileOpen) {
+        	loginView.setDisable(false);
+        	loginView.setVisible(true);
+        	loginView.toFront();
+    	} else {
+    		profileView.setVisible(true);
+    		profileView.setDisable(false);
+    		profileView.toFront();
+    	}
+
+
+    	hideLoginLabels();
     	
     }
 
@@ -209,32 +246,10 @@ public class ViewController {
     		// Hay datos introducidos, intentamos identificarnos.
     		if (controller.verificarUsuario(loginNick.getText(), loginPassword.getText())) {
     			// Login válido
+    			openProfileView();
     		} else {
     			// Login inválido
-    	           String title = "Login inválido";         
-    	            String content = "El nombre de usuario y/o la contraseña no es correcta";       
-    	            JFXDialogLayout dialogContent = new JFXDialogLayout();
-    	          
-    	            dialogContent.setHeading(new Text(title));       
-    	            dialogContent.setBody(new Text(content));
-    	            dialogContent.setStyle("-fx-font: 14 system;");
-    	            
-    	            JFXButton close = new JFXButton("Cerrar");          
-    	            close.setStyle("-fx-background-color: #f6444f; -fx-text-fill: #FFFFFF; -fx-font: 14 system;");
-    	            close.setPrefSize(100, 25);
-    	            close.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-    	            
-    	            dialogContent.setActions(close);
-    	            
-    	            JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.BOTTOM);
-    	            
-    	            close.setOnAction(new EventHandler<ActionEvent>() {
-    	                @Override
-    	                public void handle(ActionEvent __) {
-    	                    dialog.close();
-    	                }
-    	            });
-    	            dialog.show();
+    			showDialog("Login inválido", "El nombre y/o la contraseña son incorrectas");
     		}
     	}
     }
@@ -245,17 +260,18 @@ public class ViewController {
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
     	oldFront.setVisible(false);
-    	
-    	System.out.println(oldFront.toString());
-    	
+
     	registerView.setDisable(false);
     	registerView.setVisible(true);
     	registerView.toFront(); 	
+    	
+    	hideRegisterLabels();
+    	
     }
 
     @FXML
     void registerCancel(ActionEvent event) {
-    	//TODO: Hace lo mismo que el método openLoginView pero lo separo por si queremmos hacer algo diferente luego
+    	//TODO: Hace lo mismo que el método openLoginView pero lo separo por si queremos hacer algo diferente luego
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
     	oldFront.setVisible(false);
@@ -263,11 +279,57 @@ public class ViewController {
     	loginView.setDisable(false);
     	loginView.setVisible(true);
     	loginView.toFront();
+    	
+    	hideRegisterLabels();
     }
+    
 
     @FXML
     void registerUser(ActionEvent event) {
-    	//TODO: Registrar un usuario
+    	
+    	// Comprobamos que ninguno de los campos obligatorios esté vacío.
+    	boolean valid = true;
+    	if (registerNick.getText().equals("")) {
+    		registerLabelNick.setVisible(true);
+    		valid = false;
+    	}
+    	if (registerPassword.getText().equals("")) {
+    		registerLabelPassword.setVisible(true);
+    		valid = false;
+    	}
+    	if (registerPasswordRepeat.getText().equals("")) {
+    		registerLabelPassRepeat.setVisible(true);
+    		valid = false;
+    	}
+    	if (registerName.getText().equals("")) {
+    		registerLabelName.setVisible(true);
+    		valid = false;
+    	}
+    	if (registerDatePicker.getValue() == null) {
+    		registerLabelDate.setVisible(true);
+    		valid = false;
+    	}
+    	if (! registerLabelPassword.getText().equals(registerLabelPassRepeat.getText())) {
+    		valid = false;	
+    		showDialog("Registro inválido", "Las contraseñas introducidas no coinciden");
+    		
+    	}
+    	
+    	if (valid) {
+    		if (controller.registrarUsuario(registerNick.getText(),
+    										registerPassword.getText(),
+    										registerName.getText(),
+    										registerSurname.getText(),
+    										registerDatePicker.getValue(), 
+    										registerEmail.getText())) 
+    		{
+    			// Registro válido
+    			openProfileView();
+    		} else {
+    			// Registro inválido (shouldn't happen)
+    			showDialog("Registro inválido", "No se ha podido registrar al usuario");
+    		}
+    	}
     }
 
     @FXML
@@ -313,5 +375,74 @@ public class ViewController {
     	Stage stg = (Stage) rg.getScene().getWindow();
         stg.setX(event.getScreenX() - xOffset);
         stg.setY(event.getScreenY() - yOffset);
+    }
+    
+
+    void openProfileView() {
+    	isProfileOpen = true;
+    	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
+    	oldFront.setDisable(true);
+    	
+		profileView.setVisible(true);
+		profileView.setDisable(false);
+		
+		login.setText("Mi perfil");  	
+    }
+    
+    
+    @FXML
+    void profileLogout(ActionEvent event) {
+
+    }
+
+    @FXML
+    void profileUpdate(ActionEvent event) {
+
+    }
+    
+    
+    
+    
+    // Funcionalidad auxiliar
+    
+    // Ocultar todas las labels de "*Este campo es obligatorio" de la vista del login
+    void hideLoginLabels() {
+    	loginLabelNick.setVisible(false);
+    	loginLabelPassword.setVisible(false);
+    }
+    
+    // Ocultar todas las labels de "*Este campo es obligatorio" de la vista de registro
+    void hideRegisterLabels() {
+    	registerLabelNick.setVisible(false);
+    	registerLabelPassword.setVisible(false);
+    	registerLabelPassRepeat.setVisible(false);
+    	registerLabelName.setVisible(false);
+    	registerLabelDate.setVisible(false);
+    	
+    }
+    
+    // Generar un JFXDialog sobre la aplicación
+    void showDialog(String title, String content) {    
+        JFXDialogLayout dialogContent = new JFXDialogLayout(); 
+        dialogContent.setHeading(new Text(title));       
+        dialogContent.setBody(new Text(content));
+        dialogContent.setStyle("-fx-font: 14 system;");
+        
+        JFXButton close = new JFXButton("Cerrar");          
+        close.setStyle("-fx-background-color: #f6444f; -fx-text-fill: #FFFFFF; -fx-font: 14 system;");
+        close.setPrefSize(100, 25);
+        close.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        
+        dialogContent.setActions(close);
+        
+        JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.BOTTOM);
+        
+        close.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent __) {
+                dialog.close();
+            }
+        });
+        dialog.show();
     }
 }

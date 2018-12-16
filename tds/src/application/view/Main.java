@@ -18,8 +18,6 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			
-			
 			Parent root = FXMLLoader.load(getClass().getResource("Root.fxml"));
 			/*
 		      root.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -41,6 +39,8 @@ public class Main extends Application {
 			scene.getStylesheets().add(getClass().getResource("applicationred.css").toExternalForm());
 			primaryStage.initStyle(StageStyle.TRANSPARENT);
 			primaryStage.setScene(scene);
+			primaryStage.setMinHeight(600);
+			primaryStage.setMinWidth(800);
 			ResizeHelper.addResizeListener(primaryStage);
 			primaryStage.show();
 			

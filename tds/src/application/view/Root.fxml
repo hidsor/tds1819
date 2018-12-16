@@ -90,6 +90,137 @@
                         </Label>
                      </children>
                   </AnchorPane>
+                  <GridPane id="profileView" fx:id="profileView" disable="true" visible="false">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+                           <image>
+                              <Image url="@../../resources/ourtube.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="Nick:" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="15.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label id="profileNick" fx:id="profileNick" text="-nick-" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Label text="Email:" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="15.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <JFXTextField id="profileEmail" fx:id="profileEmail" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="emailactual" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+                        <Label alignment="CENTER" text="MI CUENTA" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                           <font>
+                              <Font name="System Bold" size="22.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="15.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label id="profileTitle" fx:id="profileTitle" text="Bienvenido, -nombre-" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="10.0" layoutY="184.0" text="Fecha nacimiento:" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="15.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <JFXDatePicker id="profileDatePicker" fx:id="profileDatePicker" defaultColor="#f51827" prefWidth="258.0" promptText="fechanacimientoactual" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                        <Label alignment="CENTER" text="CONTRASEÑA" GridPane.rowIndex="8" GridPane.valignment="BOTTOM">
+                           <font>
+                              <Font name="System Bold" size="22.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="15.0" />
+                           </GridPane.margin>
+                           <padding>
+                              <Insets bottom="5.0" />
+                           </padding>
+                        </Label>
+                        <Label alignment="TOP_LEFT" text="Nueva contraseña:" GridPane.rowIndex="10" GridPane.valignment="BOTTOM">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="15.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label text="Repetir contraseña:" GridPane.rowIndex="11" GridPane.valignment="BOTTOM">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="15.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <JFXPasswordField id="profilePassRepeat" fx:id="profilePassRepeat" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="11" GridPane.valignment="CENTER" />
+                        <JFXPasswordField id="profilePassword" fx:id="profilePassword" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
+                        <JFXButton id="profileUpdate" fx:id="profileUpdate" onAction="#profileUpdate" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Actualizar" textFill="WHITE" GridPane.rowIndex="13">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </JFXButton>
+                        <JFXButton id="profileLogout" fx:id="profileLogout" onAction="#profileLogout" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Log out" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="13" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                        </JFXButton>
+                        <Separator prefWidth="200.0" styleClass="sideseparator" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                           <GridPane.margin>
+                              <Insets left="15.0" right="15.0" />
+                           </GridPane.margin>
+                        </Separator>
+                        <Separator prefWidth="200.0" styleClass="sideseparator" GridPane.columnSpan="2147483647" GridPane.rowIndex="9" GridPane.valignment="TOP">
+                           <GridPane.margin>
+                              <Insets left="15.0" right="15.0" />
+                           </GridPane.margin>
+                        </Separator>
+                     </children>
+                  </GridPane>
                   <GridPane id="loginView" fx:id="loginView">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
@@ -103,7 +234,7 @@
                         <RowConstraints minHeight="5.0" percentHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
@@ -274,7 +405,7 @@
          <top>
             <FlowPane alignment="TOP_RIGHT" rowValignment="TOP" styleClass="topbar" BorderPane.alignment="CENTER">
                <children>
-                  <HBox alignment="CENTER_RIGHT">
+                  <HBox alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="800.0">
                      <children>
                         <Region prefHeight="26.0" prefWidth="690.0">
                            <HBox.margin>
