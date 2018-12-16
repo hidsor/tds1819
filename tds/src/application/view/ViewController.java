@@ -6,6 +6,8 @@ import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+
+import application.controller.AppVideo;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,7 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -26,6 +28,7 @@ public class ViewController {
 	private double oldWidth = 0;
 	private double xOffset = 0; 
 	private double yOffset = 0;
+	private AppVideo controller = AppVideo.getUnicaInstancia();
 	
 	/* STACKPANE EXTERIOR PARA JFXDIALOG */
     @FXML
@@ -76,7 +79,13 @@ public class ViewController {
     
     /* VENTANA DE LOGIN */ 
     @FXML
-    private VBox loginView; // Contenedor padre de la ventana de login
+    private GridPane loginView; // Contenedor padre de la ventana de login
+
+    @FXML
+    private Label loginLabelNick;
+
+    @FXML
+    private Label loginLabelPassword;
     
     @FXML
     private JFXButton loginButton;
@@ -92,23 +101,38 @@ public class ViewController {
     
     /* VENTANA DE REGISTRO */
     @FXML
-    private VBox registerView; // Contenedor padre de la ventana de registro
+    private GridPane registerView; // Contenedor padre de la ventana de registro
 
+    @FXML
+    private Label registerLabelNick;
+    
     @FXML
     private JFXTextField registerNick;
 
     @FXML
+    private Label registerLabelPassword;
+       
+    @FXML
     private JFXPasswordField registerPassword;
 
     @FXML
+    private Label registerLabelPassRepeat;
+    
+    @FXML
     private JFXPasswordField registerPasswordRepeat;
 
+    @FXML
+    private Label registerLabelName;
+    
     @FXML
     private JFXTextField registerName;
 
     @FXML
     private JFXTextField registerSurname;
 
+    @FXML
+    private Label registerLabelDate;
+    
     @FXML
     private JFXDatePicker registerDatePicker;
 
@@ -133,6 +157,9 @@ public class ViewController {
     	loginView.setDisable(false);
     	loginView.setVisible(true);
     	loginView.toFront();
+    	
+    	loginLabelNick.setVisible(false);
+    	loginLabelPassword.setVisible(false);
     	
     }
 
@@ -171,40 +198,55 @@ public class ViewController {
     void loginEnter(ActionEvent event) {
     	
     	if (loginNick.getText().equals("") || loginPassword.getText().equals("")) {
-            String title = "Login inválido";         
-            String content = "El nombre de usuario y/o la contraseña no puede ser un campo vacío";       
-            JFXDialogLayout dialogContent = new JFXDialogLayout();
-          
-            dialogContent.setHeading(new Text(title));       
-            dialogContent.setBody(new Text(content));
-            dialogContent.setStyle("-fx-font: 14 system;");
-            
-            JFXButton close = new JFXButton("Cerrar");          
-            close.setStyle("-fx-background-color: #f6444f; -fx-text-fill: #FFFFFF; -fx-font: 14 system;");
-            close.setPrefSize(100, 25);
-            close.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-            
-            dialogContent.setActions(close);
-            
-            JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.BOTTOM);
-            
-            close.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent __) {
-                    dialog.close();
-                }
-            });
-            dialog.show();
+    		if (loginNick.getText().equals("")) {
+    			loginLabelNick.setVisible(true);
+    		}
+    		
+    		if (loginPassword.getText().equals("")) {
+    			loginLabelPassword.setVisible(true);
+    		}
     	} else {
-    		//TODO: la parte graciosa
+    		// Hay datos introducidos, intentamos identificarnos.
+    		if (controller.verificarUsuario(loginNick.getText(), loginPassword.getText())) {
+    			// Login válido
+    		} else {
+    			// Login inválido
+    	           String title = "Login inválido";         
+    	            String content = "El nombre de usuario y/o la contraseña no es correcta";       
+    	            JFXDialogLayout dialogContent = new JFXDialogLayout();
+    	          
+    	            dialogContent.setHeading(new Text(title));       
+    	            dialogContent.setBody(new Text(content));
+    	            dialogContent.setStyle("-fx-font: 14 system;");
+    	            
+    	            JFXButton close = new JFXButton("Cerrar");          
+    	            close.setStyle("-fx-background-color: #f6444f; -fx-text-fill: #FFFFFF; -fx-font: 14 system;");
+    	            close.setPrefSize(100, 25);
+    	            close.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+    	            
+    	            dialogContent.setActions(close);
+    	            
+    	            JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.BOTTOM);
+    	            
+    	            close.setOnAction(new EventHandler<ActionEvent>() {
+    	                @Override
+    	                public void handle(ActionEvent __) {
+    	                    dialog.close();
+    	                }
+    	            });
+    	            dialog.show();
+    		}
     	}
     }
     	
     @FXML
     void openRegisterView(MouseEvent event) {
+    	
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
     	oldFront.setVisible(false);
+    	
+    	System.out.println(oldFront.toString());
     	
     	registerView.setDisable(false);
     	registerView.setVisible(true);

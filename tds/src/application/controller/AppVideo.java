@@ -54,7 +54,7 @@ public class AppVideo {
 
 	// Funcionalidad
 	
-	boolean verificarUsuario(String login, String password) {
+	public boolean verificarUsuario(String login, String password) {
 		Usuario usuario = catalogoUsuarios.getUsuario(login);
 		if (usuario == null) return false;
 		if (usuario.getPassword().equals(password)) return true;
@@ -62,7 +62,7 @@ public class AppVideo {
 	}
 
 	
-	void registrarUsuario(String login, String password, String nombre, String apellidos, LocalDate fechaNac, String email) {
+	public void registrarUsuario(String login, String password, String nombre, String apellidos, LocalDate fechaNac, String email) {
 		Usuario usuario = new Usuario(login, password, nombre, apellidos, fechaNac, email);
 		catalogoUsuarios.addUsuario(usuario);
 	}
