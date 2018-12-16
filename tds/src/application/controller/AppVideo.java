@@ -1,14 +1,9 @@
 package application.controller;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import application.model.*;
 
@@ -134,10 +129,32 @@ public class AppVideo {
 	}
 	
 	public boolean addEtiquetaVideo(Etiqueta etiqueta, Video video) {
-		return video.addEtiqueta(etiqueta);
+		video.addEtiqueta(etiqueta);
+		listaEtiquetas.add(etiqueta);
+		return true;
 	}
 	
+	public void crearListaVideos(String nombre) {		
+		usuarioActual.addListaVideos(new ListaVideos(nombre));
+	}
 	
+	public boolean addVideoALista(Video video, ListaVideos listaVideos) {
+		return listaVideos.addVideo(video);
+	}
+	
+	public boolean removeVideoDeLista(Video video, ListaVideos listaVideos) {
+		return listaVideos.removeVideo(video);
+	}
+	
+	public void reproducir(Video video) {
+		// Aquí, con el componente que debemos disenar, reproduciremos el video
+	}
+	
+	public void crearPDF() {
+		// TODO
+		// Como ostias se usa iText???
+		// Nombro rey de toda Inglaterra a quien lo consiga
+	}
 	
 	
 }
