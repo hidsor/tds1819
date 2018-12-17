@@ -52,7 +52,9 @@ public class CatalogoVideos {
 
 	//FUNCIONALIDAD
 	public boolean addVideo(Video video) {
-		return videos.put(video.getURL(), video) != null;
+		if (videos.get(video.getURL()) != null) return false;
+		videos.put(video.getURL(), video);
+		return true;
 	}
 	
 	public boolean addAllVideos(List<Video> videos) {

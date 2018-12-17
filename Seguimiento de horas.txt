@@ -21,3 +21,4 @@ ENRIQUE:
 - 13/12/2018 - 1h 30 min (pulir la persistencia)
 - 14/12/2018 - 1h (integrar persistencia en el modelo)
 - 16/12/2018 - 4h (nuevos métodos del controlador y ver como se usa el iText)
+- 17/12/2018 - 1h 30 min (terminar métodos y entender el componente)

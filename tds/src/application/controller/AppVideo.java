@@ -2,13 +2,19 @@ package application.controller;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import application.model.*;
+import application.persistence.*;
 
 public class AppVideo {
 	// Atributos
+	private IAdaptadorUsuarioDAO adaptadorUsuario;
+	private IAdaptadorVideoDAO adaptadorVideo;
+	private IAdaptadorListaVideosDAO adaptadorListaVideos;
+	
 	private CatalogoUsuarios catalogoUsuarios;
 	private CatalogoVideos catalogoVideos;
 	private ListaVideos topten;
@@ -19,8 +25,21 @@ public class AppVideo {
 	// Patrón singleton
 	private static AppVideo unicaInstancia = null;
 	
+	
+	
 	// Constructor
 	private AppVideo() {
+		// Cargamos los adaptadores
+		FactoriaDAO factoria;
+		try {
+			factoria = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
+			adaptadorUsuario = factoria.getUsuarioDAO();
+			adaptadorVideo = factoria.getVideoDAO();
+			adaptadorListaVideos = factoria.getListaVideosDAO();
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		
 		// Cargamos todos los elementos del controlador
 		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
 		catalogoVideos = CatalogoVideos.getUnicaInstancia();
@@ -55,6 +74,9 @@ public class AppVideo {
 		}
 	}
 	
+	
+	
+	
 	// Métodos get
 	public CatalogoUsuarios getCatalogoUsuarios() {
 		return catalogoUsuarios;
@@ -75,6 +97,7 @@ public class AppVideo {
 	public Usuario getUsuarioActual() {
 		return usuarioActual;
 	}
+	
 	
 	
 	
@@ -101,10 +124,15 @@ public class AppVideo {
 	public boolean registrarUsuario(String login, String password, String nombre, String apellidos, LocalDate fechaNac, String email) {
 		Usuario usuario = new Usuario(login, password, nombre, apellidos, fechaNac, email);
 		if (catalogoUsuarios.addUsuario(usuario)) {
+			adaptadorUsuario.registrarUsuario(usuario);
 			usuarioActual = usuario;
 			return true;
 		}
 		return false;
+	}
+	
+	public void salirUsuario() {
+		usuarioActual = null;
 	}
 	
 	// Busca un video
@@ -126,24 +154,39 @@ public class AppVideo {
 	// Ahora el usuario será premium
 	public void obtenerPremium() {
 		usuarioActual.setPremium();
+		adaptadorUsuario.modificarUsuario(usuario);
 	}
 	
 	public boolean addEtiquetaVideo(Etiqueta etiqueta, Video video) {
 		video.addEtiqueta(etiqueta);
 		listaEtiquetas.add(etiqueta);
+		adaptadorVideo.modificarVideo(video);
 		return true;
 	}
 	
-	public void crearListaVideos(String nombre) {		
-		usuarioActual.addListaVideos(new ListaVideos(nombre));
+	public void crearListaVideos(String nombre) {
+		ListaVideos listaVideos = new ListaVideos(nombre);
+		usuarioActual.addListaVideos(listaVideos);
+		adaptadorListaVideos.registrarListaVideos(listaVideos);
+		adaptadorUsuario.modificarUsuario(usuarioActual);
+	}
+	
+	public void borrarListaVideos(ListaVideos listaVideos) {
+		usuarioActual.removeListaVideos(listaVideos);
+		adaptadorListaVideos.borrarListaVideos(listaVideos);
+		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
 	
 	public boolean addVideoALista(Video video, ListaVideos listaVideos) {
-		return listaVideos.addVideo(video);
+		listaVideos.addVideo(video);
+		adaptadorListaVideos.modificarListaVideos(listaVideos);
+		return true;
 	}
 	
 	public boolean removeVideoDeLista(Video video, ListaVideos listaVideos) {
-		return listaVideos.removeVideo(video);
+		listaVideos.removeVideo(video);
+		adaptadorListaVideos.modificarListaVideos(listaVideos);
+		return true;
 	}
 	
 	public void reproducir(Video video) {
