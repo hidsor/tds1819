@@ -19,9 +19,9 @@ public class AppVideo {
 	private ListaVideos topten;
 	private Set<Etiqueta> listaEtiquetas;
 	
-	private Usuario usuarioActual; // Para saber quiï¿½n estï¿½ usando la aplicaciï¿½n
+	private Usuario usuarioActual; // Para saber quién está usando la aplicación
 	
-	// Patrï¿½n singleton
+	// Patrón singleton
 	private static AppVideo unicaInstancia = null;
 	
 	// Constructor
@@ -30,7 +30,7 @@ public class AppVideo {
 		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
 		catalogoVideos = CatalogoVideos.getUnicaInstancia();
 		
-		// Obtenemos una lista con todos los vï¿½deos del sistema
+		// Obtenemos una lista con todos los vídeos del sistema
 		List<Video> videos = new LinkedList<Video>(catalogoVideos.getVideos().values());
 		
 		// Topten videos
@@ -41,7 +41,7 @@ public class AppVideo {
 		
 
 		// Conjunto de etiquetas
-		// Recorremos todos los videos aï¿½adiendo todas las etiquetas de cada uno al conjunto
+		// Recorremos todos los videos añadiendo todas las etiquetas de cada uno al conjunto
 		listaEtiquetas = new HashSet<Etiqueta>();
 		for (Video i : videos) {
 			listaEtiquetas.addAll(i.getEtiquetas());
@@ -50,7 +50,7 @@ public class AppVideo {
 		
 	}
 	
-	// Patrï¿½n singleton
+	// Patrón singleton
 	public static AppVideo getUnicaInstancia() {
 		if (unicaInstancia == null) {
 			unicaInstancia = new AppVideo();
@@ -60,7 +60,7 @@ public class AppVideo {
 		}
 	}
 	
-	// Mï¿½todos get
+	// Métodos get
 	public CatalogoUsuarios getCatalogoUsuarios() {
 		return catalogoUsuarios;
 	}
@@ -86,17 +86,17 @@ public class AppVideo {
 	// Funcionalidad
 	public boolean verificarUsuario(String login, String password) {
 		Usuario usuario = catalogoUsuarios.getUsuario(login);
-		// Si el usuario no estï¿½ registrado, devuelve falso
+		// Si el usuario no está registrado, devuelve falso
 		if (usuario == null)
 			return false;
 		
-		// Si estï¿½ registrado y la contraseï¿½a es correcta, devuelve verdadero
+		// Si está registrado y la contraseña es correcta, devuelve verdadero
 		if (usuario.getPassword().equals(password)) {
 			usuarioActual = usuario;
 			return true;
 		}
 		
-		// Si estï¿½ registrado, pero la contraseï¿½a no es correcta, devuelve falso.
+		// Si está registrado, pero la contraseña no es correcta, devuelve falso.
 		else
 			return false;
 	}
@@ -118,7 +118,7 @@ public class AppVideo {
 		Filtro filtro = usuarioActual.getFiltro();
 		
 		// Recorremos todos los videos. Si el video contiene la cadena que buscamos 
-		// y la condiciï¿½n del filtro se cumple, es un posible resultado.
+		// y la condición del filtro se cumple, es un posible resultado.
 		for (Video i : catalogoVideos.getVideos().values()) {
 			if (i.getTitulo().contains(cadena) && filtro.filtrarVideo(usuarioActual, i)) {
 				resultados.add(i);
@@ -128,7 +128,7 @@ public class AppVideo {
 	}
 
 	
-	// Ahora el usuario serï¿½ premium
+	// Ahora el usuario será premium
 	public void obtenerPremium() {
 		usuarioActual.setPremium();
 	}
