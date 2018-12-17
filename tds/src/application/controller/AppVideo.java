@@ -26,12 +26,12 @@ public class AppVideo {
 		catalogoVideos = CatalogoVideos.getUnicaInstancia();
 		
 		// Obtenemos una lista con todos los vídeos del sistema
-		List<Video> videos = (List<Video>) catalogoVideos.getVideos().values();
+		List<Video> videos = new LinkedList<Video>(catalogoVideos.getVideos().values());
 		
 		// Topten videos
 		topten = new ListaVideos("topten");
 		videos.sort( (v1, v2) -> { return ((Integer)(-v1.getNumReproducciones())).compareTo(-v2.getNumReproducciones()); } );
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 10 && i < videos.size(); i++)
 			catalogoVideos.addVideo(videos.get(i));
 		
 

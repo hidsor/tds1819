@@ -45,6 +45,8 @@ public class CatalogoVideos {
 	// MÉTODOS DE CONSULTA
 	public Map<String, Video> getVideos() {
 		return Collections.unmodifiableMap(videos);
+		
+		//return new HashMap<String, Video>(videos);
 	}
 
 

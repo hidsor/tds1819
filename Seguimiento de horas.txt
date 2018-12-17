@@ -7,6 +7,10 @@ VLAD:
 16/11/2018 - 2h (Avances en la vista: login)
 17/11/2018 - 15 min (Refactorizada estructura de la interfaz)
 19/11/2018 - 2h (Agregada ventana de registro, controlador ventana FXML separado del controlador real)
+15/12/2018 - 45 min (Comienzos controlador)
+16/12/2018 - 2h (Avances en la vista: registro y login cambiados a gridpane)
+16/12/2018 - 2h (Avances en la vista: Creada ventana de perfil)
+17/12/2018 - 45 min (Avances en la vista: Funcionalidad registro, login y perfil (salvo update) completa)
 
 ENRIQUE:
 - 17/11/2018 - 1 hora (Hacer UML)

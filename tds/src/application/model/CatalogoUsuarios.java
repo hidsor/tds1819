@@ -44,7 +44,10 @@ public class CatalogoUsuarios {
 
 	//FUNCIONALIDAD
 	public boolean addUsuario(Usuario usuario) {
-		return usuarios.put(usuario.getLogin(), usuario) != null;
+		// Imitamos un set
+		if (usuarios.get(usuario.getLogin()) != null) return false;
+		usuarios.put(usuario.getLogin(), usuario);
+		return true;
 	}
 	
 	public void removeUsuario(Usuario usuario) {
