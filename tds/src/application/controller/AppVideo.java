@@ -1,15 +1,25 @@
 package application.controller;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import application.model.*;
 import application.persistence.*;
+import umu.tds.videos.Videos;
+import umu.tds.videos.VideosEvent;
+import umu.tds.videos.VideosListener;
 
-public class AppVideo {
+public class AppVideo implements VideosListener {
 	// Atributos
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
 	private IAdaptadorVideoDAO adaptadorVideo;
@@ -118,7 +128,9 @@ public class AppVideo {
 		else
 			return false;
 	}
-
+	
+	
+	
 	// Devuelve verdadero si se ha podido registrar.
 	// Devuelve falso si no (ya hay alguien con ese login en el sistema)
 	public boolean registrarUsuario(String login, String password, String nombre, String apellidos, LocalDate fechaNac, String email) {
@@ -126,6 +138,14 @@ public class AppVideo {
 		if (catalogoUsuarios.addUsuario(usuario)) {
 			adaptadorUsuario.registrarUsuario(usuario);
 			usuarioActual = usuario;
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean registrarVideo(Video video) {
+		if (catalogoVideos.addVideo(video)) {
+			adaptadorVideo.registrarVideo(video);
 			return true;
 		}
 		return false;
@@ -154,7 +174,7 @@ public class AppVideo {
 	// Ahora el usuario será premium
 	public void obtenerPremium() {
 		usuarioActual.setPremium();
-		adaptadorUsuario.modificarUsuario(usuario);
+		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
 	
 	public boolean addEtiquetaVideo(Etiqueta etiqueta, Video video) {
@@ -193,10 +213,44 @@ public class AppVideo {
 		// Aquí, con el componente que debemos disenar, reproduciremos el video
 	}
 	
-	public void crearPDF() {
-		// TODO
-		// Como ostias se usa iText???
-		// Nombro rey de toda Inglaterra a quien lo consiga
+	public void crearPDF(String nombre){
+		try {
+			FileOutputStream archivo = new FileOutputStream(nombre);
+			Document documento = new Document();
+			PdfWriter.getInstance(documento, archivo);
+		    documento.open();
+		    documento.add(new Paragraph(nombre + "\n\n"));
+		    documento.add(new Paragraph(usuarioActual.infoListasVideos()));
+		    documento.close();
+			
+		} catch (FileNotFoundException e) {			
+			System.err.println("No se pudo crear el archivo " + nombre);
+		}
+		catch (DocumentException e) {
+			System.err.println("No se pudo escribir en el documento");
+		}
+	}
+
+	@Override
+	public void nuevosVideos(VideosEvent evento) {
+		List<Video> videos = adaptarVideos(evento.getVideos());
+		for (Video i : videos) {
+			registrarVideo(i);
+		}
+	}
+	
+	private List<Video> adaptarVideos(Videos videos) {
+		List<Video> videosAdaptados = new LinkedList<Video>();
+		for (umu.tds.videos.Video i : videos.getVideo()) {
+			Video video = new Video(i.getUrl(), i.getTitulo(), 0);
+			for (umu.tds.videos.Etiqueta j : i.getEtiqueta()) {
+				video.addEtiqueta(new Etiqueta(j.getNombre()));
+			}
+			videosAdaptados.add(video);			
+		}
+		
+		return videosAdaptados;
+		
 	}
 	
 	

@@ -167,4 +167,14 @@ public class Usuario {
 	public int hashCode() {
 		return login.hashCode();
 	}
+	
+	
+	public String infoListasVideos() {
+		StringBuffer buffer = new StringBuffer("");
+		for (ListaVideos i : listas) {
+			buffer.append(i.toString() + "\n");
+		}
+		
+		return buffer.toString();
+	}
 }

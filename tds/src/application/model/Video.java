@@ -83,5 +83,12 @@ public class Video {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
+	@Override
+	public String toString() {
+		return "Titulo: " + titulo + "\t Reproducciones: " + numReproducciones;
+	}
+	
 
 }
