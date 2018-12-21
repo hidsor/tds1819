@@ -254,7 +254,7 @@
                                     <Font name="System Bold" size="16.0" />
                                  </font>
                               </Label>
-                              <JFXTextField id="exploreTitle" fx:id="exploreTitle" focusColor="#f51827" maxHeight="-Infinity" prefHeight="20.0" promptText="Título" styleClass="jfxtextfield" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <JFXTextField id="exploreTitle" fx:id="exploreTitle" focusColor="#f51827" maxHeight="-Infinity" prefHeight="20.0" styleClass="jfxtextfield" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                               <JFXButton id="profileUpdate" fx:id="exploreSearch" onAction="#exploreSearch" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Buscar" textFill="WHITE" GridPane.columnIndex="4" GridPane.rowIndex="1">
                                  <font>
                                     <Font size="14.0" />

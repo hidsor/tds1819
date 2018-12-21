@@ -21,6 +21,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
@@ -377,6 +378,14 @@ public class ViewController {
    
     	for (Video video : videos) {
     		Label element = new Label();
+    		element.setMaxWidth(200.0);
+    		element.setMaxHeight(200.0);
+    		element.setPrefWidth(200.0);
+    		element.setPrefHeight(150.0);
+    		element.setAlignment(Pos.CENTER);
+    		element.setOnMouseEntered(e1 -> element.setStyle("-fx-background-color: #cfcfcf"));
+    		element.setOnMouseExited(e1 -> element.setStyle(""));
+    		element.setOnMouseClicked(e1 -> showDialog("HE SIDO CONVOCADO", "MI NOMBRE ES " + element.getText()));
     		element.setContentDisplay(ContentDisplay.TOP);
     		element.setText(video.getTitulo());
     		ImageIcon icon = videoWeb.getThumb(video.getURL());
