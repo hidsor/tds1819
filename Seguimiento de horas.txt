@@ -11,6 +11,7 @@ VLAD:
 16/12/2018 - 2h (Avances en la vista: registro y login cambiados a gridpane)
 16/12/2018 - 2h (Avances en la vista: Creada ventana de perfil)
 17/12/2018 - 45 min (Avances en la vista: Funcionalidad registro, login y perfil (salvo update) completa)
+21/12/2018 - 3h (Avances en la vista: Funcionalidad perfil completa. Ventana explorar comenzada)
 
 ENRIQUE:
 - 17/11/2018 - 1 hora (Hacer UML)

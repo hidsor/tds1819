@@ -74,6 +74,10 @@ public class CatalogoVideos {
 		List<Video> videosBD = adaptadorVideo.recuperarTodosVideos();
 		for (Video v : videosBD)
 			videos.put(v.getURL(), v);
+		
+		//hocus pocus
+		Video v1 = new Video("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "Rick Astley - Never Gonna Give You Up (Video)", 1337);
+		addVideo(v1);
 	}
 
 

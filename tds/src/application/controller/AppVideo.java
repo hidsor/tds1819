@@ -73,10 +73,7 @@ public class AppVideo {
 			return unicaInstancia;
 		}
 	}
-	
-	
-	
-	
+
 	// Métodos get
 	public CatalogoUsuarios getCatalogoUsuarios() {
 		return catalogoUsuarios;
@@ -98,9 +95,7 @@ public class AppVideo {
 		return usuarioActual;
 	}
 	
-	
-	
-	
+
 	// Funcionalidad
 	public boolean verificarUsuario(String login, String password) {
 		Usuario usuario = catalogoUsuarios.getUsuario(login);
@@ -149,12 +144,34 @@ public class AppVideo {
 		}	
 		return resultados;
 	}
+	
+	// Modifica los campos del usuarioActual pasados de parámetro 
+	// Solo se modifican los campos que no sean nulos o vacíos
+	public void modificarUsuarioActual(String email, String password, LocalDate fechaNac) {
+		
+		boolean cambiado = false;
+		
+		if (email != null && !email.equals("")) {
+			usuarioActual.setEmail(email);
+			cambiado = true;
+		}
+		
+		if (password != null && !password.equals("")) {
+			usuarioActual.setPassword(password);
+			cambiado = true;
+		}
+		if (fechaNac != null) {
+			usuarioActual.setFechaNac(fechaNac);
+			cambiado = true;
+		}
+		if (cambiado) adaptadorUsuario.modificarUsuario(usuarioActual);
+	}
 
 	
 	// Ahora el usuario será premium
 	public void obtenerPremium() {
 		usuarioActual.setPremium();
-		adaptadorUsuario.modificarUsuario(usuario);
+		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
 	
 	public boolean addEtiquetaVideo(Etiqueta etiqueta, Video video) {

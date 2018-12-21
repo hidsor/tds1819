@@ -1,6 +1,7 @@
 package application.model;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ListaVideos {
@@ -14,6 +15,7 @@ public class ListaVideos {
 	// CONSTRUCTORES
 	public ListaVideos(String nombre) {
 		this.nombre = nombre;
+		videos = new LinkedList<Video>();
 	}
 	
 	

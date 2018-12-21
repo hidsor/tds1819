@@ -1,5 +1,12 @@
 package application.view;
 
+import java.awt.Graphics;
+import java.awt.ScrollPane;
+import java.awt.image.BufferedImage;
+import java.util.Set;
+
+import javax.swing.ImageIcon;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXDialog;
@@ -9,19 +16,27 @@ import com.jfoenix.controls.JFXTextField;
 
 import application.controller.AppVideo;
 import application.model.Usuario;
+import application.model.Video;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 import javafx.scene.Node;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import com.jfoenix.controls.JFXMasonryPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import tds.video.VideoWeb;
 public class ViewController {
 
 	private double oldHeight = 0;
@@ -30,6 +45,7 @@ public class ViewController {
 	private double yOffset = 0;
 	private AppVideo controller = AppVideo.getUnicaInstancia();
 	boolean isProfileOpen = false;
+	private static VideoWeb videoWeb = new VideoWeb();
 	
 	/* STACKPANE EXTERIOR PARA JFXDIALOG */
     @FXML
@@ -93,6 +109,16 @@ public class ViewController {
     @FXML
     private JFXButton profileUpdate, profileLogout;
     
+    /* VENTANA DE EXPLORAR */
+    @FXML
+    private BorderPane exploreView; // Contenedor de la vista de explorar
+    @FXML
+    private JFXMasonryPane exploreContent;
+    @FXML
+    private JFXTextField exploreTitle;
+    @FXML
+    private JFXButton exploreSearch, exploreClear;
+    
     // Manejo de eventos  
     @FXML
     void openLoginView(ActionEvent event) {
@@ -120,10 +146,10 @@ public class ViewController {
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
     	oldFront.setVisible(false);
-    	//test
-    	testwindow.setDisable(false);
-    	testwindow.setVisible(true);
-    	testwindow.toFront();
+    	
+    	exploreView.setDisable(false);
+    	exploreView.setVisible(true);
+    	exploreView.toFront();
     }
 
     @FXML
@@ -163,6 +189,10 @@ public class ViewController {
     		if (controller.verificarUsuario(loginNick.getText(), loginPassword.getText())) {
     			// Login válido
     			openProfileView();
+    			explorar.setDisable(false);
+    			mislistas.setDisable(false);
+    			recientes.setDisable(false);
+    			nuevalista.setDisable(false);
     		} else {
     			// Login inválido
     			showDialog("Login inválido", "El nombre y/o la contraseña son incorrectas");
@@ -234,6 +264,10 @@ public class ViewController {
 					registerSurname.getText(), registerDatePicker.getValue(), registerEmail.getText())) {
     			// Registro válido
     			openProfileView();
+    			explorar.setDisable(false);
+    			mislistas.setDisable(false);
+    			recientes.setDisable(false);
+    			nuevalista.setDisable(false);    			
     		} else {
     			// Registro inválido (shouldn't happen)
     			showDialog("Registro inválido", "No se ha podido registrar al usuario");
@@ -300,22 +334,68 @@ public class ViewController {
 		// Actualizamos elementos
 		login.setText("Mi perfil");
 		profileEmail.setPromptText(usuarioActual.getEmail());
+		profileEmail.setText("");
 		profileNick.setText(usuarioActual.getLogin());
 		profileDatePicker.setPromptText(usuarioActual.getFechaNac().toString());
+		profileDatePicker.setAccessibleText("");
 		profileTitle.setText("Bienvenido, " + usuarioActual.getNombre());
 	}
       
     @FXML
     void profileLogout(ActionEvent event) {
-    	//controller.salirCuenta();
+    	controller.salirUsuario();
     	isProfileOpen = false;
     	login.setText("Log in");
+		explorar.setDisable(true);
+		mislistas.setDisable(true);
+		recientes.setDisable(true);
+		nuevalista.setDisable(true);
     	openLoginView(null);
     }
 
     @FXML
     void profileUpdate(ActionEvent event) {
+    	// Actualiza todos los campos introducidos.
+    	// La comprobación de si un campo contiene información o no se delega al controlador.
+    	// Asimismo, si la contraseña nueva no se escribe dos veces correctamente, no se realizan los cambios
+    	if (profilePassword.getText().equals(profilePassRepeat.getText())) {
+    		controller.modificarUsuarioActual(profileEmail.getText(), profilePassword.getText(), profileDatePicker.getValue());
+    		showDialog("Boop!", "Todos los cambios han sido actualizados :)");
+    		openProfileView();
+    	} else {
+    		showDialog("Cambios inválidos", "Las contraseñas introducidas no coinciden");
+    	}
+    	
+    	
+    }
+
+    @FXML
+    void exploreSearch(ActionEvent event) {
     	//TODO
+    	//controller.buscar(cadena)
+    	Set<Video> videos = controller.buscar(exploreTitle.getText());
+   
+    	for (Video video : videos) {
+    		Label element = new Label();
+    		element.setContentDisplay(ContentDisplay.TOP);
+    		element.setText(video.getTitulo());
+    		ImageIcon icon = videoWeb.getThumb(video.getURL());
+    		BufferedImage bi = new BufferedImage(
+    			    icon.getIconWidth(),
+    			    icon.getIconHeight(),
+    			    BufferedImage.TYPE_INT_RGB);
+    		Graphics g = bi.createGraphics();
+    		icon.paintIcon(null, g, 0,0);
+    		g.dispose();
+    		Image thumbnail = SwingFXUtils.toFXImage(bi, null);
+    		element.setGraphic(new ImageView(thumbnail));
+    		exploreContent.getChildren().add(element);
+    	}
+    }    
+    
+    @FXML
+    void exploreClear(ActionEvent event) {
+    	exploreContent.getChildren().clear();
     }
     
     // Funcionalidad auxiliar
