@@ -13,20 +13,20 @@ import application.persistence.IAdaptadorVideoDAO;
 
 public class CatalogoVideos {
 
-	// ATRIBUTOSç
+	// ATRIBUTOS
 	private Map<String, Video> videos;
 	static private CatalogoVideos unicaInstancia = null;
 	
-	// necesarios para la persistencia
+	// Necesarios para la persistencia
 	private FactoriaDAO dao;
 	private IAdaptadorVideoDAO adaptadorVideo;
 	
-	
+	// Patrón singleton
 	public static CatalogoVideos getUnicaInstancia() {
-		if (unicaInstancia == null)
-			return new CatalogoVideos();
-		else
-			return unicaInstancia;
+		if (unicaInstancia == null) {
+			unicaInstancia = new CatalogoVideos();
+		}
+		return unicaInstancia;
 	}
 	
 	// CONSTRUCTOR

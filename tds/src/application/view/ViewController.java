@@ -1,7 +1,6 @@
 package application.view;
 
 import java.awt.Graphics;
-import java.awt.ScrollPane;
 import java.awt.image.BufferedImage;
 import java.util.Set;
 
@@ -36,7 +35,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import com.jfoenix.controls.JFXMasonryPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -129,7 +127,7 @@ public class ViewController {
     
     // Manejo de eventos  
     @FXML
-    void openLoginView(ActionEvent event) {
+    public void openLoginView(ActionEvent event) {
     	// Ocultamos el elemento que hubiese en el frente
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
@@ -151,7 +149,7 @@ public class ViewController {
     }
 
     @FXML
-    void openExplorarView(ActionEvent event) {
+    public void openExplorarView(ActionEvent event) {
     	// Ocultamos el elemento que hubiese en el frente
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
@@ -164,27 +162,27 @@ public class ViewController {
     }
 
     @FXML
-    void openMislistasView(ActionEvent event) {
+    public void openMislistasView(ActionEvent event) {
     	//TODO
     }
 
     @FXML
-    void openRecientesView(ActionEvent event) {
+    public void openRecientesView(ActionEvent event) {
     	//TODO
     }
 
     @FXML
-    void openNuevalistaView(ActionEvent event) {
+    public void openNuevalistaView(ActionEvent event) {
     	//TODO
     }
 
     @FXML
-    void openPremiumView(ActionEvent event) {
+    public void openPremiumView(ActionEvent event) {
     	//TODO
     }
     
     @FXML
-    void loginEnter(ActionEvent event) {
+    public void loginEnter(ActionEvent event) {
     	// Comprobamos que ambos campos hayan sido introducidos
     	if (loginNick.getText().equals("") || loginPassword.getText().equals("")) {
     		// Si no, mostramos la etiqueta de "*Campo obligatorio" correspondiente
@@ -213,7 +211,7 @@ public class ViewController {
     }
     	
     @FXML
-    void openRegisterView(MouseEvent event) {
+    public void openRegisterView(MouseEvent event) {
     	// Ocultamos el elemento que hubiese en el frente
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
@@ -228,7 +226,7 @@ public class ViewController {
     }
 
     @FXML
-    void registerCancel(ActionEvent event) {
+    public void registerCancel(ActionEvent event) {
     	//TODO: HACE LO MISMO QUE openLoginView pero lo dejo separado de mientras
     	// Ocultamos el elemento que hubiese en el frente
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
@@ -243,7 +241,7 @@ public class ViewController {
     
 
     @FXML
-    void registerUser(ActionEvent event) {
+    public void registerUser(ActionEvent event) {
     	// Comprobamos que ninguno de los campos obligatorios esté vacío.
     	// Si alguno lo está, activamos su etiqueta de "*Campo obligatorio"
     	boolean valid = true;
@@ -291,12 +289,12 @@ public class ViewController {
     }
 
     @FXML
-    void minimizeWindow(ActionEvent event) {
+    public void minimizeWindow(ActionEvent event) {
     	((Stage)((JFXButton)event.getSource()).getScene().getWindow()).setIconified(true);  	
     }
 
     @FXML
-	void maximizeWindow(ActionEvent event) {
+    public void maximizeWindow(ActionEvent event) {
 		Stage stg = ((Stage) ((JFXButton) event.getSource()).getScene().getWindow());
 		// Si la ventana estaba maximizada, restauramos su tamaño anterior
 		if (stg.isMaximized()) {
@@ -312,19 +310,19 @@ public class ViewController {
 	}
 
     @FXML
-    void closeWindow(ActionEvent event) {
+    public void closeWindow(ActionEvent event) {
     	((Stage)((JFXButton)event.getSource()).getScene().getWindow()).close();
     	System.exit(0);
     }
     
     @FXML
-    void saveWindowPosition(MouseEvent event) {
+    public void saveWindowPosition(MouseEvent event) {
         xOffset = event.getSceneX();
         yOffset = event.getSceneY();
     }
     
     @FXML
-    void dragWindow(MouseEvent event) {
+    public void dragWindow(MouseEvent event) {
     	//System.out.println(event.getSource().toString());
     	
     	Region rg = (Region) event.getSource();
@@ -334,7 +332,7 @@ public class ViewController {
         stg.setY(event.getScreenY() - yOffset);
     }
     
-	void openProfileView() {
+    public void openProfileView() {
 		Usuario usuarioActual = controller.getUsuarioActual();
 		isProfileOpen = true;
 		// Escondemos el elemento anterior
@@ -359,7 +357,7 @@ public class ViewController {
 	}
       
     @FXML
-    void profileLogout(ActionEvent event) {
+    public void profileLogout(ActionEvent event) {
     	controller.salirUsuario();
     	isProfileOpen = false;
     	login.setText("Log in");
@@ -372,13 +370,13 @@ public class ViewController {
 
 
     @FXML
-    void loadVideos(ActionEvent event) {
+    public void loadVideos(ActionEvent event) {
     	//TODO: Componente cargador de vídeos
     }
     
     
     @FXML
-    void profileUpdate(ActionEvent event) {
+    public void profileUpdate(ActionEvent event) {
     	// Actualiza todos los campos introducidos.
     	// La comprobación de si un campo contiene información o no se delega al controlador.
     	// Asimismo, si la contraseña nueva no se escribe dos veces correctamente, no se realizan los cambios
@@ -394,10 +392,18 @@ public class ViewController {
     }
 
     @FXML
-    void exploreSearch(ActionEvent event) {
+    public void exploreSearch(ActionEvent event) {
     	Set<Video> videos = controller.buscar(exploreTitle.getText());
-   
+    	boolean ifExists = false;
     	for (Video video : videos) {
+    		for (Node child : exploreContent.getChildren()) {
+    			Label l = (Label) child;
+    			if (l.getText().equals(video.getTitulo())) {
+    				ifExists = true;
+    				break;
+    			}
+    		}
+    		if (ifExists) continue;
     		Label element = new Label();
     		element.setMaxWidth(200.0);
     		element.setMaxHeight(200.0);
@@ -433,20 +439,20 @@ public class ViewController {
     }    
     
     @FXML
-    void exploreClear(ActionEvent event) {
+    public void exploreClear(ActionEvent event) {
     	exploreContent.getChildren().clear();
     }
     
     // Funcionalidad auxiliar
     
     // Ocultar todas las labels de "*Este campo es obligatorio" de la vista del login
-    void hideLoginLabels() {
+    public void hideLoginLabels() {
     	loginLabelNick.setVisible(false);
     	loginLabelPassword.setVisible(false);
     }
     
     // Ocultar todas las labels de "*Este campo es obligatorio" de la vista de registro
-    void hideRegisterLabels() {
+    public void hideRegisterLabels() {
     	registerLabelNick.setVisible(false);
     	registerLabelPassword.setVisible(false);
     	registerLabelPassRepeat.setVisible(false);
@@ -456,7 +462,7 @@ public class ViewController {
     }
     
     // Generar un JFXDialog con un vídeo pasado de parámetro
-    void showVideoDialog(Video video) {
+    public void showVideoDialog(Video video) {
         JFXDialogLayout dialogContent = new JFXDialogLayout(); 
         dialogContent.setHeading(new Text(video.getTitulo()));       
         SwingNode videoComponent = new SwingNode();
@@ -519,7 +525,7 @@ public class ViewController {
     }
     
     // Generar un JFXDialog textual sobre la aplicación
-    void showDialog(String title, String content) {    
+    public void showDialog(String title, String content) {    
         JFXDialogLayout dialogContent = new JFXDialogLayout(); 
         dialogContent.setHeading(new Text(title));       
         dialogContent.setBody(new Text(content));
@@ -545,7 +551,7 @@ public class ViewController {
     
     // Método para hacer una transición de un nodo pasado de parámetro
     // La duración no está parametrizada pero podría parametrizarse también
-    void fadeIn(Node node) {
+    public void fadeIn(Node node) {
 		FadeTransition ft = new FadeTransition(Duration.millis(200), node);
 		ft.setFromValue(0.0);
 		ft.setToValue(1.0);

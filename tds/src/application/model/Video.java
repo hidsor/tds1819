@@ -49,7 +49,6 @@ public class Video {
 		return Collections.unmodifiableSet(etiquetas);
 	}
 
-
 	// FUNCIONALIDAD
 	public boolean addEtiqueta(Etiqueta e) {
 		if (etiquetas == null) {
@@ -68,6 +67,10 @@ public class Video {
 	// Incrementa el contador de reproducciones en uno
 	public void reproducir() {
 		numReproducciones++;
+	}
+	
+	public boolean isTituloLike(String titulo) {
+		return this.titulo.toLowerCase().contains(titulo.toLowerCase());
 	}
 	
 	@Override

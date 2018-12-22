@@ -25,10 +25,10 @@ public class AdaptadorVideo implements IAdaptadorVideoDAO {
 	private static AdaptadorVideo unicaInstancia;
 
 	public static AdaptadorVideo getUnicaInstancia() { // patron singleton
-		if (unicaInstancia == null)
-			return new AdaptadorVideo();
-		else
-			return unicaInstancia;
+		if (unicaInstancia == null) {
+			unicaInstancia = new AdaptadorVideo();
+		}
+		return unicaInstancia;
 	}
 
 	private AdaptadorVideo() { 

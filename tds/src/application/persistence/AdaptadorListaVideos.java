@@ -22,10 +22,10 @@ public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
 	private static AdaptadorListaVideos unicaInstancia;
 
 	public static AdaptadorListaVideos getUnicaInstancia() { // patron singleton
-		if (unicaInstancia == null)
-			return new AdaptadorListaVideos();
-		else
-			return unicaInstancia;
+		if (unicaInstancia == null) {
+			unicaInstancia = new AdaptadorListaVideos();
+		}
+		return unicaInstancia;
 	}
 
 	private AdaptadorListaVideos() { 

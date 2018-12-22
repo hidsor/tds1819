@@ -30,10 +30,10 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 	private static AdaptadorUsuario unicaInstancia = null;
 
 	public static AdaptadorUsuario getUnicaInstancia() { // patron singleton
-		if (unicaInstancia == null)
-			return new AdaptadorUsuario();
-		else
-			return unicaInstancia;
+		if (unicaInstancia == null) {
+			unicaInstancia = new AdaptadorUsuario();
+		}
+		return unicaInstancia;
 	}
 
 	private AdaptadorUsuario() { 

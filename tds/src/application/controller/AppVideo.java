@@ -68,10 +68,9 @@ public class AppVideo {
 	public static AppVideo getUnicaInstancia() {
 		if (unicaInstancia == null) {
 			unicaInstancia = new AppVideo();
-			return unicaInstancia;
-		} else {
-			return unicaInstancia;
+			
 		}
+		return unicaInstancia;
 	}
 
 	// Métodos get
@@ -138,7 +137,7 @@ public class AppVideo {
 		// Recorremos todos los videos. Si el video contiene la cadena que buscamos 
 		// y la condición del filtro se cumple, es un posible resultado.
 		for (Video i : catalogoVideos.getVideos().values()) {
-			if (i.getTitulo().contains(cadena) && filtro.filtrarVideo(usuarioActual, i)) {
+			if (i.isTituloLike(cadena) && filtro.filtrarVideo(usuarioActual, i)) {
 				resultados.add(i);
 			}
 		}	

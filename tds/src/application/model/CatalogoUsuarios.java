@@ -17,10 +17,10 @@ public class CatalogoUsuarios {
 
 	
 	public static CatalogoUsuarios getUnicaInstancia() {
-		if (unicaInstancia == null)
-			return new CatalogoUsuarios();
-		else
-			return unicaInstancia;
+		if (unicaInstancia == null) {
+			unicaInstancia = new CatalogoUsuarios();
+		}
+		return unicaInstancia;
 	}
 	
 	// CONSTRUCTOR
