@@ -18,7 +18,6 @@ public class Video {
 		this.URL = URL;
 		this.titulo = titulo;
 		this.numReproducciones = numReproducciones;
-		etiquetas = new HashSet<Etiqueta>();
 	}
 
 	
@@ -44,16 +43,25 @@ public class Video {
 	}
 
 	public Set<Etiqueta> getEtiquetas() {
+		if (etiquetas == null) {
+			etiquetas = new HashSet<Etiqueta>();
+		}
 		return Collections.unmodifiableSet(etiquetas);
 	}
 
 
 	// FUNCIONALIDAD
 	public boolean addEtiqueta(Etiqueta e) {
+		if (etiquetas == null) {
+			etiquetas = new HashSet<Etiqueta>();
+		}
 		return etiquetas.add(e);
 	}
 
 	public boolean removeEtiqueta(Etiqueta e) {
+		if (etiquetas == null) {
+			etiquetas = new HashSet<Etiqueta>();
+		}
 		return etiquetas.remove(e);
 	}
 	
@@ -61,8 +69,6 @@ public class Video {
 	public void reproducir() {
 		numReproducciones++;
 	}
-	
-	
 	
 	@Override
 	public boolean equals(Object obj) {

@@ -15,12 +15,8 @@ public class ListaVideos {
 	// CONSTRUCTORES
 	public ListaVideos(String nombre) {
 		this.nombre = nombre;
-		videos = new LinkedList<Video>();
 	}
 	
-	
-
-
 	// MÉTODOS DE CONSULTA Y MODIFICADO
 	public int getCodigo() {
 		return codigo;
@@ -43,24 +39,39 @@ public class ListaVideos {
 	}
 
 	public List<Video> getVideos() {
+		if (videos == null) {
+			videos = new LinkedList<Video>();
+		}
 		return Collections.unmodifiableList(videos);
 	}
 	
 	
 	// FUNCIONALIDAD
 	public boolean addVideo(Video video) {
+		if (videos == null) {
+			videos = new LinkedList<Video>();
+		}
 		return videos.add(video);
 	}
 	
 	public Video removeVideo(int index) {
+		if (videos == null) {
+			videos = new LinkedList<Video>();
+		}
 		return videos.remove(index);
 	}
 	
 	public boolean removeVideo(Video video) {
+		if (videos == null) {
+			videos = new LinkedList<Video>();
+		}
 		return videos.remove(video);
 	}
 	
 	public boolean containsVideo(Video video) {
+		if (videos == null) {
+			videos = new LinkedList<Video>();
+		}
 		return videos.contains(video);
 	}
 	

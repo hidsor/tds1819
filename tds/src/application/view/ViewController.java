@@ -15,6 +15,7 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
 import application.controller.AppVideo;
+import application.model.Etiqueta;
 import application.model.Usuario;
 import application.model.Video;
 import javafx.animation.FadeTransition;
@@ -38,6 +39,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import com.jfoenix.controls.JFXMasonryPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -113,7 +115,7 @@ public class ViewController {
     @FXML
     private JFXPasswordField profilePassword, profilePassRepeat;
     @FXML
-    private JFXButton profileUpdate, profileLogout;
+    private JFXButton profileUpdate, profileLogout, profileLoad;
     
     /* VENTANA DE EXPLORAR */
     @FXML
@@ -368,6 +370,13 @@ public class ViewController {
     	openLoginView(null);
     }
 
+
+    @FXML
+    void loadVideos(ActionEvent event) {
+    	//TODO: Componente cargador de vídeos
+    }
+    
+    
     @FXML
     void profileUpdate(ActionEvent event) {
     	// Actualiza todos los campos introducidos.
@@ -386,8 +395,6 @@ public class ViewController {
 
     @FXML
     void exploreSearch(ActionEvent event) {
-    	//TODO
-    	//controller.buscar(cadena)
     	Set<Video> videos = controller.buscar(exploreTitle.getText());
    
     	for (Video video : videos) {
@@ -455,18 +462,46 @@ public class ViewController {
         SwingNode videoComponent = new SwingNode();
         videoComponent.setContent(videoWeb);
         
+        // Contenedor de etiquetas
+        HBox tags = new HBox();
+        tags.setSpacing(5.0);
+        
+        for (Etiqueta tag : video.getEtiquetas()) {
+        	Label l = new Label(tag.getNombre());
+        	l.setStyle("-fx-font: 14 system; -fx-background-color: #efefef; -fx-padding : 2 5 2 5; -fx-font-weight: bold;");
+        	tags.getChildren().add(l);
+        }
+        
+        // Contenedor de añadir nueva etiqueta
+        HBox addTags = new HBox();
+        addTags.setSpacing(10.0);
+        
+        Label addTagsText = new Label("Añadir nueva etiqueta:");
+        addTagsText.setStyle("-fx-text-fill: #000000; -fx-font: 12 system; -fx-font-weight: bold;");
+        JFXTextField addTagsTextField = new JFXTextField();
+        //addTagsTextField.setPromptText("Añadir nueva etiqueta");
+        addTagsTextField.setStyle("-jfx-focus-color: #f51827; -jfx-unfocus-color: #4d4d4d;");
+        
+        addTags.getChildren().addAll(addTagsText, addTagsTextField);
+        
+        // Contenedor del reproductor de vídeos
         VBox body = new VBox();
         body.setSpacing(5.0);
-        body.getChildren().addAll(videoComponent, new Text("Reproducciones: " + video.getNumReproducciones()));
+        body.getChildren().addAll(videoComponent, tags, addTags, new Text("Reproducciones: " + video.getNumReproducciones()));
         dialogContent.setBody(body);
-        dialogContent.setStyle("-fx-font: 14 system;");
+        //dialogContent.setStyle("-fx-font: 14 system; -fx-font-weight: bold;");
         
-        JFXButton close = new JFXButton("Cerrar");          
+        JFXButton close = new JFXButton("Cerrar");  
+        JFXButton add = new JFXButton("Añadir");
         close.setStyle("-fx-background-color: #f6444f; -fx-text-fill: #FFFFFF; -fx-font: 14 system;");
+        add.setStyle("-fx-background-color: #f6444f; -fx-text-fill: #FFFFFF; -fx-font: 14 system;");
         close.setPrefSize(100, 25);
+        add.setPrefSize(100, 25);
         close.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        add.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         
-        dialogContent.setActions(close);
+        
+        dialogContent.setActions(add, close);
         
         JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.BOTTOM);
         
