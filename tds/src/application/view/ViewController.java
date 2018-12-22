@@ -17,17 +17,21 @@ import com.jfoenix.controls.JFXTextField;
 import application.controller.AppVideo;
 import application.model.Usuario;
 import application.model.Video;
+import javafx.animation.FadeTransition;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -36,6 +40,7 @@ import com.jfoenix.controls.JFXMasonryPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import tds.video.VideoWeb;
 public class ViewController {
@@ -134,10 +139,12 @@ public class ViewController {
         	loginView.setVisible(true);
         	loginView.toFront();
         	hideLoginLabels();
+        	fadeIn(loginView);
     	} else {
-    		profileView.setVisible(true);
     		profileView.setDisable(false);
-    		profileView.toFront();
+        	profileView.setVisible(true);
+        	profileView.toFront();
+        	fadeIn(profileView);
     	}
     }
 
@@ -151,6 +158,7 @@ public class ViewController {
     	exploreView.setDisable(false);
     	exploreView.setVisible(true);
     	exploreView.toFront();
+    	fadeIn(exploreView);
     }
 
     @FXML
@@ -188,6 +196,7 @@ public class ViewController {
     	} else {
     		// Hay datos introducidos, intentamos identificarnos.
     		if (controller.verificarUsuario(loginNick.getText(), loginPassword.getText())) {
+		
     			// Login válido
     			openProfileView();
     			explorar.setDisable(false);
@@ -213,10 +222,12 @@ public class ViewController {
     	registerView.toFront(); 	
     	// Ocultamos todas las etiquetas de "*Campo obligatorio" del registro
     	hideRegisterLabels();
+    	fadeIn(registerView);
     }
 
     @FXML
     void registerCancel(ActionEvent event) {
+    	//TODO: HACE LO MISMO QUE openLoginView pero lo dejo separado de mientras
     	// Ocultamos el elemento que hubiese en el frente
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
@@ -225,6 +236,7 @@ public class ViewController {
     	loginView.setDisable(false);
     	loginView.setVisible(true);
     	loginView.toFront();
+    	fadeIn(loginView);
     }
     
 
@@ -300,6 +312,7 @@ public class ViewController {
     @FXML
     void closeWindow(ActionEvent event) {
     	((Stage)((JFXButton)event.getSource()).getScene().getWindow()).close();
+    	System.exit(0);
     }
     
     @FXML
@@ -327,11 +340,12 @@ public class ViewController {
 		oldFront.setDisable(true);
 		oldFront.setVisible(false);
 
-		// Hacemos la vista visible
+		// Hacemos la vista visible con una transición
 		profileView.setVisible(true);
 		profileView.setDisable(false);
 		profileView.toFront();
-
+		fadeIn(profileView);
+		
 		// Actualizamos elementos
 		login.setText("Mi perfil");
 		profileEmail.setPromptText(usuarioActual.getEmail());
@@ -361,7 +375,7 @@ public class ViewController {
     	// Asimismo, si la contraseña nueva no se escribe dos veces correctamente, no se realizan los cambios
     	if (profilePassword.getText().equals(profilePassRepeat.getText())) {
     		controller.modificarUsuarioActual(profileEmail.getText(), profilePassword.getText(), profileDatePicker.getValue());
-    		showDialog("Boop!", "Todos los cambios han sido actualizados :)");
+    		//showDialog("Boop!", "Todos los cambios han sido actualizados :)");
     		openProfileView();
     	} else {
     		showDialog("Cambios inválidos", "Las contraseñas introducidas no coinciden");
@@ -383,9 +397,18 @@ public class ViewController {
     		element.setPrefWidth(200.0);
     		element.setPrefHeight(150.0);
     		element.setAlignment(Pos.CENTER);
-    		element.setOnMouseEntered(e1 -> element.setStyle("-fx-background-color: #cfcfcf"));
-    		element.setOnMouseExited(e1 -> element.setStyle(""));
-    		element.setOnMouseClicked(e1 -> showDialog("HE SIDO CONVOCADO", "MI NOMBRE ES " + element.getText()));
+    		element.setOnMouseEntered(e -> element.setStyle("-fx-background-color: #cfcfcf"));
+    		element.setOnMouseExited(e -> element.setStyle(""));
+    		element.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    		    @Override
+    		    public void handle(MouseEvent mouseEvent) {
+    		        if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+    		            if(mouseEvent.getClickCount() == 2){
+    		            	showVideoDialog(video);
+    		            }
+    		        }
+    		    }
+    		});
     		element.setContentDisplay(ContentDisplay.TOP);
     		element.setText(video.getTitulo());
     		ImageIcon icon = videoWeb.getThumb(video.getURL());
@@ -425,7 +448,42 @@ public class ViewController {
     	
     }
     
-    // Generar un JFXDialog sobre la aplicación
+    // Generar un JFXDialog con un vídeo pasado de parámetro
+    void showVideoDialog(Video video) {
+        JFXDialogLayout dialogContent = new JFXDialogLayout(); 
+        dialogContent.setHeading(new Text(video.getTitulo()));       
+        SwingNode videoComponent = new SwingNode();
+        videoComponent.setContent(videoWeb);
+        
+        VBox body = new VBox();
+        body.setSpacing(5.0);
+        body.getChildren().addAll(videoComponent, new Text("Reproducciones: " + video.getNumReproducciones()));
+        dialogContent.setBody(body);
+        dialogContent.setStyle("-fx-font: 14 system;");
+        
+        JFXButton close = new JFXButton("Cerrar");          
+        close.setStyle("-fx-background-color: #f6444f; -fx-text-fill: #FFFFFF; -fx-font: 14 system;");
+        close.setPrefSize(100, 25);
+        close.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        
+        dialogContent.setActions(close);
+        
+        JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.BOTTOM);
+        
+        close.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent __) {
+                dialog.close();
+                videoWeb.cancel();
+            }
+        });
+        //controller.reproducir(video); <---- Descomentar cuando tengamos el cargador de vídeos
+        									// Porque estoy injertando vídeos de momento y si los modifico puede que se líe
+        videoWeb.playVideo(video.getURL());
+        dialog.show();   	
+    }
+    
+    // Generar un JFXDialog textual sobre la aplicación
     void showDialog(String title, String content) {    
         JFXDialogLayout dialogContent = new JFXDialogLayout(); 
         dialogContent.setHeading(new Text(title));       
@@ -448,5 +506,14 @@ public class ViewController {
             }
         });
         dialog.show();
+    }
+    
+    // Método para hacer una transición de un nodo pasado de parámetro
+    // La duración no está parametrizada pero podría parametrizarse también
+    void fadeIn(Node node) {
+		FadeTransition ft = new FadeTransition(Duration.millis(200), node);
+		ft.setFromValue(0.0);
+		ft.setToValue(1.0);
+		ft.play();
     }
 }

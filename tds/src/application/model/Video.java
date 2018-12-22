@@ -57,6 +57,11 @@ public class Video {
 		return etiquetas.remove(e);
 	}
 	
+	// Incrementa el contador de reproducciones en uno
+	public void reproducir() {
+		numReproducciones++;
+	}
+	
 	
 	
 	@Override

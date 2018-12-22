@@ -79,7 +79,7 @@ public class CatalogoVideos {
 		Video v1 = new Video("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "Rick Astley - Never Gonna Give You Up (Video)", 1337);
 		Video v2 = new Video("https://www.youtube.com/watch?v=QiFBgtgUtfw", "KOLM TRIIPU / THREE STRIPES", 1238);
 		Video v3 = new Video("https://www.youtube.com/watch?v=FTrxDBDBOHU", "Obi-Wan says \"Hello There\" 67 million times", 1339);
-		Video v4 = new Video("https://www.youtube.com/watch?v=FTQbiNvZqaY", "Toto - Africa (Official Music Video)", 1344);
+		Video v4 = new Video("https://www.youtube.com/watch?v=wGjtv2jHKrg", "Toto - Africa", 42);
 		Video v5 = new Video("https://www.youtube.com/watch?v=KsomXlyTyaQ", "Matt & Kim - Yea Yeah", 1123);
 		
 		addVideo(v1);

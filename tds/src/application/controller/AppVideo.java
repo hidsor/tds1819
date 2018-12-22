@@ -207,7 +207,10 @@ public class AppVideo {
 	}
 	
 	public void reproducir(Video video) {
-		// Aquí, con el componente que debemos disenar, reproduciremos el video
+		// Simplemente incrementamos el número de visitas del vídeo y lo persistimos
+		video.reproducir();
+		adaptadorVideo.modificarVideo(video);
+		
 	}
 	
 	public void crearPDF() {
