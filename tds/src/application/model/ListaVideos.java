@@ -5,19 +5,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ListaVideos {
-	// ATRIBUTOS
+	
+	// Atributos
 	private int codigo;
 	private String nombre;
 	// private int numVideos;	<- Atributo calculado
 	private List<Video> videos;	
 	
-	
-	// CONSTRUCTORES
+	// Constructor
 	public ListaVideos(String nombre) {
 		this.nombre = nombre;
 	}
 	
-	// MÉTODOS DE CONSULTA Y MODIFICADO
+	// Métodos de consulta y modificado
 	public int getCodigo() {
 		return codigo;
 	}
@@ -44,9 +44,8 @@ public class ListaVideos {
 		}
 		return Collections.unmodifiableList(videos);
 	}
-	
-	
-	// FUNCIONALIDAD
+
+	// Funcionalidad
 	public boolean addVideo(Video video) {
 		if (videos == null) {
 			videos = new LinkedList<Video>();
@@ -76,12 +75,9 @@ public class ListaVideos {
 	}
 	
 	public void reproducirLista() {
-		for (Video i : videos) {
-			// TODO
-			// reproducirVideo();
-		}
+		//for (Video i : videos) {
+			// TODO <--- ¿? Vlad no entender este método
+			// reproducirVideo(); 
+		//}
 	}
-	
-
-
 }

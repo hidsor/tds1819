@@ -10,23 +10,22 @@ import application.model.*;
 import application.persistence.*;
 
 public class AppVideo {
+
 	// Atributos
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
 	private IAdaptadorVideoDAO adaptadorVideo;
 	private IAdaptadorListaVideosDAO adaptadorListaVideos;
-	
+
 	private CatalogoUsuarios catalogoUsuarios;
 	private CatalogoVideos catalogoVideos;
 	private ListaVideos topten;
 	private Set<Etiqueta> listaEtiquetas;
-	
+
 	private Usuario usuarioActual; // Para saber quién está usando la aplicación
-	
+
 	// Patrón singleton
 	private static AppVideo unicaInstancia = null;
-	
-	
-	
+
 	// Constructor
 	private AppVideo() {
 		// Cargamos los adaptadores
@@ -39,83 +38,87 @@ public class AppVideo {
 		} catch (DAOException e) {
 			e.printStackTrace();
 		}
-		
+
 		// Cargamos todos los elementos del controlador
 		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
 		catalogoVideos = CatalogoVideos.getUnicaInstancia();
-		
+
 		// Obtenemos una lista con todos los vídeos del sistema
 		List<Video> videos = new LinkedList<Video>(catalogoVideos.getVideos().values());
-		
-		// Topten videos
+
+		// Inicialización de los 10 vídeos más visualizados del sistema
 		topten = new ListaVideos("topten");
-		videos.sort( (v1, v2) -> { return ((Integer)(-v1.getNumReproducciones())).compareTo(-v2.getNumReproducciones()); } );
+		// Ordenamos los vídeos por número de reproducciones
+		// TODO: Por qué pones un - a las reproducciones ????
+		videos.sort((v1, v2) -> {
+			return ((Integer) (-v1.getNumReproducciones())).compareTo(-v2.getNumReproducciones());
+		});
+
+		// Añadimos los 10 vídeos más reproducidos
 		for (int i = 0; i < 10 && i < videos.size(); i++)
 			catalogoVideos.addVideo(videos.get(i));
-		
 
 		// Conjunto de etiquetas
-		// Recorremos todos los videos añadiendo todas las etiquetas de cada uno al conjunto
+		// Recorremos todos los videos añadiendo todas las etiquetas de cada uno al
+		// conjunto
 		listaEtiquetas = new HashSet<Etiqueta>();
 		for (Video i : videos) {
 			listaEtiquetas.addAll(i.getEtiquetas());
 		}
-		
-		
 	}
-	
+
 	// Patrón singleton
 	public static AppVideo getUnicaInstancia() {
 		if (unicaInstancia == null) {
 			unicaInstancia = new AppVideo();
-			
 		}
 		return unicaInstancia;
 	}
 
-	// Métodos get
+	// Métodos de consulta
 	public CatalogoUsuarios getCatalogoUsuarios() {
 		return catalogoUsuarios;
 	}
-	
+
 	public CatalogoVideos getCatalogoVideos() {
 		return catalogoVideos;
 	}
-	
+
 	public ListaVideos getTopten() {
 		return topten;
 	}
-	
+
 	public Set<Etiqueta> getListaEtiquetas() {
 		return listaEtiquetas;
 	}
-	
+
 	public Usuario getUsuarioActual() {
 		return usuarioActual;
 	}
-	
 
 	// Funcionalidad
 	public boolean verificarUsuario(String login, String password) {
+		// Buscamos el usuario en el catálogo
 		Usuario usuario = catalogoUsuarios.getUsuario(login);
-		// Si el usuario no está registrado, devuelve falso
-		if (usuario == null)
+
+		// Si el usuario no está registrado, el login es válido
+		if (usuario == null) {
 			return false;
-		
-		// Si está registrado y la contraseña es correcta, devuelve verdadero
+		}
+
+		// Si está registrado y la contraseña es correcta, el login es válido
 		if (usuario.getPassword().equals(password)) {
 			usuarioActual = usuario;
 			return true;
 		}
-		
-		// Si está registrado, pero la contraseña no es correcta, devuelve falso.
-		else
-			return false;
+		// Si está registrado, pero la contraseña no es correcta, el login es inválido
+		return false;
 	}
 
 	// Devuelve verdadero si se ha podido registrar.
 	// Devuelve falso si no (ya hay alguien con ese login en el sistema)
-	public boolean registrarUsuario(String login, String password, String nombre, String apellidos, LocalDate fechaNac, String email) {
+	public boolean registrarUsuario(String login, String password, String nombre, String apellidos, LocalDate fechaNac,
+			String email) {
 		Usuario usuario = new Usuario(login, password, nombre, apellidos, fechaNac, email);
 		if (catalogoUsuarios.addUsuario(usuario)) {
 			adaptadorUsuario.registrarUsuario(usuario);
@@ -124,37 +127,36 @@ public class AppVideo {
 		}
 		return false;
 	}
-	
+
+	// Notificar al controlador de que el usuario hace logout del sistema
 	public void salirUsuario() {
 		usuarioActual = null;
 	}
-	
-	// Busca un video
-	public Set<Video> buscar(String cadena) {
+
+	// Buscar un vídeo que contenga la cadena pasada de parámetro (case insensitive)
+	public Set<Video> buscarVideos(String cadena) {
 		Set<Video> resultados = new HashSet<>();
 		Filtro filtro = usuarioActual.getFiltro();
-		
-		// Recorremos todos los videos. Si el video contiene la cadena que buscamos 
+
+		// Recorremos todos los videos. Si el video contiene la cadena que buscamos
 		// y la condición del filtro se cumple, es un posible resultado.
 		for (Video i : catalogoVideos.getVideos().values()) {
-			if (i.isTituloLike(cadena) && filtro.filtrarVideo(usuarioActual, i)) {
+			if (i.contieneTitulo(cadena) && filtro.filtrarVideo(usuarioActual, i)) {
 				resultados.add(i);
 			}
-		}	
+		}
 		return resultados;
 	}
-	
-	// Modifica los campos del usuarioActual pasados de parámetro 
+
+	// Modifica los campos del usuarioActual pasados de parámetro
 	// Solo se modifican los campos que no sean nulos o vacíos
 	public void modificarUsuarioActual(String email, String password, LocalDate fechaNac) {
-		
 		boolean cambiado = false;
-		
+
 		if (email != null && !email.equals("")) {
 			usuarioActual.setEmail(email);
 			cambiado = true;
 		}
-		
 		if (password != null && !password.equals("")) {
 			usuarioActual.setPassword(password);
 			cambiado = true;
@@ -163,60 +165,59 @@ public class AppVideo {
 			usuarioActual.setFechaNac(fechaNac);
 			cambiado = true;
 		}
-		if (cambiado) adaptadorUsuario.modificarUsuario(usuarioActual);
+		if (cambiado)
+			adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
 
-	
-	// Ahora el usuario será premium
+	// Convertir un usuario en premium
 	public void obtenerPremium() {
 		usuarioActual.setPremium();
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
-	
+
 	public boolean addEtiquetaVideo(Etiqueta etiqueta, Video video) {
 		video.addEtiqueta(etiqueta);
 		listaEtiquetas.add(etiqueta);
 		adaptadorVideo.modificarVideo(video);
 		return true;
 	}
-	
+
 	public void crearListaVideos(String nombre) {
 		ListaVideos listaVideos = new ListaVideos(nombre);
 		usuarioActual.addListaVideos(listaVideos);
 		adaptadorListaVideos.registrarListaVideos(listaVideos);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
-	
+
 	public void borrarListaVideos(ListaVideos listaVideos) {
 		usuarioActual.removeListaVideos(listaVideos);
 		adaptadorListaVideos.borrarListaVideos(listaVideos);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
-	
+
 	public boolean addVideoALista(Video video, ListaVideos listaVideos) {
 		listaVideos.addVideo(video);
 		adaptadorListaVideos.modificarListaVideos(listaVideos);
 		return true;
 	}
-	
+
 	public boolean removeVideoDeLista(Video video, ListaVideos listaVideos) {
 		listaVideos.removeVideo(video);
 		adaptadorListaVideos.modificarListaVideos(listaVideos);
 		return true;
 	}
-	
+
 	public void reproducir(Video video) {
 		// Simplemente incrementamos el número de visitas del vídeo y lo persistimos
 		video.reproducir();
 		adaptadorVideo.modificarVideo(video);
-		
+
 	}
-	
+
 	public void crearPDF() {
 		// TODO
-		// Como ostias se usa iText???
+		// Como ostias se usa iText??? <- con cuidao
 		// Nombro rey de toda Inglaterra a quien lo consiga
 	}
-	
-	
+
 }

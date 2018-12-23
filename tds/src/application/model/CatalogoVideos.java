@@ -2,10 +2,8 @@ package application.model;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import application.persistence.DAOException;
 import application.persistence.FactoriaDAO;
@@ -13,7 +11,7 @@ import application.persistence.IAdaptadorVideoDAO;
 
 public class CatalogoVideos {
 
-	// ATRIBUTOS
+	// Atributos
 	private Map<String, Video> videos;
 	static private CatalogoVideos unicaInstancia = null;
 	
@@ -29,7 +27,7 @@ public class CatalogoVideos {
 		return unicaInstancia;
 	}
 	
-	// CONSTRUCTOR
+	// Constructor
 	private CatalogoVideos() {
 		try {
 			dao = FactoriaDAO.getInstancia();
@@ -41,16 +39,12 @@ public class CatalogoVideos {
 		}
 	}
 	
-	
-	// MÉTODOS DE CONSULTA
+	// Métodos de consulta
 	public Map<String, Video> getVideos() {
 		return Collections.unmodifiableMap(videos);
-		
-		//return new HashMap<String, Video>(videos);
 	}
 
-
-	//FUNCIONALIDAD
+	// Funcionalidad
 	public boolean addVideo(Video video) {
 		if (videos.get(video.getURL()) != null) return false;
 		videos.put(video.getURL(), video);
@@ -67,15 +61,14 @@ public class CatalogoVideos {
 	boolean removeVideo(Video video) {
 		return videos.remove(video.getURL()) != null;
 	}
-	
-	
+
 	// Carga los videos de la base de datos en el conjunto;
 	private void cargarCatalogo() throws DAOException {
 		List<Video> videosBD = adaptadorVideo.recuperarTodosVideos();
 		for (Video v : videosBD)
 			videos.put(v.getURL(), v);
 		
-		//hocus pocus
+		// hocus pocus temporal
 		Video v1 = new Video("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "Rick Astley - Never Gonna Give You Up (Video)", 1337);
 		v1.addEtiqueta(new Etiqueta("Music"));
 		v1.addEtiqueta(new Etiqueta("Meme"));

@@ -78,7 +78,7 @@
                         </JFXButton>
                         <JFXButton id="registerCancel" fx:id="registerCancel" onAction="#registerCancel" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Cancelar" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
                            <font>
-                              <Font size="18.0" />
+                              <Font name="System Bold" size="18.0" />
                            </font>
                         </JFXButton>
                      </children>
