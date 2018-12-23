@@ -7,23 +7,24 @@ import java.util.Map;
 import application.persistence.*;
 
 public class CatalogoUsuarios {
-	// ATRIBUTOS
+
+	// Atributos
 	private Map<String, Usuario> usuarios;
 	private static CatalogoUsuarios unicaInstancia = null;
-	
-	// necesarios para la persistencia
+
+	// Necesarios para la persistencia
 	private FactoriaDAO dao;
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
 
-	
+	// Patrón singleton
 	public static CatalogoUsuarios getUnicaInstancia() {
-		if (unicaInstancia == null)
-			return new CatalogoUsuarios();
-		else
-			return unicaInstancia;
+		if (unicaInstancia == null) {
+			unicaInstancia = new CatalogoUsuarios();
+		}
+		return unicaInstancia;
 	}
-	
-	// CONSTRUCTOR
+
+	// Constructor
 	private CatalogoUsuarios() {
 		try {
 			dao = FactoriaDAO.getInstancia();
@@ -34,31 +35,30 @@ public class CatalogoUsuarios {
 			eDAO.printStackTrace();
 		}
 	}
-	
-	// MÉTODOS GET
-	
+
+	// Métodos de consulta
 	public Usuario getUsuario(String login) {
 		return usuarios.get(login);
 	}
 
-
-	//FUNCIONALIDAD
+	// Funcionalidad
 	public boolean addUsuario(Usuario usuario) {
 		// Imitamos un set
-		if (usuarios.get(usuario.getLogin()) != null) return false;
+		if (usuarios.get(usuario.getLogin()) != null) {
+			return false;
+		}
 		usuarios.put(usuario.getLogin(), usuario);
 		return true;
 	}
-	
+
 	public void removeUsuario(Usuario usuario) {
 		usuarios.remove(usuario.getLogin());
 	}
-	
+
 	private void cargarCatalogo() throws DAOException {
 		List<Usuario> usuariosBD = adaptadorUsuario.recuperarTodosUsuarios();
 		for (Usuario u : usuariosBD)
 			usuarios.put(u.getLogin(), u);
 	}
-	
 
 }

@@ -15,7 +15,8 @@ import beans.Entidad;
 import beans.Propiedad;
 
 public class AdaptadorVideo implements IAdaptadorVideoDAO {
-	// Constantes
+	
+	// Constantes y atributos
 	public static final String propURL = "URL";
 	public static final String propTitulo = "titulo";
 	public static final String propNumReproducciones = "num de reproducciones";
@@ -24,21 +25,23 @@ public class AdaptadorVideo implements IAdaptadorVideoDAO {
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorVideo unicaInstancia;
 
-	public static AdaptadorVideo getUnicaInstancia() { // patron singleton
-		if (unicaInstancia == null)
-			return new AdaptadorVideo();
-		else
-			return unicaInstancia;
+	// Patrón singleton
+	public static AdaptadorVideo getUnicaInstancia() {
+		if (unicaInstancia == null) {
+			unicaInstancia = new AdaptadorVideo();
+		}
+		return unicaInstancia;
 	}
 
 	private AdaptadorVideo() { 
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
 
-	/* cuando se registra un video se le asigna un identificador unico */
 	public void registrarVideo(Video video) {
+		// Cuando se registra un vídeo se le asigna un identificador único
 		Entidad eVideo;
-		// Si la entidad está registrada no la registra de nuevo
+		
+		// Si la entidad está registrada no se registra de nuevo
 		boolean existe = true; 
 		try {
 			eVideo = servPersistencia.recuperarEntidad(video.getCodigo());
@@ -47,9 +50,7 @@ public class AdaptadorVideo implements IAdaptadorVideoDAO {
 		}
 		if (existe) return;
 		
-		// Crear entidad video
 		eVideo = new Entidad();
-
 		eVideo.setNombre("video");
 		eVideo.setPropiedades(new ArrayList<Propiedad>(
 				Arrays.asList(
@@ -60,15 +61,12 @@ public class AdaptadorVideo implements IAdaptadorVideoDAO {
 				)
 		));
 		
-		// registrar entidad video
 		eVideo = servPersistencia.registrarEntidad(eVideo);
 		
-		// asignar identificador unico
-		// Se aprovecha el que genera el servicio de persistencia
+		// Se aprovecha el identificador único que genera el servicio de persistencia
 		video.setCodigo(eVideo.getId()); 	
 	}
 
-	
 	public void borrarVideo(Video video) {	
 		Entidad eVideo = servPersistencia.recuperarEntidad(video.getCodigo());
 		servPersistencia.borrarEntidad(eVideo);
@@ -76,7 +74,6 @@ public class AdaptadorVideo implements IAdaptadorVideoDAO {
 
 	public void modificarVideo(Video video) {
 		Entidad eVideo;
-
 		eVideo = servPersistencia.recuperarEntidad(video.getCodigo());
 		actualizarPropiedadEntidad(eVideo, propURL, video.getURL());
 		actualizarPropiedadEntidad(eVideo, propTitulo, video.getTitulo());
@@ -85,32 +82,27 @@ public class AdaptadorVideo implements IAdaptadorVideoDAO {
 	}
 
 	public Video recuperarVideo(int codigo) {
-		// Si la entidad esta en el pool la devuelve directamente
+		// Si la entidad está en el pool se devuelve directamente
 		if (PoolDAO.getUnicaInstancia().contiene(codigo))
 			return (Video) PoolDAO.getUnicaInstancia().getObjeto(codigo);
 
-		// si no, la recupera de la base de datos
-		// recuperar entidad
+		// Si no, se recupera de la base de datos
 		Entidad eVideo = servPersistencia.recuperarEntidad(codigo);
 
-		// recuperar propiedades que no son objetos
-		// nombre
+		// Recuperar propiedades que no son objetos
 		String URL = servPersistencia.recuperarPropiedadEntidad(eVideo, propURL);
 		String titulo = servPersistencia.recuperarPropiedadEntidad(eVideo, propTitulo);
 		int numReproducciones = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eVideo, propTitulo));
-		
 		
 		Video video = new Video(URL, titulo, numReproducciones);
 		video.setCodigo(codigo);
 		Set<Etiqueta> etiquetas = obtenerEtiquetasDesdeString(servPersistencia.recuperarPropiedadEntidad(eVideo, propEtiquetas));
 		for (Etiqueta i : etiquetas) {
 			video.addEtiqueta(i);
-		}
+		}	
 		
-		// Anadimos el objeto al pool
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, video);
-
-		// devolver el objeto video
+		
 		return video;
 	}
 
@@ -124,14 +116,13 @@ public class AdaptadorVideo implements IAdaptadorVideoDAO {
 		return listasVideos;
 	}
 
-	// -------------------Funciones auxiliares-----------------------------
+	// Funcionalidad auxiliar
 	private String obtenerStringEtiquetas(Set<Etiqueta> etiquetas) {
 		String lineas = "";
 		for (Etiqueta i : etiquetas) {
 			lineas += i.getNombre() + " ";
 		}
 		return lineas.trim();
-
 	}
 	
 	private Set<Etiqueta> obtenerEtiquetasDesdeString(String lineas) {
@@ -140,7 +131,6 @@ public class AdaptadorVideo implements IAdaptadorVideoDAO {
 		while (strTok.hasMoreTokens()) {
 			etiquetas.add( new Etiqueta((String) strTok.nextElement()));
 		}
-		
 		return etiquetas;
 	}
 	

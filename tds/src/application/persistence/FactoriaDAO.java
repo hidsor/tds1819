@@ -1,8 +1,9 @@
 package application.persistence;
 
-//Define una factoria abstracta que devuelve todos los DAO de la aplicacion
+// Define una factoría abstracta que devuelve todos los DAO de la aplicación
 
 public abstract class FactoriaDAO {
+	// Atributos
 	private static FactoriaDAO unicaInstancia;
 	
 	public static final String DAO_TDS = "application.persistence.TDSFactoriaDAO";
@@ -25,13 +26,11 @@ public abstract class FactoriaDAO {
 	public static FactoriaDAO getInstancia() throws DAOException{
 			if (unicaInstancia == null) return getInstancia (FactoriaDAO.DAO_TDS);
 					else return unicaInstancia;
-		}
+	}
 
-	/* Constructor */
 	protected FactoriaDAO (){}
 		
-		
-	// Metodos factoria que devuelven adaptadores que implementen estos interfaces
+	// Metodos factoría que devuelven adaptadores que implementen estas interfaces
 	public abstract IAdaptadorUsuarioDAO getUsuarioDAO();
 	public abstract IAdaptadorListaVideosDAO getListaVideosDAO();
 	public abstract IAdaptadorVideoDAO getVideoDAO();

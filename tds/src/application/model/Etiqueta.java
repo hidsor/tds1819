@@ -1,17 +1,16 @@
 package application.model;
 
 public class Etiqueta {
-	// ATRIBUTOS
+
+	// Atributos
 	private String nombre;
-	
-	
-	// CONSTRUCTOR
+
+	// Constructor
 	public Etiqueta(String nombre) {
 		this.nombre = nombre;
 	}
 
-	
-	// MÉTODOS DE CONSULTA
+	// Métodos de consulta
 	public String getNombre() {
 		return nombre;
 	}
