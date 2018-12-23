@@ -5,24 +5,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Video {
+
+	// Atributos
 	private int codigo;
 	private String URL;
 	private String titulo;
 	private int numReproducciones;
 	private Set<Etiqueta> etiquetas;
-	
-	
+
+	// Constructor
 	public Video(String URL, String titulo, int numReproducciones) {
 		super();
 		this.codigo = 0;
 		this.URL = URL;
 		this.titulo = titulo;
 		this.numReproducciones = numReproducciones;
-		etiquetas = new HashSet<Etiqueta>();
 	}
 
-	
-
+	// Métodos de consulta
 	public int getCodigo() {
 		return codigo;
 	}
@@ -44,41 +44,56 @@ public class Video {
 	}
 
 	public Set<Etiqueta> getEtiquetas() {
+		if (etiquetas == null) {
+			etiquetas = new HashSet<Etiqueta>();
+		}
 		return Collections.unmodifiableSet(etiquetas);
 	}
 
-
-	// FUNCIONALIDAD
+	// Funcionalidad
 	public boolean addEtiqueta(Etiqueta e) {
+		if (etiquetas == null) {
+			etiquetas = new HashSet<Etiqueta>();
+		}
 		return etiquetas.add(e);
 	}
 
 	public boolean removeEtiqueta(Etiqueta e) {
+		if (etiquetas == null) {
+			etiquetas = new HashSet<Etiqueta>();
+		}
 		return etiquetas.remove(e);
 	}
-	
-	
-	
+
+	public void reproducir() {
+		// Incrementa el contador de reproducciones en uno
+		numReproducciones++;
+	}
+
+	public boolean contieneTitulo(String titulo) {
+		return this.titulo.toLowerCase().contains(titulo.toLowerCase());
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null) 
+		if (obj == null)
 			return false;
 		if (this.getClass() != obj.getClass())
 			return false;
-		
+
 		Video otro = (Video) obj;
-		
-		return URL.equals(otro.URL);		
+
+		return URL.equals(otro.URL);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return URL.hashCode();
 	}
 
-
+	// TODO: Qué es esto enrique
 	public Object compareRep(Video otro) {
 		// TODO Auto-generated method stub
 		return null;

@@ -1,31 +1,26 @@
 package application.model;
 
-
-
 public class RolPremium {
-	// ATRIBUTOS
+
+	// Atributos
 	private Filtro filtroPremium;
-	
-	
-	// CONSTRUCTOR
+
+	// Constructores
 	public RolPremium(Filtro filtroPremium) {
 		this.filtroPremium = filtroPremium;
 	}
-	
+
 	public RolPremium() {
 		this(new NoFiltro());
 	}
 
-
-	// MÉTODO DE OBTENCIÓN
+	// Métodos de consulta
 	public Filtro getFiltro() {
 		return filtroPremium;
 	}
-	
+
 	public void setFiltro(Filtro filtroPremium) {
 		this.filtroPremium = filtroPremium;
 	}
-
-	
-	// FUNCIONALIDAD
+	// Funcionalidad
 }

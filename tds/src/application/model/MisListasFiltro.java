@@ -11,7 +11,7 @@ public class MisListasFiltro implements Filtro {
 			if (lv.containsVideo(video))
 				return false;
 		}
-		return true;		
+		return true;
 	}
 
 }

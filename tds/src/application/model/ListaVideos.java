@@ -5,23 +5,20 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ListaVideos {
-	// ATRIBUTOS
+	
+	// Atributos
 	private int codigo;
 	private String nombre;
 	// private int numVideos;	<- Atributo calculado
 	private List<Video> videos;	
 	
-	
-	// CONSTRUCTORES
+	// Constructor
 	public ListaVideos(String nombre) {
 		this.nombre = nombre;
 		videos = new LinkedList<Video>();
 	}
 	
-	
-
-
-	// MÉTODOS DE CONSULTA Y MODIFICADO
+	// Mï¿½todos de consulta y modificado
 	public int getCodigo() {
 		return codigo;
 	}
@@ -43,24 +40,38 @@ public class ListaVideos {
 	}
 
 	public List<Video> getVideos() {
+		if (videos == null) {
+			videos = new LinkedList<Video>();
+		}
 		return Collections.unmodifiableList(videos);
 	}
-	
-	
-	// FUNCIONALIDAD
+
+	// Funcionalidad
 	public boolean addVideo(Video video) {
+		if (videos == null) {
+			videos = new LinkedList<Video>();
+		}
 		return videos.add(video);
 	}
 	
 	public Video removeVideo(int index) {
+		if (videos == null) {
+			videos = new LinkedList<Video>();
+		}
 		return videos.remove(index);
 	}
 	
 	public boolean removeVideo(Video video) {
+		if (videos == null) {
+			videos = new LinkedList<Video>();
+		}
 		return videos.remove(video);
 	}
 	
 	public boolean containsVideo(Video video) {
+		if (videos == null) {
+			videos = new LinkedList<Video>();
+		}
 		return videos.contains(video);
 	}
 	
