@@ -257,6 +257,14 @@ public class AppVideo implements VideosListener {
 			registrarVideo(i);
 		}
 	}
+
+	
+	
+	
+	
+	
+	
+	
 	
 	private List<Video> adaptarVideos(Videos videos) {
 		List<Video> videosAdaptados = new LinkedList<Video>();

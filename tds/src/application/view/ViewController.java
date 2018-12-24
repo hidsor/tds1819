@@ -2,6 +2,9 @@ package application.view;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
@@ -10,6 +13,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
+import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
@@ -18,6 +22,8 @@ import application.model.Etiqueta;
 import application.model.Usuario;
 import application.model.Video;
 import javafx.animation.FadeTransition;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
@@ -29,6 +35,7 @@ import javafx.util.Duration;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -126,6 +133,9 @@ public class ViewController {
     private JFXTextField exploreTitle;
     @FXML
     private JFXButton exploreSearch, exploreClear;
+    @FXML 
+    private JFXListView<String> tags = new JFXListView<String>();	// Contiene todas las etiquetas disponibles
+    private ObservableList<String> listaObservable = FXCollections.observableArrayList();
     
     ///////////////////////
     /* MANEJO DE EVENTOS */
@@ -155,7 +165,9 @@ public class ViewController {
     }
 
     @FXML
-    public void openExplorarView(ActionEvent event) {
+    public void openExplorarView(ActionEvent event) {	
+    	loadTags(controller.getListaEtiquetas());
+    	
     	// Ocultamos el elemento que hubiese en el frente
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
@@ -165,7 +177,6 @@ public class ViewController {
     	exploreView.setDisable(false);
     	exploreView.setVisible(true);
     	exploreView.toFront();
-  
     	fadeIn(exploreView);
     }
 
@@ -610,6 +621,18 @@ public class ViewController {
 		ft.setFromValue(0.0);
 		ft.setToValue(1.0);
 		ft.play();
+	}
+	
+	
+	
+	// Cargamos la lista con todas las etiquetas
+	public void loadTags(Set<Etiqueta> etiquetasGuardadas) {
+		listaObservable = FXCollections.observableArrayList();
+		for (Etiqueta e : etiquetasGuardadas) {
+			listaObservable.add(e.getNombre());
+			listaObservable.add(e.getNombre()+"2");
+		}
+		tags.setItems(listaObservable);
 	}
 
 }

@@ -14,5 +14,22 @@ public class Etiqueta {
 	public String getNombre() {
 		return nombre;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (this.getClass() != obj.getClass())
+			return false;
+		Etiqueta otro = (Etiqueta) obj;
+		return nombre.equals(otro.nombre);
+	}
+	
+	@Override
+	public int hashCode() {
+		return nombre.hashCode();
+	}
 
 }

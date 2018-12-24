@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXMasonryPane?>
 <?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
@@ -11,6 +12,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -290,7 +292,22 @@
                         </GridPane>
                      </top>
                      <right>
-                        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+                        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <TextArea prefHeight="54.0" prefWidth="100.0" text="  Etiquetas &#10;disponibles" />
+                              <ScrollPane>
+                                 <content>
+                                    <JFXListView fx:id="tags" prefHeight="200.0" prefWidth="100.0" />
+                                 </content>
+                              </ScrollPane>
+                              <Separator prefHeight="17.0" prefWidth="100.0" />
+                              <TextArea prefHeight="57.0" prefWidth="100.0" text="   Buscar&#10;etiquetas:" />
+                              <ScrollPane>
+                                 <content>
+                                    <JFXListView prefHeight="173.0" prefWidth="100.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children></VBox>
                      </right>
                   </BorderPane>
                   <GridPane id="loginView" fx:id="loginView">
