@@ -3,9 +3,12 @@ package application.view;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 
@@ -50,6 +53,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import tds.video.VideoWeb;
+
 public class ViewController {
 	///////////////
 	/* ATRIBUTOS */
@@ -134,8 +138,10 @@ public class ViewController {
     @FXML
     private JFXButton exploreSearch, exploreClear;
     @FXML 
-    private JFXListView<String> tags = new JFXListView<String>();	// Contiene todas las etiquetas disponibles
-    private ObservableList<String> listaObservable = FXCollections.observableArrayList();
+    private JFXListView<String> tagsView = new JFXListView<String>();	// Para visualizar todas las etiquetas disponibles
+    @FXML
+    private JFXListView<String> searchTagsView = new JFXListView<String>(); // Visualizar nuestras etiquetas de búsqueda
+    private Set<Etiqueta> searchTags = new HashSet<Etiqueta>();
     
     ///////////////////////
     /* MANEJO DE EVENTOS */
@@ -627,12 +633,28 @@ public class ViewController {
 	
 	// Cargamos la lista con todas las etiquetas
 	public void loadTags(Set<Etiqueta> etiquetasGuardadas) {
-		listaObservable = FXCollections.observableArrayList();
-		for (Etiqueta e : etiquetasGuardadas) {
-			listaObservable.add(e.getNombre());
-			listaObservable.add(e.getNombre()+"2");
-		}
-		tags.setItems(listaObservable);
+		tagsView.setItems(etiquetasGuardadas.stream()
+				.map(Etiqueta::getNombre)
+				.collect(Collectors.toCollection(FXCollections::observableArrayList)));
 	}
+	
+	
+	@FXML
+	public boolean addSearchTag(MouseEvent event) {
+		String tagName = tagsView.getSelectionModel().getSelectedItem();
+		if (controller.addEtiquetaBusqueda(tagName)) {
+			searchTagsView.getItems().add(tagName);
+			return true;
+		}
+		return false;
+	}
+	
+	@FXML
+	public boolean removeSearchTag(MouseEvent event) {
+		//TODO
+		return true;
+	}
+	
+	
 
 }

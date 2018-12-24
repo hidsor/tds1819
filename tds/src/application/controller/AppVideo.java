@@ -29,6 +29,8 @@ public class AppVideo implements VideosListener {
 	private CatalogoVideos catalogoVideos;
 	private ListaVideos topten;
 	private Set<Etiqueta> listaEtiquetas;
+	
+	private Set<Etiqueta> etiquetasBusqueda;
 
 	private Usuario usuarioActual; // Para saber qui�n est� usando la aplicaci�n
 
@@ -74,6 +76,9 @@ public class AppVideo implements VideosListener {
 		for (Video i : videos) {
 			listaEtiquetas.addAll(i.getEtiquetas());
 		}
+		
+		
+		etiquetasBusqueda = new HashSet<Etiqueta>();
 	}
 
 	// Patr�n singleton
@@ -150,6 +155,17 @@ public class AppVideo implements VideosListener {
 	public void salirUsuario() {
 		usuarioActual = null;
 	}
+	
+	public boolean addEtiquetaBusqueda(String nombre) {
+		Etiqueta etiqueta = new Etiqueta(nombre);
+		return etiquetasBusqueda.add(etiqueta);
+	}
+	
+	public boolean borrarEtiquetaBusqueda(String nombre) {
+		Etiqueta etiqueta = new Etiqueta(nombre);
+		return etiquetasBusqueda.remove(etiqueta);
+	}
+	
 
 	// Buscar un v�deo que contenga la cadena pasada de par�metro (case insensitive)
 	public Set<Video> buscarVideos(String cadena) {

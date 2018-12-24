@@ -31,5 +31,10 @@ public class Etiqueta {
 	public int hashCode() {
 		return nombre.hashCode();
 	}
+	
+	@Override
+	public String toString() {
+		return nombre.toString();
+	}
 
 }
