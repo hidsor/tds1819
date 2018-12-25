@@ -92,7 +92,7 @@ public class AdaptadorVideo implements IAdaptadorVideoDAO {
 		// Recuperar propiedades que no son objetos
 		String URL = servPersistencia.recuperarPropiedadEntidad(eVideo, propURL);
 		String titulo = servPersistencia.recuperarPropiedadEntidad(eVideo, propTitulo);
-		int numReproducciones = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eVideo, propTitulo));
+		int numReproducciones = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eVideo, propNumReproducciones));
 		
 		Video video = new Video(URL, titulo, numReproducciones);
 		video.setCodigo(codigo);

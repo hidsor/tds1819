@@ -3,6 +3,7 @@ package application.controller;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -103,7 +104,11 @@ public class AppVideo implements VideosListener {
 	}
 
 	public Set<Etiqueta> getListaEtiquetas() {
-		return listaEtiquetas;
+		return Collections.unmodifiableSet(listaEtiquetas);
+	}
+	
+	public Set<Etiqueta> getEtiquetasBusqueda() {
+		return Collections.unmodifiableSet(etiquetasBusqueda);
 	}
 
 	public Usuario getUsuarioActual() {
@@ -156,6 +161,10 @@ public class AppVideo implements VideosListener {
 		usuarioActual = null;
 	}
 	
+	public boolean addEtiqueta(Etiqueta etiqueta) {
+		return listaEtiquetas.add(etiqueta);
+	}
+	
 	public boolean addEtiquetaBusqueda(String nombre) {
 		Etiqueta etiqueta = new Etiqueta(nombre);
 		return etiquetasBusqueda.add(etiqueta);
@@ -164,6 +173,10 @@ public class AppVideo implements VideosListener {
 	public boolean removeEtiquetaBusqueda(String nombre) {
 		Etiqueta etiqueta = new Etiqueta(nombre);
 		return etiquetasBusqueda.remove(etiqueta);
+	}
+	
+	public boolean isEtiquetasBusquedaEmpty() {
+		return etiquetasBusqueda.isEmpty();
 	}
 	
 
@@ -272,16 +285,11 @@ public class AppVideo implements VideosListener {
 		List<Video> videos = adaptarVideos(evento.getVideos());
 		for (Video i : videos) {
 			registrarVideo(i);
+			for (Etiqueta j : i.getEtiquetas()) {
+				listaEtiquetas.add(j);
+			}
 		}
 	}
-
-	
-	
-	
-	
-	
-	
-	
 	
 	private List<Video> adaptarVideos(Videos videos) {
 		List<Video> videosAdaptados = new LinkedList<Video>();
@@ -293,8 +301,7 @@ public class AppVideo implements VideosListener {
 			videosAdaptados.add(video);			
 		}
 		
-		return videosAdaptados;
-		
+		return videosAdaptados;		
 	}
 	
 	

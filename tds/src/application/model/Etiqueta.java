@@ -24,12 +24,12 @@ public class Etiqueta {
 		if (this.getClass() != obj.getClass())
 			return false;
 		Etiqueta otro = (Etiqueta) obj;
-		return nombre.equals(otro.nombre);
+		return nombre.equalsIgnoreCase(otro.nombre);
 	}
 	
 	@Override
 	public int hashCode() {
-		return nombre.hashCode();
+		return nombre.toLowerCase().hashCode();
 	}
 	
 	@Override

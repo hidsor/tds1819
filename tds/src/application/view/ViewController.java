@@ -2,6 +2,7 @@ package application.view;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,19 +23,18 @@ import application.model.Usuario;
 import application.model.Video;
 import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -44,11 +44,14 @@ import javafx.scene.layout.BorderPane;
 import com.jfoenix.controls.JFXMasonryPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import tds.video.VideoWeb;
+import umu.tds.videos.CargadorVideos;
+import umu.tds.videos.ComponenteBuscadorVideos;
 
 public class ViewController {
 	///////////////
@@ -59,6 +62,7 @@ public class ViewController {
 	private double xOffset = 0; 
 	private double yOffset = 0;
 	private AppVideo controller = AppVideo.getUnicaInstancia();
+	private ComponenteBuscadorVideos buscador = new ComponenteBuscadorVideos();
 	private boolean isProfileOpen = false;
 	private static VideoWeb videoWeb = new VideoWeb();
 	
@@ -372,7 +376,16 @@ public class ViewController {
 
     @FXML
     public void loadVideos(ActionEvent event) {
-    	//TODO: Componente cargador de vídeos
+    	buscador.addVideosListener(controller);
+    	FileChooser fileChooser = new FileChooser();
+    	fileChooser.setTitle("Abrir XML con videos");
+    	try {
+	    	File file = fileChooser.showOpenDialog(( (Node) event.getSource()).getScene().getWindow());
+	    	buscador.buscarVideo(file.getAbsolutePath());
+    	}
+    	catch (Exception e) {
+			System.out.println("Error: Abra un archivo valido");
+		}
     }
      
     @FXML
@@ -538,10 +551,7 @@ public class ViewController {
 
 		// Añadimos las etiquetas al contenedor
 		for (Etiqueta tag : video.getEtiquetas()) {
-			Label l = new Label(tag.getNombre());
-			l.setStyle(
-					"-fx-font: 14 system; -fx-background-color: #efefef; -fx-padding : 2 5 2 5; -fx-font-weight: bold;");
-			tags.getChildren().add(l);
+			addTagToPane(tag, tags);
 		}
 
 		// Contenedor de añadir nueva etiqueta
@@ -574,6 +584,19 @@ public class ViewController {
 		add.setStyle("-fx-background-color: #f6444f; -fx-text-fill: #FFFFFF; -fx-font: 14 system;");
 		add.setPrefSize(100, 25);
 		add.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+		add.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    		    @Override
+    		    public void handle(MouseEvent mouseEvent) {
+	                Etiqueta tag =  new Etiqueta(addTagsTextField.getText());
+	                if (controller.addEtiquetaVideo(tag, video)) {
+	        			addTagToPane(tag, tags);
+		                if (controller.addEtiqueta(tag)) {		        			
+		        			tagsView.getItems().add(tag.getNombre());
+		                }
+	                }
+	                addTagsTextField.clear();
+    		    }
+    		});
 
 		dialogContent.setActions(add, close);
 
@@ -653,6 +676,8 @@ public class ViewController {
 	
 	@FXML
 	public boolean removeSearchTag(MouseEvent event) {
+		if (controller.isEtiquetasBusquedaEmpty())
+			return false;
 		if (event.getClickCount() == 2) {
 			String tagName = searchTagsView.getSelectionModel().getSelectedItem();
 			controller.removeEtiquetaBusqueda(tagName);
@@ -662,6 +687,12 @@ public class ViewController {
 		return false;
 	}
 	
+	private boolean addTagToPane(Etiqueta tag, Pane tags) {
+		Label l = new Label(tag.getNombre());
+		l.setStyle(
+				"-fx-font: 14 system; -fx-background-color: #efefef; -fx-padding : 2 5 2 5; -fx-font-weight: bold;");
+		return tags.getChildren().add(l);
+	}
 	
 
 }
