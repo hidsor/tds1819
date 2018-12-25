@@ -161,7 +161,7 @@ public class AppVideo implements VideosListener {
 		return etiquetasBusqueda.add(etiqueta);
 	}
 	
-	public boolean borrarEtiquetaBusqueda(String nombre) {
+	public boolean removeEtiquetaBusqueda(String nombre) {
 		Etiqueta etiqueta = new Etiqueta(nombre);
 		return etiquetasBusqueda.remove(etiqueta);
 	}
@@ -175,7 +175,8 @@ public class AppVideo implements VideosListener {
 		// Recorremos todos los videos. Si el video contiene la cadena que buscamos
 		// y la condici�n del filtro se cumple, es un posible resultado.
 		for (Video i : catalogoVideos.getVideos().values()) {
-			if (i.contieneTitulo(cadena) && filtro.filtrarVideo(usuarioActual, i)) {
+			if (i.contieneTitulo(cadena) && filtro.filtrarVideo(usuarioActual, i) 
+					&& ( etiquetasBusqueda.isEmpty() || i.containsAllEtiquetas(etiquetasBusqueda) )) {
 				resultados.add(i);
 			}
 		}
@@ -223,7 +224,7 @@ public class AppVideo implements VideosListener {
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
 
-	public void borrarListaVideos(ListaVideos listaVideos) {
+	public void removeListaVideos(ListaVideos listaVideos) {
 		usuarioActual.removeListaVideos(listaVideos);
 		adaptadorListaVideos.borrarListaVideos(listaVideos);
 		adaptadorUsuario.modificarUsuario(usuarioActual);

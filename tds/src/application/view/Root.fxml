@@ -297,7 +297,7 @@
                               <JFXListView fx:id="tagsView" onMouseClicked="#addSearchTag" prefHeight="200.0" prefWidth="100.0" />
                               <Separator prefHeight="17.0" prefWidth="100.0" />
                               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="52.0" prefWidth="100.0" text="  Buscar&#10;etiquetas:" />
-                              <JFXListView fx:id="searchTagsView" prefHeight="173.0" prefWidth="100.0" />
+                              <JFXListView fx:id="searchTagsView" onMouseClicked="#removeSearchTag" prefHeight="173.0" prefWidth="100.0" />
                            </children></VBox>
                      </right>
                   </BorderPane>

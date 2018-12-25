@@ -2,11 +2,7 @@ package application.view;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -397,6 +393,10 @@ public class ViewController {
     @FXML
     // Busqueda de vídeos
     public void exploreSearch(ActionEvent event) {
+    	// Borramos el resultado de la busqueda anterior
+    	exploreContent.getChildren().clear();
+    	
+    	// Hecho esto, buscamos
     	Set<Video> videos = controller.buscarVideos(exploreTitle.getText());
     	boolean ifExists = false;
     	for (Video video : videos) {
@@ -641,18 +641,25 @@ public class ViewController {
 	
 	@FXML
 	public boolean addSearchTag(MouseEvent event) {
-		String tagName = tagsView.getSelectionModel().getSelectedItem();
-		if (controller.addEtiquetaBusqueda(tagName)) {
-			searchTagsView.getItems().add(tagName);
-			return true;
+		if (event.getClickCount() == 2) {
+			String tagName = tagsView.getSelectionModel().getSelectedItem();
+			if (controller.addEtiquetaBusqueda(tagName)) {
+				searchTagsView.getItems().add(tagName);
+				return true;
+			}
 		}
 		return false;
 	}
 	
 	@FXML
 	public boolean removeSearchTag(MouseEvent event) {
-		//TODO
-		return true;
+		if (event.getClickCount() == 2) {
+			String tagName = searchTagsView.getSelectionModel().getSelectedItem();
+			controller.removeEtiquetaBusqueda(tagName);
+			searchTagsView.getItems().remove(tagName);
+			return true;
+		}
+		return false;
 	}
 	
 	

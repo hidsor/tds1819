@@ -1,5 +1,6 @@
 package application.model;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +21,7 @@ public class Video {
 		this.URL = URL;
 		this.titulo = titulo;
 		this.numReproducciones = numReproducciones;
+		etiquetas = new HashSet<Etiqueta>();
 	}
 
 	// Métodos de consulta
@@ -64,6 +66,14 @@ public class Video {
 		}
 		return etiquetas.remove(e);
 	}
+	
+	public boolean containsEtiqueta(Etiqueta e) {
+		return etiquetas.contains(e);
+	}
+	
+	public boolean containsAllEtiquetas(Collection<Etiqueta> c) {
+		return etiquetas.containsAll(c);
+	}
 
 	public void reproducir() {
 		// Incrementa el contador de reproducciones en uno
@@ -92,13 +102,6 @@ public class Video {
 	public int hashCode() {
 		return URL.hashCode();
 	}
-
-	// TODO: Qué es esto enrique
-	public Object compareRep(Video otro) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	
 	@Override
 	public String toString() {
