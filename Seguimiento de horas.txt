@@ -17,6 +17,8 @@ VLAD:
 22/12/2018 - 15 min (Avances en la vista: Fade in a todas las ventanas)
 22/12/2018 - 1h 15 min (Avances en la vista: Botón de cargar vídeos y etiquetas en los vídeos)
 23/12/2018 - 1h (Refactorización y limpieza de código)
+26/12/2018 - 4h (Limpieza y refactorización de la vista)
+26/12/2018 - 2h (Avances en la vista: Ventana de nueva lista)
 
 ENRIQUE:
 - 17/11/2018 - 1 hora (Hacer UML)

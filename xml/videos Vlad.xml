@@ -11,18 +11,25 @@
 		<etiqueta nombre="Music"/>
 		<etiqueta nombre="Meme"/>
 	</video>
-	<video titulo="Obi-Wan says 'Hello There' 67 million times" url="https://www.youtube.com/watch?v=FTrxDBDBOHU" >
-		<etiqueta nombre="Movie"/>
-		<etiqueta nombre="Meme"/>
-	</video>
 	<video titulo="Toto - Africa" url="https://www.youtube.com/watch?v=wGjtv2jHKrg" >
 		<etiqueta nombre="Music"/>
 		<etiqueta nombre="Meme"/>
 		<etiqueta nombre="Classic"/>
 	</video>
-	<video titulo="Matt & Kim - Yea Yeah" url="https://www.youtube.com/watch?v=KsomXlyTyaQ" >
+	<video titulo="Matt and Kim - Yea Yeah" url="https://www.youtube.com/watch?v=KsomXlyTyaQ" >
 		<etiqueta nombre="Music"/>
 		<etiqueta nombre="Indie"/>
+	</video>
+	<video titulo="The Bygone Days - Porco Rosso" url="https://www.youtube.com/watch?v=y1hzHolsgCM" >
+		<etiqueta nombre="Music"/>
+		<etiqueta nombre="Animation"/>
+	</video>	
+	<video titulo="cows cows cows" url="https://www.youtube.com/watch?v=FavUpD_IjVY" >
+		<etiqueta nombre="Meme"/>
+		<etiqueta nombre="Animation"/>
+	</video>	
+	<video titulo="The Conservation of The Assassination of Archimedes Narrated Version" url="https://www.youtube.com/watch?v=v1Mjc4zNfY4" >
+		<etiqueta nombre="Art"/>
 	</video>
 	
 </videos>

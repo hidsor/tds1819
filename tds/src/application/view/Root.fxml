@@ -12,6 +12,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -33,51 +34,193 @@
          <center>
             <StackPane id="stackpane" fx:id="stackpane" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
+                  <BorderPane id="newListView" fx:id="newListView" disable="true" prefHeight="200.0" prefWidth="200.0" visible="false">
+                     <top>
+                        <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+                           <children>
+                              <TextField id="newListVideoTitle" fx:id="newListVideoTitle" prefHeight="40.0" promptText="Buscar" style="-fx-border-radius: 0;" styleClass="mysearchbar" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </TextField>
+                              <JFXButton id="newListVideoSearch" fx:id="newListVideoSearch" onAction="#newListVideoSearch" prefHeight="40.0" prefWidth="80.0" ripplerFill="WHITE" styleClass="jfxbutton" text="">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../resources/explorar_secundario.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                              <JFXButton id="newListVideoClear" fx:id="newListVideoClear" onAction="#newListVideoClear" prefHeight="40.0" prefWidth="80.0" ripplerFill="WHITE" styleClass="jfxbutton" text="">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin>
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../resources/borrar.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                              <Region prefWidth="210.0" />
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <BorderPane.margin>
+                              <Insets left="10.0" right="10.0" top="10.0" />
+                           </BorderPane.margin>
+                        </HBox>
+                     </top>
+                     <center>
+                        <ScrollPane pannable="true" style="-fx-fit-to-width: true;" styleClass="myscrollview" BorderPane.alignment="CENTER">
+                           <content>
+                              <JFXMasonryPane id="newListVideoContent" fx:id="newListVideoContent" HSpacing="1.0" VSpacing="1.0" cellHeight="150.0" cellWidth="200.0" />
+                           </content>
+                           <BorderPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </BorderPane.margin>
+                        </ScrollPane>
+                     </center>
+                     <right>
+                        <VBox prefHeight="200.0" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
+                           <BorderPane.margin>
+                              <Insets bottom="10.0" right="10.0" top="10.0" />
+                           </BorderPane.margin>
+                           <children>
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <TextField id="newListTitle" fx:id="newListTitle" prefHeight="40.0" promptText="Buscar lista" style="-fx-border-radius: 0;" styleClass="mysearchbar" HBox.hgrow="ALWAYS">
+                                       <font>
+                                          <Font name="System Bold" size="16.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </TextField>
+                                    <JFXButton id="newListSearch" fx:id="newListSearch" onAction="#newListSearch" prefHeight="40.0" prefWidth="80.0" ripplerFill="WHITE" styleClass="jfxbutton" text="">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets right="5.0" />
+                                       </HBox.margin>
+                                       <graphic>
+                                          <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../resources/explorar_secundario.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                    <JFXButton id="newListClear" fx:id="newListClear" onAction="#newListClear" prefHeight="40.0" prefWidth="80.0" ripplerFill="WHITE" styleClass="jfxbutton" text="">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                       <graphic>
+                                          <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../resources/borrar.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </HBox>
+                              <JFXListView id="newList" fx:id="newList" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                                 <styleClass>
+                                    <String fx:value="myscrollview" />
+                                    <String fx:value="myjfxlistview" />
+                                 </styleClass>
+                              </JFXListView>
+                           </children>
+                        </VBox>
+                     </right>
+                  </BorderPane>
                   <GridPane id="registerView" fx:id="registerView" disable="true" visible="false">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label id="registerLabelNick" fx:id="registerLabelNick" text="*Este campo es obligatorio" textFill="RED" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-                        <JFXTextField id="registerNick" fx:id="registerNick" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="*Usuario" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-                        <Label id="registerLabelPassword" fx:id="registerLabelPassword" text="*Este campo es obligatorio" textFill="RED" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
-                        <JFXPasswordField id="registerPassword" fx:id="registerPassword" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="*Contraseña" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
-                        <Label id="registerLabelPassRepeat" fx:id="registerLabelPassRepeat" text="*Este campo es obligatorio" textFill="RED" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                        <Label id="registerLabelNick" fx:id="registerLabelNick" text="*Este campo es obligatorio" textFill="RED" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+                        <JFXTextField id="registerNick" fx:id="registerNick" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="*Usuario" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+                           <font>
+                              <Font size="14.0" />
+                           </font></JFXTextField>
+                        <Label id="registerLabelPassword" fx:id="registerLabelPassword" text="*Este campo es obligatorio" textFill="RED" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
+                        <JFXPasswordField id="registerPassword" fx:id="registerPassword" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="*Contraseña" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+                           <font>
+                              <Font size="14.0" />
+                           </font></JFXPasswordField>
+                        <Label id="registerLabelPassRepeat" fx:id="registerLabelPassRepeat" text="*Este campo es obligatorio" textFill="RED" visible="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
                            <padding>
                               <Insets top="15.0" />
                            </padding>
                         </Label>
-                        <JFXPasswordField id="registerPasswordRepeat" fx:id="registerPasswordRepeat" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="*Repetir contraseña" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
-                        <JFXTextField id="registerName" fx:id="registerName" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="*Nombre" styleClass="jfxtextfield" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                        <Label id="registerLabelName" fx:id="registerLabelName" text="*Este campo es obligatorio" textFill="RED" visible="false" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
-                        <JFXTextField id="registerSurname" fx:id="registerSurname" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="Apellidos" styleClass="jfxtextfield" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                        <Label id="registerLabelDate" fx:id="registerLabelDate" text="*Este campo es obligatorio" textFill="RED" visible="false" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.valignment="BOTTOM" />
-                        <JFXDatePicker id="registerDatePicker" fx:id="registerDatePicker" defaultColor="#f51827" prefWidth="258.0" promptText="*Fecha de nacimiento" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="6" />
-                        <JFXTextField id="registerEmail" fx:id="registerEmail" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="Email" styleClass="jfxtextfield" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                        <JFXButton id="registerRegister" fx:id="registerRegister" onAction="#registerUser" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Registrar" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
+                        <JFXPasswordField id="registerPasswordRepeat" fx:id="registerPasswordRepeat" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="*Repetir contraseña" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="7" GridPane.valignment="BOTTOM">
+                           <font>
+                              <Font size="14.0" />
+                           </font></JFXPasswordField>
+                        <JFXTextField id="registerName" fx:id="registerName" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="*Nombre" styleClass="jfxtextfield" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                           <font>
+                              <Font size="14.0" />
+                           </font></JFXTextField>
+                        <Label id="registerLabelName" fx:id="registerLabelName" text="*Este campo es obligatorio" textFill="RED" visible="false" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+                        <JFXTextField id="registerSurname" fx:id="registerSurname" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="Apellidos" styleClass="jfxtextfield" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+                           <font>
+                              <Font size="14.0" />
+                           </font></JFXTextField>
+                        <Label id="registerLabelDate" fx:id="registerLabelDate" text="*Este campo es obligatorio" textFill="RED" visible="false" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM" />
+                        <JFXDatePicker id="registerDatePicker" fx:id="registerDatePicker" defaultColor="#f51827" prefWidth="258.0" promptText="*Fecha de nacimiento" style="-fx-font-size: 14;" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="6" GridPane.valignment="BOTTOM" />
+                        <JFXTextField id="registerEmail" fx:id="registerEmail" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="Email" styleClass="jfxtextfield" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="8" GridPane.valignment="BOTTOM">
+                           <font>
+                              <Font size="14.0" />
+                           </font></JFXTextField>
+                        <JFXButton id="registerRegister" fx:id="registerRegister" onAction="#registerUser" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Registrar" textFill="WHITE" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
                         </JFXButton>
-                        <JFXButton id="registerCancel" fx:id="registerCancel" onAction="#registerCancel" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Cancelar" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
+                        <JFXButton id="registerCancel" fx:id="registerCancel" onAction="#registerCancel" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Cancelar" textFill="WHITE" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -95,108 +238,133 @@
                   </AnchorPane>
                   <GridPane id="profileView" fx:id="profileView" disable="true" visible="false">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="10.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="200.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="10.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="30.0" percentHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                            <image>
                               <Image url="@../../resources/ourtube.png" />
                            </image>
                         </ImageView>
-                        <Label text="Nick:" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+                        <Label text="Nick:" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.valignment="CENTER">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="15.0" />
+                              <Insets left="10.0" />
                            </GridPane.margin>
                         </Label>
-                        <Label id="profileNick" fx:id="profileNick" text="-nick-" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                        <Label id="profileNick" fx:id="profileNick" text="-nick-" GridPane.columnIndex="2" GridPane.rowIndex="6" GridPane.valignment="CENTER">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Label>
-                        <Label text="Email:" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+                        <Label text="Email:" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.valignment="CENTER">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="15.0" />
+                              <Insets left="10.0" />
                            </GridPane.margin>
                         </Label>
-                        <JFXTextField id="profileEmail" fx:id="profileEmail" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" promptText="emailactual" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
-                        <Label alignment="CENTER" text="MI CUENTA" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                        <JFXTextField id="profileEmail" fx:id="profileEmail" focusColor="#f51827" prefWidth="250.0" promptText="emailactual" styleClass="jfxtextfield" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+                           <GridPane.margin>
+                              <Insets right="8.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font size="14.0" />
+                           </font></JFXTextField>
+                        <Label alignment="CENTER" text="MI CUENTA" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
                            <font>
                               <Font name="System Bold" size="22.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="15.0" />
+                              <Insets left="10.0" />
                            </GridPane.margin>
                         </Label>
-                        <Label id="profileTitle" fx:id="profileTitle" text="Bienvenido, -nombre-" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                        <Label id="profileTitle" fx:id="profileTitle" text="Bienvenido, -nombre-" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Label>
-                        <Label layoutX="10.0" layoutY="184.0" text="Fecha nacimiento:" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
+                        <Label layoutX="10.0" layoutY="184.0" text="Fecha nacimiento:" GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.valignment="CENTER">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="15.0" />
+                              <Insets left="10.0" />
                            </GridPane.margin>
                         </Label>
-                        <JFXDatePicker id="profileDatePicker" fx:id="profileDatePicker" defaultColor="#f51827" prefWidth="258.0" promptText="fechanacimientoactual" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
-                        <Label alignment="CENTER" text="CONTRASEÑA" GridPane.rowIndex="8" GridPane.valignment="BOTTOM">
+                        <JFXDatePicker id="profileDatePicker" fx:id="profileDatePicker" defaultColor="#f51827" maxWidth="1.7976931348623157E308" prefWidth="250.0" promptText="fechanacimientoactual" style="-fx-font-size: 14;" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8" GridPane.valignment="CENTER">
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin></JFXDatePicker>
+                        <Label alignment="CENTER" text="CONTRASEÑA" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.valignment="BOTTOM">
                            <font>
                               <Font name="System Bold" size="22.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="15.0" />
+                              <Insets left="10.0" />
                            </GridPane.margin>
                            <padding>
                               <Insets bottom="5.0" />
                            </padding>
                         </Label>
-                        <Label alignment="TOP_LEFT" text="Nueva contraseña:" GridPane.rowIndex="10" GridPane.valignment="BOTTOM">
+                        <Label alignment="TOP_LEFT" text="Nueva contraseña:" GridPane.columnIndex="1" GridPane.rowIndex="12" GridPane.valignment="BOTTOM">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="15.0" />
+                              <Insets left="10.0" />
                            </GridPane.margin>
                         </Label>
-                        <Label text="Repetir contraseña:" GridPane.rowIndex="11" GridPane.valignment="BOTTOM">
+                        <Label text="Repetir contraseña:" GridPane.columnIndex="1" GridPane.rowIndex="13" GridPane.valignment="BOTTOM">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="15.0" />
+                              <Insets left="10.0" />
                            </GridPane.margin>
                         </Label>
-                        <JFXPasswordField id="profilePassRepeat" fx:id="profilePassRepeat" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="11" GridPane.valignment="CENTER" />
-                        <JFXPasswordField id="profilePassword" fx:id="profilePassword" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="250.0" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
-                        <JFXButton id="profileUpdate" fx:id="profileUpdate" onAction="#profileUpdate" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Actualizar" textFill="WHITE" GridPane.rowIndex="13">
+                        <JFXPasswordField id="profilePassRepeat" fx:id="profilePassRepeat" focusColor="#f51827" prefWidth="250.0" styleClass="jfxtextfield" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="13" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets right="8.0" />
+                           </GridPane.margin></JFXPasswordField>
+                        <JFXPasswordField id="profilePassword" fx:id="profilePassword" focusColor="#f51827" prefWidth="250.0" styleClass="jfxtextfield" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="12" GridPane.valignment="CENTER">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets right="8.0" />
+                           </GridPane.margin></JFXPasswordField>
+                        <JFXButton id="profileUpdate" fx:id="profileUpdate" onAction="#profileUpdate" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Actualizar" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="15">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -204,7 +372,7 @@
                               <Insets left="10.0" right="10.0" />
                            </GridPane.margin>
                         </JFXButton>
-                        <JFXButton id="profileLogout" fx:id="profileLogout" onAction="#profileLogout" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Log out" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="13" GridPane.valignment="CENTER">
+                        <JFXButton id="profileLogout" fx:id="profileLogout" onAction="#profileLogout" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Log out" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="15" GridPane.valignment="CENTER">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -212,22 +380,22 @@
                               <Insets left="10.0" right="10.0" />
                            </GridPane.margin>
                         </JFXButton>
-                        <Separator prefWidth="200.0" styleClass="sideseparator" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                        <Separator prefWidth="200.0" styleClass="sideseparator" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="5" GridPane.valignment="TOP">
                            <GridPane.margin>
-                              <Insets left="15.0" right="15.0" />
+                              <Insets left="10.0" />
                            </GridPane.margin>
                         </Separator>
-                        <Separator prefWidth="200.0" styleClass="sideseparator" GridPane.columnSpan="2147483647" GridPane.rowIndex="9" GridPane.valignment="TOP">
+                        <Separator prefWidth="200.0" styleClass="sideseparator" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="11" GridPane.valignment="TOP">
                            <GridPane.margin>
-                              <Insets left="15.0" right="15.0" />
+                              <Insets left="10.0" right="15.0" />
                            </GridPane.margin>
                         </Separator>
-                        <JFXButton id="profleLoad" fx:id="profileLoad" alignment="CENTER" onAction="#loadVideos" ripplerFill="#f51827" style="-fx-background-color: #000000;" text="Cargar vídeos" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                        <JFXButton id="profleLoad" fx:id="profileLoad" alignment="CENTER" onAction="#loadVideos" ripplerFill="WHITE" style="-fx-background-color: #000000;" text="Cargar vídeos" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets bottom="5.0" left="10.0" right="10.0" />
+                              <Insets bottom="4.0" left="10.0" />
                            </GridPane.margin>
                            <graphic>
                               <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
@@ -240,87 +408,119 @@
                      </children>
                   </GridPane>
                   <BorderPane id="exploreView" fx:id="exploreView" disable="true" prefHeight="200.0" prefWidth="200.0" visible="false">
-                     <center>
-                        <ScrollPane hbarPolicy="NEVER" style="-fx-fit-to-height: true; -fx-fit-to-width: true;" BorderPane.alignment="CENTER">
-                           <content>
-                              <JFXMasonryPane id="exploreContent" fx:id="exploreContent" HSpacing="1.0" VSpacing="1.0" cellHeight="20.0" cellWidth="20.0" />
-                           </content>
-                        </ScrollPane>
-                     </center>
-                     <top>
-                        <GridPane BorderPane.alignment="CENTER">
-                          <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="2.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="2.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="2.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="2.0" prefWidth="100.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Label text="Buscar:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                                 <font>
-                                    <Font name="System Bold" size="16.0" />
-                                 </font>
-                              </Label>
-                              <JFXTextField id="exploreTitle" fx:id="exploreTitle" focusColor="#f51827" maxHeight="-Infinity" prefHeight="20.0" styleClass="jfxtextfield" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                              <JFXButton id="profileUpdate" fx:id="exploreSearch" onAction="#exploreSearch" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Buscar" textFill="WHITE" GridPane.columnIndex="4" GridPane.rowIndex="1">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                                 <GridPane.margin>
-                                    <Insets left="5.0" right="5.0" />
-                                 </GridPane.margin>
-                              </JFXButton>
-                              <JFXButton id="exploreClear" fx:id="exploreClear" onAction="#exploreClear" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Limpiar" textFill="WHITE" GridPane.columnIndex="6" GridPane.rowIndex="1">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                                 <GridPane.margin>
-                                    <Insets left="5.0" right="5.0" />
-                                 </GridPane.margin>
-                              </JFXButton>
-                           </children>
-                        </GridPane>
-                     </top>
                      <right>
                         <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                            <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="53.0" prefWidth="100.0" text="  Etiquetas&#10;disponibles" />
-                              <JFXListView fx:id="tagsView" onMouseClicked="#addSearchTag" prefHeight="200.0" prefWidth="100.0" />
-                              <Separator prefHeight="17.0" prefWidth="100.0" />
-                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="52.0" prefWidth="100.0" text="  Buscar&#10;etiquetas:" />
-                              <JFXListView fx:id="searchTagsView" onMouseClicked="#removeSearchTag" prefHeight="173.0" prefWidth="100.0" />
-                           </children></VBox>
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="53.0" prefWidth="100.0" text="  Etiquetas&#10;disponibles">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font></Label>
+                              <JFXListView fx:id="tagsView" onMouseClicked="#addSearchTag" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                                 <styleClass>
+                                    <String fx:value="myscrollview" />
+                                    <String fx:value="myjfxlistview" />
+                                 </styleClass></JFXListView>
+                              <Separator prefHeight="17.0" prefWidth="100.0" styleClass="sideseparator" />
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="52.0" prefWidth="100.0" text="Etiquetas&#10;utilizadas">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font></Label>
+                              <JFXListView fx:id="searchTagsView" onMouseClicked="#removeSearchTag" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                                 <styleClass>
+                                    <String fx:value="myscrollview" />
+                                    <String fx:value="myjfxlistview" />
+                                 </styleClass></JFXListView>
+                           </children>
+                           <BorderPane.margin>
+                              <Insets bottom="10.0" right="10.0" />
+                           </BorderPane.margin></VBox>
                      </right>
+                     <center>
+                        <ScrollPane pannable="true" style="-fx-fit-to-width: true;" styleClass="myscrollview" BorderPane.alignment="CENTER">
+                           <content>
+                              <JFXMasonryPane id="exploreContent" fx:id="exploreContent" HSpacing="1.0" VSpacing="1.0" cellHeight="150.0" cellWidth="200.0" />
+                           </content>
+                           <BorderPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" />
+                           </BorderPane.margin>
+                        </ScrollPane>
+                     </center>
+                     <top>
+                        <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+                           <children>
+                              <TextField id="exploreTitle" fx:id="exploreTitle" prefHeight="40.0" promptText="Buscar" style="-fx-border-radius: 0;" styleClass="mysearchbar" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </TextField>
+                              <JFXButton id="profileUpdate" fx:id="exploreSearch" onAction="#exploreSearch" prefHeight="40.0" prefWidth="80.0" ripplerFill="WHITE" styleClass="jfxbutton" text="">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../resources/explorar_secundario.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                              <JFXButton id="exploreClear" fx:id="exploreClear" onAction="#exploreClear" prefHeight="40.0" prefWidth="80.0" ripplerFill="WHITE" styleClass="jfxbutton" text="">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin>
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../resources/borrar.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                              <Region prefWidth="110.0" />
+                           </children>
+                           <BorderPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </BorderPane.margin>
+                        </HBox>
+                     </top>
                   </BorderPane>
                   <GridPane id="loginView" fx:id="loginView">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="300.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="375.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="10.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="10.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="5.0" percentHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <JFXTextField id="loginNick" fx:id="loginNick" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="350.0" promptText="Usuario" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                        <JFXPasswordField id="loginPassword" fx:id="loginPassword" focusColor="#f51827" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="350.0" promptText="Contraseña" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                        <JFXTextField id="loginNick" fx:id="loginNick" focusColor="#f51827" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="350.0" promptText="Usuario" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                           <font>
+                              <Font size="14.0" />
+                           </font></JFXTextField>
+                        <JFXPasswordField id="loginPassword" fx:id="loginPassword" focusColor="#f51827" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="350.0" promptText="Contraseña" styleClass="jfxtextfield" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4">
+                           <font>
+                              <Font size="14.0" />
+                           </font></JFXPasswordField>
                         <JFXButton id="loginButton" fx:id="loginButton" onAction="#loginEnter" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="LOG IN" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6">
                            <font>
                               <Font name="System Bold" size="18.0" />
@@ -331,20 +531,20 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Label>
-                        <Label id="loginLabelNick" fx:id="loginLabelNick" text="*Este campo es obligatorio" textFill="RED" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
-                        <Label id="loginLabelPassword" fx:id="loginLabelPassword" layoutX="176.0" layoutY="130.0" text="*Este campo es obligatorio" textFill="RED" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+                        <Label id="loginLabelNick" fx:id="loginLabelNick" text="*Este campo es obligatorio" textFill="RED" visible="false" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+                        <Label id="loginLabelPassword" fx:id="loginLabelPassword" layoutX="176.0" layoutY="130.0" text="*Este campo es obligatorio" textFill="RED" visible="false" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
                      </children>
                   </GridPane>
                </children>
             </StackPane>
          </center>
          <left>
-            <VBox minWidth="-Infinity" prefWidth="136.0" styleClass="sidebar">
+            <VBox minWidth="-Infinity" prefWidth="140.0" styleClass="sidebar">
                <children>
                   <Separator disable="true" prefWidth="200.0" styleClass="sideseparator" />
                   <JFXButton id="login" fx:id="login" alignment="TOP_LEFT" focusTraversable="false" onAction="#openLoginView" prefHeight="40.0" prefWidth="200.0" text="Log in">
                      <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="16.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
@@ -368,7 +568,7 @@
                   <Separator prefWidth="200.0" styleClass="sideseparator" />
                   <JFXButton id="explorar" fx:id="explorar" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openExplorarView" prefHeight="40.0" prefWidth="200.0" text="Explorar">
                      <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="16.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
@@ -389,7 +589,7 @@
                   <Separator prefWidth="200.0" styleClass="sideseparator" />
                   <JFXButton id="mislistas" fx:id="mislistas" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openMislistasView" prefHeight="40.0" prefWidth="200.0" text="Mis listas">
                      <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="16.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
@@ -410,7 +610,7 @@
                   <Separator prefWidth="200.0" styleClass="sideseparator" />
                   <JFXButton id="recientes" fx:id="recientes" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openRecientesView" prefHeight="40.0" prefWidth="200.0" text="Recientes">
                      <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="16.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
@@ -431,7 +631,7 @@
                   <Separator prefWidth="200.0" styleClass="sideseparator" />
                   <JFXButton id="nuevalista" fx:id="nuevalista" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openNuevalistaView" prefHeight="40.0" prefWidth="200.0" text="Nueva lista">
                      <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="16.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
@@ -455,7 +655,7 @@
                   <Separator layoutX="10.0" layoutY="199.0" prefWidth="200.0" styleClass="sideseparator" />
                   <JFXButton id="premium" fx:id="premium" alignment="TOP_LEFT" disable="true" focusTraversable="false" onAction="#openPremiumView" prefHeight="40.0" prefWidth="200.0" text="Premium">
                      <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="16.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
@@ -487,11 +687,6 @@
                <children>
                   <HBox alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="800.0">
                      <children>
-                        <Region prefHeight="26.0" prefWidth="690.0">
-                           <HBox.margin>
-                              <Insets left="4.0" top="2.0" />
-                           </HBox.margin>
-                        </Region>
                         <JFXButton id="minimize" fx:id="minimizeButton" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" onAction="#minimizeWindow" styleClass="topjfxbutton" text="">
                            <graphic>
                               <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">

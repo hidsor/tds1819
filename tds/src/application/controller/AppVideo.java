@@ -117,24 +117,22 @@ public class AppVideo implements VideosListener {
 
 	// Funcionalidad
 	public boolean verificarUsuario(String login, String password) {
-		// Buscamos el usuario en el catï¿½logo
+		// Buscamos el usuario en el catálogo
 		Usuario usuario = catalogoUsuarios.getUsuario(login);
 
-		// Si el usuario no estï¿½ registrado, el login es vï¿½lido
+		// Si el usuario no está registrado, el login es inválido
 		if (usuario == null) {
 			return false;
 		}
 
-		// Si estï¿½ registrado y la contraseï¿½a es correcta, el login es vï¿½lido
+		// Si está registrado y la contraseña es correcta, el login es válido
 		if (usuario.getPassword().equals(password)) {
 			usuarioActual = usuario;
 			return true;
 		}
-		// Si estï¿½ registrado, pero la contraseï¿½a no es correcta, el login es invï¿½lido
+		// Si está registrado, pero la contraseña no es correcta, el login es inválido
 		return false;
 	}
-	
-	
 	
 	// Devuelve verdadero si se ha podido registrar.
 	// Devuelve falso si no (ya hay alguien con ese login en el sistema)
@@ -155,6 +153,14 @@ public class AppVideo implements VideosListener {
 			return true;
 		}
 		return false;
+	}
+	
+	public void borrarVideo(String URL) {
+		Video video = catalogoVideos.getVideo(URL);
+		if (video != null) {
+			catalogoVideos.borrarVideo(video);
+			adaptadorVideo.borrarVideo(video);
+		}
 	}
 	
 	public void salirUsuario() {
@@ -224,7 +230,7 @@ public class AppVideo implements VideosListener {
 	}
 
 	public boolean addEtiquetaVideo(Etiqueta etiqueta, Video video) {
-		video.addEtiqueta(etiqueta);
+		if (!video.addEtiqueta(etiqueta)) return false;
 		listaEtiquetas.add(etiqueta);
 		adaptadorVideo.modificarVideo(video);
 		return true;
@@ -255,8 +261,10 @@ public class AppVideo implements VideosListener {
 		return true;
 	}
 
-	public void reproducir(Video video) {
-		// Simplemente incrementamos el nï¿½mero de visitas del vï¿½deo y lo persistimos
+	public void reproducir(String URL) {
+		Video video = catalogoVideos.getVideo(URL);
+		if (video == null) return;
+		
 		video.reproducir();
 		adaptadorVideo.modificarVideo(video);
 
@@ -299,10 +307,8 @@ public class AppVideo implements VideosListener {
 				video.addEtiqueta(new Etiqueta(j.getNombre()));
 			}
 			videosAdaptados.add(video);			
-		}
-		
+		}	
 		return videosAdaptados;		
 	}
-	
 	
 }

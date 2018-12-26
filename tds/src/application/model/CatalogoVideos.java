@@ -43,11 +43,17 @@ public class CatalogoVideos {
 	public Map<String, Video> getVideos() {
 		return Collections.unmodifiableMap(videos);
 	}
+	
+	public Video getVideo(String URL) {
+		return videos.get(URL);
+	}
 
 	// Funcionalidad
 	public boolean addVideo(Video video) {
+		// Imitamos un set; si el vídeo no estaba ya, lo metemos
 		if (videos.get(video.getURL()) != null) return false;
 		videos.put(video.getURL(), video);
+		
 		return true;
 	}
 	
@@ -58,7 +64,7 @@ public class CatalogoVideos {
 		return true;
 	}
 	
-	boolean removeVideo(Video video) {
+	public boolean borrarVideo(Video video) {
 		return videos.remove(video.getURL()) != null;
 	}
 

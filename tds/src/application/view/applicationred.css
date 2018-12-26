@@ -1,5 +1,3 @@
-/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
-
 .parent{
 	-fx-background-color: #FFFFFF;
 }
@@ -94,6 +92,96 @@
 	
 }
 
+.videothumbnail {
+	-fx-font-weight: bold;
+}
+
+.videotag {
+	-fx-font: 14 system;
+	-fx-background-color: #efefef; 
+	-fx-padding : 2 5 2 5; 
+	-fx-font-weight: bold;
+}
+
+.videothumbnail:hover {
+	-fx-background-color: #cfcfcf;
+}
+
 .removebutton .jfx-rippler{
-	-jfx-rippler-fill: #f51827
+	-jfx-rippler-fill: #f51827;
+}
+.myjfxlistview .jfx-list-cell{
+	-fx-font-size: 14;
+}
+.myjfxlistview .jfx-list-cell .jfx-rippler{
+	-jfx-rippler-fill: #f51827;
+	
+}
+.myjfxlistview .jfx-list-cell:hover{
+	-fx-background-color: #fdc7c3;
+	-fx-font-size: 14;
+}
+
+.myjfxlistview .jfx-list-cell:selected{
+	-fx-background-color: #fb7a80;
+	-fx-text-fill: #FFFFFF;
+	
+}
+.myscrollview{
+	-fx-border-color: #dfdfdf;
+	-fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* The main scrollbar **track** CSS class  */
+.myscrollview .scroll-bar:horizontal .track,
+.myscrollview .scroll-bar:vertical .track{
+	-fx-background-color:transparent;
+	-fx-border-color:transparent;
+	-fx-background-radius: 0em;
+	-fx-border-radius:2em;
+}
+
+/* The increment and decrement button CSS class of scrollbar */
+.myscrollview .scroll-bar:horizontal .increment-button ,
+.myscrollview .scroll-bar:horizontal .decrement-button {
+    -fx-background-color:transparent;
+	-fx-background-radius: 0em;
+	-fx-padding:0 0 10 0;
+
+}
+
+/* The increment and decrement button CSS class of scrollbar */
+
+.myscrollview .scroll-bar:vertical .increment-button ,
+.myscrollview .scroll-bar:vertical .decrement-button {
+
+    -fx-background-color:transparent;
+	-fx-background-radius: 0em;
+	-fx-padding:0 10 0 0;
+
+}
+
+.myscrollview  .scroll-bar .increment-arrow,
+.myscrollview  .scroll-bar .decrement-arrow
+ {
+	-fx-shape: " ";	
+	-fx-padding:0;
+}
+
+/* The main scrollbar **thumb** CSS class which we drag every time (movable) */
+.myscrollview .scroll-bar:horizontal .thumb,
+.myscrollview .scroll-bar:vertical .thumb {
+    -fx-background-color: #f6444f;
+	-fx-background-insets: 2, 0, 0;
+	-fx-background-radius: 2em;
+
+}
+
+
+.mysearchbar {
+	-fx-background-color: #FFFFFF;
+	-fx-border-color: #dfdfdf;
+	-fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }

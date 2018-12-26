@@ -35,6 +35,7 @@ import javafx.util.Duration;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -50,22 +51,31 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import tds.video.VideoWeb;
-import umu.tds.videos.CargadorVideos;
 import umu.tds.videos.ComponenteBuscadorVideos;
 
 public class ViewController {
-	///////////////
-	/* ATRIBUTOS */
-	///////////////
+	////////////////////////////
+	/* ATRIBUTOS Y CONSTANTES */
+	////////////////////////////
 	private double oldHeight = 0;
 	private double oldWidth = 0;
 	private double xOffset = 0; 
 	private double yOffset = 0;
-	private AppVideo controller = AppVideo.getUnicaInstancia();
-	private ComponenteBuscadorVideos buscador = new ComponenteBuscadorVideos();
-	private boolean isProfileOpen = false;
-	private static VideoWeb videoWeb = new VideoWeb();
+	private AppVideo controller;
+	private ComponenteBuscadorVideos buscador;
+	private boolean isProfileOpen;
+	private static VideoWeb videoWeb;
 	
+	private final static String DIALOG_BUTTON_STYLE =	"-fx-background-color: #f6444f;"
+														+ " -fx-text-fill: #FFFFFF;"
+														+ " -fx-font: 14 system;"
+														+ " -fx-font-weight: bold;";
+	private final static String DIALOG_LABEL_STYLE = "-fx-text-fill: #000000;"
+														+ " -fx-font: 14 system;";
+	private final static String DIALOG_JFXTEXTFIELD_STYLE = "-jfx-focus-color: #f51827;"
+														+ " -jfx-unfocus-color: #4d4d4d;"
+														+ " -fx-font: 14 system;";
+
 	/* STACKPANE EXTERIOR PARA JFXDIALOG */
     @FXML
     private StackPane rootStackPane;
@@ -132,20 +142,44 @@ public class ViewController {
     @FXML
     private BorderPane exploreView; // Contenedor de la vista de explorar
     @FXML
-    private JFXMasonryPane exploreContent;
+    private JFXMasonryPane exploreContent; // Contenedor de los vídeos buscados
     @FXML
-    private JFXTextField exploreTitle;
+    private TextField exploreTitle;
     @FXML
     private JFXButton exploreSearch, exploreClear;
     @FXML 
     private JFXListView<String> tagsView = new JFXListView<String>();	// Para visualizar todas las etiquetas disponibles
     @FXML
-    private JFXListView<String> searchTagsView = new JFXListView<String>(); // Visualizar nuestras etiquetas de búsqueda
-    private Set<Etiqueta> searchTags = new HashSet<Etiqueta>();
+    private JFXListView<String> searchTagsView = new JFXListView<String>(); // Visualizar nuestras etiquetas de búsqueda utilizadas
+ 
+    /* VENTANA DE NUEVA LISTA */
+    @FXML
+    private BorderPane newListView; // Contenedor de la vista de nueva lista
+    @FXML
+    private JFXMasonryPane newListVideoContent;
+    @FXML
+    private TextField newListVideoTitle, newListTitle;
+    @FXML
+    private JFXButton newListVideoSearch, newListVideoClear, newListSearch, newListClear;
+    @FXML
+    private JFXListView<Label> newList;
     
+	/////////////////
+	/* CONSTRUCTOR */
+	/////////////////	
+	public ViewController() {
+		controller = AppVideo.getUnicaInstancia();
+		buscador = new ComponenteBuscadorVideos();
+		videoWeb = new VideoWeb();
+    	buscador.addVideosListener(controller);
+		isProfileOpen = false;
+	}
+	
     ///////////////////////
     /* MANEJO DE EVENTOS */
     ///////////////////////
+	
+	/* ABRIR VENTANAS */
     @FXML
     public void openLoginView(ActionEvent event) {
     	// Abrimos una ventana u otra en función del estado
@@ -198,14 +232,76 @@ public class ViewController {
 
     @FXML
     public void openNuevalistaView(ActionEvent event) {
-    	//TODO
+    	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
+    	oldFront.setDisable(true);
+    	oldFront.setVisible(false);
+    		
+    	// Traemos la ventana al frente y la hacemos visible
+    	newListView.setDisable(false);
+    	newListView.setVisible(true);
+    	newListView.toFront();
+    	fadeIn(newListView);
     }
 
     @FXML
     public void openPremiumView(ActionEvent event) {
     	//TODO
     }
-    
+        	
+    @FXML
+    public void openRegisterView(MouseEvent event) {
+    	// Ocultamos el elemento que hubiese en el frente
+    	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
+    	oldFront.setDisable(true);
+    	oldFront.setVisible(false);
+    	
+    	// Limpiamos todos los elementos de la ventana
+    	registerNick.setText("");
+    	registerPassword.setText("");
+    	registerPasswordRepeat.setText("");
+    	registerName.setText("");
+    	registerSurname.setText("");
+    	registerDatePicker.setValue(null);
+    	registerEmail.setText("");    	
+    	
+    	// Traemos la ventana al frente y la hacemos visible
+    	registerView.setDisable(false);
+    	registerView.setVisible(true);
+    	registerView.toFront(); 	
+    	
+    	hideRegisterLabels();
+    	fadeIn(registerView);
+    }
+
+    public void openProfileView() {
+    	// Actualizamos al usuario actual por si se han producido cambios
+		Usuario usuarioActual = controller.getUsuarioActual();
+		isProfileOpen = true;
+		
+		// Ocultamos el elemento que hubiese en el frente
+		Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
+		oldFront.setDisable(true);
+		oldFront.setVisible(false);
+
+		// Hacemos la vista visible
+		profileView.setVisible(true);
+		profileView.setDisable(false);
+		profileView.toFront();
+		fadeIn(profileView);
+		
+		// Actualizamos elementos de la vista de perfil
+		login.setText("Mi perfil");
+		profileNick.setText(usuarioActual.getLogin());
+		profileEmail.setPromptText(usuarioActual.getEmail());
+		profileDatePicker.setPromptText(usuarioActual.getFechaNac().toString());
+		profileTitle.setText("Bienvenido, " + usuarioActual.getNombre());
+		
+		// Limpiamos los elementos a introducir
+		profileEmail.setText("");
+		profileDatePicker.setValue(null);
+	}
+      
+    /* FUNCIONALIDAD VENTANA LOGIN */
     @FXML
     // Validación de la cuenta introducida en el login
     public void loginEnter(ActionEvent event) {
@@ -235,51 +331,8 @@ public class ViewController {
     		}
     	}
     }
-    	
-    @FXML
-    public void openRegisterView(MouseEvent event) {
-    	// Ocultamos el elemento que hubiese en el frente
-    	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
-    	oldFront.setDisable(true);
-    	oldFront.setVisible(false);
-    	
-    	// Limpiamos todos los elementos de la ventana
-    	registerNick.setText("");
-    	registerPassword.setText("");
-    	registerPasswordRepeat.setText("");
-    	registerName.setText("");
-    	registerSurname.setText("");
-    	registerDatePicker.setValue(null);
-    	registerEmail.setText("");    	
-    	
-    	// Traemos la ventana al frente y la hacemos visible
-    	registerView.setDisable(false);
-    	registerView.setVisible(true);
-    	registerView.toFront(); 	
-    	
-    	hideRegisterLabels();
-    	fadeIn(registerView);
-    }
 
-    @FXML
-    public void registerCancel(ActionEvent event) {
-    	//TODO: HACE LO MISMO QUE openLoginView pero lo dejo separado de mientras
-    	/*
-    	// Ocultamos el elemento que hubiese en el frente
-    	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
-    	oldFront.setDisable(true);
-    	oldFront.setVisible(false);
-    	
-    	// Traemos la ventana al frente y la hacemos visible
-    	loginView.setDisable(false);
-    	loginView.setVisible(true);
-    	loginView.toFront();
-    	fadeIn(loginView);
-    	*/
-    	openLoginView(event);
-    }
-    
-
+    /* FUNCIONALIDAD VENTANA DE REGISTRO */
     @FXML
     // Registrar un usuario
     public void registerUser(ActionEvent event) {
@@ -329,35 +382,26 @@ public class ViewController {
     		}
     	}
     }
-
-    public void openProfileView() {
-    	// Actualizamos al usuario actual por si se han producido cambios
-		Usuario usuarioActual = controller.getUsuarioActual();
-		isProfileOpen = true;
-		
-		// Ocultamos el elemento que hubiese en el frente
-		Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
-		oldFront.setDisable(true);
-		oldFront.setVisible(false);
-
-		// Hacemos la vista visible
-		profileView.setVisible(true);
-		profileView.setDisable(false);
-		profileView.toFront();
-		fadeIn(profileView);
-		
-		// Actualizamos elementos de la vista de perfil
-		login.setText("Mi perfil");
-		profileNick.setText(usuarioActual.getLogin());
-		profileEmail.setPromptText(usuarioActual.getEmail());
-		profileDatePicker.setPromptText(usuarioActual.getFechaNac().toString());
-		profileTitle.setText("Bienvenido, " + usuarioActual.getNombre());
-		
-		// Limpiamos los elementos a introducir
-		profileEmail.setText("");
-		profileDatePicker.setValue(null);
-	}
-      
+    
+    @FXML
+    public void registerCancel(ActionEvent event) {
+    	//TODO: HACE LO MISMO QUE openLoginView pero lo dejo separado de mientras
+    	/*
+    	// Ocultamos el elemento que hubiese en el frente
+    	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
+    	oldFront.setDisable(true);
+    	oldFront.setVisible(false);
+    	
+    	// Traemos la ventana al frente y la hacemos visible
+    	loginView.setDisable(false);
+    	loginView.setVisible(true);
+    	loginView.toFront();
+    	fadeIn(loginView);
+    	*/
+    	openLoginView(event);
+    }
+    
+    /* FUNCIONALIDAD VENTANA DE PERFIL */
     @FXML
     // Salir de la cuenta actualmente utilizada
     public void profileLogout(ActionEvent event) {
@@ -376,15 +420,16 @@ public class ViewController {
 
     @FXML
     public void loadVideos(ActionEvent event) {
-    	buscador.addVideosListener(controller);
     	FileChooser fileChooser = new FileChooser();
     	fileChooser.setTitle("Abrir XML con videos");
     	try {
 	    	File file = fileChooser.showOpenDialog(( (Node) event.getSource()).getScene().getWindow());
 	    	buscador.buscarVideo(file.getAbsolutePath());
+	    	showDialog("Boop!", "Vídeos cargados :)");
     	}
     	catch (Exception e) {
-			System.out.println("Error: Abra un archivo valido");
+    		showDialog("Error", "Elija un fichero válido");
+			//System.out.println("Error: Abra un archivo valido");
 		}
     }
      
@@ -403,14 +448,16 @@ public class ViewController {
     	}	
     }
 
+    /* FUNCIONALIDAD VENTANA DE EXPLORAR */
     @FXML
     // Busqueda de vídeos
     public void exploreSearch(ActionEvent event) {
     	// Borramos el resultado de la busqueda anterior
-    	exploreContent.getChildren().clear();
+    	//exploreContent.getChildren().clear();
     	
     	// Hecho esto, buscamos
     	Set<Video> videos = controller.buscarVideos(exploreTitle.getText());
+    	System.out.println(videos.toString());
     	boolean ifExists = false;
     	for (Video video : videos) {
     		// Comprobamos que el vídeo que queremos mostrar no esté ya en la vista
@@ -428,18 +475,18 @@ public class ViewController {
     		
     		// Propiedades de la label que contiene la miniatura y el título del vídeo
     		element.setMaxWidth(200.0);
-    		element.setMaxHeight(200.0);
+    		element.setMaxHeight(150.0);
     		element.setPrefWidth(200.0);
     		element.setPrefHeight(150.0);
     		element.setAlignment(Pos.CENTER);
-    		element.setOnMouseEntered(e -> element.setStyle("-fx-background-color: #cfcfcf"));
-    		element.setOnMouseExited(e -> element.setStyle(""));
+    		element.getStyleClass().add("videothumbnail");
     		element.setOnMouseClicked(new EventHandler<MouseEvent>() {
     		    @Override
     		    public void handle(MouseEvent mouseEvent) {
     		        if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
     		            if(mouseEvent.getClickCount() == 2){
     		            	// Si se hace doble click sobre la miniatura del vídeo, abrimos una ventana para reproducirlo
+    		            	controller.reproducir(video.getURL());
     		            	showVideoDialog(video);
     		            }
     		        }
@@ -470,8 +517,29 @@ public class ViewController {
     public void exploreClear(ActionEvent event) {
     	exploreContent.getChildren().clear();
     }
-    
+    /* FUNCIONALIDAD VENTANA DE NUEVA LISTA */
+   
+    @FXML
+    void newListClear(ActionEvent event) {
+    	//TODO
+    }
 
+    @FXML
+    void newListSearch(ActionEvent event) {
+    	//TODO
+    }
+
+    @FXML
+    void newListVideoClear(ActionEvent event) {
+    	//TODO
+    }
+
+    @FXML
+    void newListVideoSearch(ActionEvent event) {
+    	//TODO
+    }
+    
+    /* FUNCIONALIDAD BARRA SUPERIOR */
     @FXML
     public void minimizeWindow(ActionEvent event) {
     	((Stage)((JFXButton)event.getSource()).getScene().getWindow()).setIconified(true);  	
@@ -516,11 +584,8 @@ public class ViewController {
         stg.setX(event.getScreenX() - xOffset);
         stg.setY(event.getScreenY() - yOffset);
     }
-    
-    ////////////////////////////  
-    /* FUNCIONALIDAD AUXILIAR */
-    ////////////////////////////  
-    
+ 
+    /* FUNCIONALIDAD AUXILIAR */  
     // Ocultar todas las labels de "*Este campo es obligatorio" de la vista del login
     public void hideLoginLabels() {
     	loginLabelNick.setVisible(false);
@@ -537,7 +602,8 @@ public class ViewController {
     }
     
 	// Generar un JFXDialog con un vídeo pasado de parámetro
-	public void showVideoDialog(Video video) {
+	public void showVideoDialog(Video video) {		
+		
 		JFXDialogLayout dialogContent = new JFXDialogLayout();
 
 		dialogContent.setHeading(new Text(video.getTitulo()));
@@ -559,10 +625,11 @@ public class ViewController {
 		addTags.setSpacing(10.0);
 
 		Label addTagsText = new Label("Añadir nueva etiqueta:");
-		addTagsText.setStyle("-fx-text-fill: #000000; -fx-font: 12 system; -fx-font-weight: bold;");
+		
+		addTagsText.setStyle(DIALOG_LABEL_STYLE + " -fx-font-weight: bold;");
 
 		JFXTextField addTagsTextField = new JFXTextField();
-		addTagsTextField.setStyle("-jfx-focus-color: #f51827; -jfx-unfocus-color: #4d4d4d;");
+		addTagsTextField.setStyle(DIALOG_JFXTEXTFIELD_STYLE);
 
 		addTags.getChildren().addAll(addTagsText, addTagsTextField);
 
@@ -576,12 +643,12 @@ public class ViewController {
 
 		// Botones de la ventana emergente
 		JFXButton close = new JFXButton("Cerrar");
-		close.setStyle("-fx-background-color: #f6444f; -fx-text-fill: #FFFFFF; -fx-font: 14 system;");
+		close.setStyle(DIALOG_BUTTON_STYLE);
 		close.setPrefSize(100, 25);
 		close.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
 		JFXButton add = new JFXButton("Añadir");
-		add.setStyle("-fx-background-color: #f6444f; -fx-text-fill: #FFFFFF; -fx-font: 14 system;");
+		add.setStyle(DIALOG_BUTTON_STYLE);
 		add.setPrefSize(100, 25);
 		add.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		add.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -589,10 +656,8 @@ public class ViewController {
     		    public void handle(MouseEvent mouseEvent) {
 	                Etiqueta tag =  new Etiqueta(addTagsTextField.getText());
 	                if (controller.addEtiquetaVideo(tag, video)) {
-	        			addTagToPane(tag, tags);
-		                if (controller.addEtiqueta(tag)) {		        			
-		        			tagsView.getItems().add(tag.getNombre());
-		                }
+	        			addTagToPane(tag, tags);     			
+		        		tagsView.getItems().add(tag.getNombre());
 	                }
 	                addTagsTextField.clear();
     		    }
@@ -609,9 +674,6 @@ public class ViewController {
 				videoWeb.cancel();
 			}
 		});
-		// controller.reproducir(video); <---- Descomentar cuando tengamos el cargador
-		// de vídeos
-		// Porque estoy injertando vídeos de momento y si los modifico puede que se líe
 		videoWeb.playVideo(video.getURL());
 		dialog.show();
 	}
@@ -622,11 +684,11 @@ public class ViewController {
 
 		dialogContent.setHeading(new Text(title));
 		dialogContent.setBody(new Text(content));
-		dialogContent.setStyle("-fx-font: 14 system;");
+		dialogContent.setStyle(DIALOG_LABEL_STYLE);
 
 		// Botones de la ventana emergente
 		JFXButton close = new JFXButton("Cerrar");
-		close.setStyle("-fx-background-color: #f6444f; -fx-text-fill: #FFFFFF; -fx-font: 14 system;");
+		close.setStyle(DIALOG_BUTTON_STYLE);
 		close.setPrefSize(100, 25);
 		close.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
@@ -652,8 +714,6 @@ public class ViewController {
 		ft.play();
 	}
 	
-	
-	
 	// Cargamos la lista con todas las etiquetas
 	public void loadTags(Set<Etiqueta> etiquetasGuardadas) {
 		tagsView.setItems(etiquetasGuardadas.stream()
@@ -661,10 +721,10 @@ public class ViewController {
 				.collect(Collectors.toCollection(FXCollections::observableArrayList)));
 	}
 	
-	
+	// Añadir una etiqueta a las etiquetas utilizadas para la búsqueda
 	@FXML
 	public boolean addSearchTag(MouseEvent event) {
-		if (event.getClickCount() == 2) {
+		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
 			String tagName = tagsView.getSelectionModel().getSelectedItem();
 			if (controller.addEtiquetaBusqueda(tagName)) {
 				searchTagsView.getItems().add(tagName);
@@ -674,11 +734,12 @@ public class ViewController {
 		return false;
 	}
 	
+	// Eliminar una etiqueta de las etiquetas utilizadas para la búsqueda
 	@FXML
 	public boolean removeSearchTag(MouseEvent event) {
 		if (controller.isEtiquetasBusquedaEmpty())
 			return false;
-		if (event.getClickCount() == 2) {
+		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
 			String tagName = searchTagsView.getSelectionModel().getSelectedItem();
 			controller.removeEtiquetaBusqueda(tagName);
 			searchTagsView.getItems().remove(tagName);
@@ -687,12 +748,11 @@ public class ViewController {
 		return false;
 	}
 	
+	// Añadir una etiqueta a un contenedor pasado de parámetro
 	private boolean addTagToPane(Etiqueta tag, Pane tags) {
 		Label l = new Label(tag.getNombre());
-		l.setStyle(
-				"-fx-font: 14 system; -fx-background-color: #efefef; -fx-padding : 2 5 2 5; -fx-font-weight: bold;");
+		l.getStyleClass().add("videotag");
 		return tags.getChildren().add(l);
 	}
 	
-
 }
