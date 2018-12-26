@@ -2,34 +2,42 @@
 <videos xmlns="http://www.videos.es/tds" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
 	xs:schemaLocation="http://www.videos.es/tds videos.xsd">
 
-	<video titulo="Rick Astley - Never Gonna Give You Up (Video)" url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" >
+	<video titulo="Rick Astley - Never Gonna Give You Up (Video)" url="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
 		<etiqueta nombre="Music"/>
 		<etiqueta nombre="Meme"/>
 		<etiqueta nombre="Classic"/>
 	</video>
-	<video titulo="KOLM TRIIPU / THREE STRIPES" url="https://www.youtube.com/watch?v=QiFBgtgUtfw" >
+	<video titulo="KOLM TRIIPU / THREE STRIPES" url="https://www.youtube.com/watch?v=QiFBgtgUtfw">
 		<etiqueta nombre="Music"/>
 		<etiqueta nombre="Meme"/>
 	</video>
-	<video titulo="Toto - Africa" url="https://www.youtube.com/watch?v=wGjtv2jHKrg" >
+	<video titulo="Toto - Africa" url="https://www.youtube.com/watch?v=wGjtv2jHKrg">
 		<etiqueta nombre="Music"/>
 		<etiqueta nombre="Meme"/>
 		<etiqueta nombre="Classic"/>
 	</video>
-	<video titulo="Matt and Kim - Yea Yeah" url="https://www.youtube.com/watch?v=KsomXlyTyaQ" >
+	<video titulo="Matt and Kim - Yea Yeah" url="https://www.youtube.com/watch?v=KsomXlyTyaQ">
 		<etiqueta nombre="Music"/>
 		<etiqueta nombre="Indie"/>
 	</video>
-	<video titulo="The Bygone Days - Porco Rosso" url="https://www.youtube.com/watch?v=y1hzHolsgCM" >
+	<video titulo="The Bygone Days - Porco Rosso" url="https://www.youtube.com/watch?v=y1hzHolsgCM">
 		<etiqueta nombre="Music"/>
 		<etiqueta nombre="Animation"/>
 	</video>	
-	<video titulo="cows cows cows" url="https://www.youtube.com/watch?v=FavUpD_IjVY" >
+	<video titulo="cows cows cows" url="https://www.youtube.com/watch?v=FavUpD_IjVY">
 		<etiqueta nombre="Meme"/>
 		<etiqueta nombre="Animation"/>
 	</video>	
-	<video titulo="The Conservation of The Assassination of Archimedes Narrated Version" url="https://www.youtube.com/watch?v=v1Mjc4zNfY4" >
+	<video titulo="The Conservation of The Assassination of Archimedes Narrated Version" url="https://www.youtube.com/watch?v=v1Mjc4zNfY4">
 		<etiqueta nombre="Art"/>
 	</video>
-	
+	<video titulo="ATTACK OF THE MUTANT DICK FROM OUTHER SPACE" url="https://www.youtube.com/watch?v=D1eKNW5Nn1A">
+		<etiqueta nombre="Art"/>
+		<etiqueta nombre="Movie"/>
+	</video>
+	<video titulo="Animal crossing switch leak" url="https://www.youtube.com/watch?v=ahAEt2jTosY">
+		<etiqueta nombre="Art"/>
+		<etiqueta nombre="Meme"/>
+		<etiqueta nombre="Cursed"/>
+	</video>
 </videos>

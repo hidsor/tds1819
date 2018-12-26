@@ -30,7 +30,7 @@
 
 <StackPane id="rootStackPane" fx:id="rootStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="parent" stylesheets="@applicationred.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.view.ViewController">
    <children>
-      <BorderPane id="rootBorderPane" fx:id="rootBorderPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0">
+      <BorderPane id="rootBorderPane" fx:id="rootBorderPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-border-color: #dfdfdf;">
          <center>
             <StackPane id="stackpane" fx:id="stackpane" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
@@ -539,9 +539,8 @@
             </StackPane>
          </center>
          <left>
-            <VBox minWidth="-Infinity" prefWidth="140.0" styleClass="sidebar">
+            <VBox minWidth="-Infinity" prefWidth="140.0" style="-fx-border-color: transparent #dfdfdf transparent transparent;" styleClass="sidebar">
                <children>
-                  <Separator disable="true" prefWidth="200.0" styleClass="sideseparator" />
                   <JFXButton id="login" fx:id="login" alignment="TOP_LEFT" focusTraversable="false" onAction="#openLoginView" prefHeight="40.0" prefWidth="200.0" text="Log in">
                      <font>
                         <Font name="System Bold" size="16.0" />
@@ -683,9 +682,9 @@
             </VBox>
          </left>
          <top>
-            <FlowPane alignment="TOP_RIGHT" rowValignment="TOP" styleClass="topbar" BorderPane.alignment="CENTER">
+            <FlowPane alignment="TOP_RIGHT" rowValignment="TOP" style="-fx-border-color: transparent transparent #dfdfdf transparent;" styleClass="topbar" BorderPane.alignment="CENTER">
                <children>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="800.0">
+                  <HBox alignment="CENTER_RIGHT" prefHeight="28.0">
                      <children>
                         <JFXButton id="minimize" fx:id="minimizeButton" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" onAction="#minimizeWindow" styleClass="topjfxbutton" text="">
                            <graphic>
