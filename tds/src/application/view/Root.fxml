@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXMasonryPane?>
 <?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
@@ -290,7 +291,14 @@
                         </GridPane>
                      </top>
                      <right>
-                        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+                        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="53.0" prefWidth="100.0" text="  Etiquetas&#10;disponibles" />
+                              <JFXListView fx:id="tagsView" onMouseClicked="#addSearchTag" prefHeight="200.0" prefWidth="100.0" />
+                              <Separator prefHeight="17.0" prefWidth="100.0" />
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="52.0" prefWidth="100.0" text="  Buscar&#10;etiquetas:" />
+                              <JFXListView fx:id="searchTagsView" onMouseClicked="#removeSearchTag" prefHeight="173.0" prefWidth="100.0" />
+                           </children></VBox>
                      </right>
                   </BorderPane>
                   <GridPane id="loginView" fx:id="loginView">

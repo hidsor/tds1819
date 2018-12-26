@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<videos xmlns="http://www.videos.es/tds" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+	xs:schemaLocation="http://www.videos.es/tds videos.xsd">
+
+	<video titulo="Rick Astley - Never Gonna Give You Up (Video)" url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" >
+		<etiqueta nombre="Music"/>
+		<etiqueta nombre="Meme"/>
+		<etiqueta nombre="Classic"/>
+	</video>
+	<video titulo="KOLM TRIIPU / THREE STRIPES" url="https://www.youtube.com/watch?v=QiFBgtgUtfw" >
+		<etiqueta nombre="Music"/>
+		<etiqueta nombre="Meme"/>
+	</video>
+	<video titulo="Obi-Wan says 'Hello There' 67 million times" url="https://www.youtube.com/watch?v=FTrxDBDBOHU" >
+		<etiqueta nombre="Movie"/>
+		<etiqueta nombre="Meme"/>
+	</video>
+	<video titulo="Toto - Africa" url="https://www.youtube.com/watch?v=wGjtv2jHKrg" >
+		<etiqueta nombre="Music"/>
+		<etiqueta nombre="Meme"/>
+		<etiqueta nombre="Classic"/>
+	</video>
+	<video titulo="Matt & Kim - Yea Yeah" url="https://www.youtube.com/watch?v=KsomXlyTyaQ" >
+		<etiqueta nombre="Music"/>
+		<etiqueta nombre="Indie"/>
+	</video>
+	
+</videos>

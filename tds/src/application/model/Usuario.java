@@ -37,7 +37,7 @@ public class Usuario {
 		this(login, password, "", "", null, "");
 	}
 
-	// Métodos de consulta y modificado
+	// Mï¿½todos de consulta y modificado
 	public int getCodigo() {
 		return codigo;
 	}
@@ -90,7 +90,7 @@ public class Usuario {
 		return premium != null;
 	}
 
-	// Hacemos premium al usuario asignándole un rol premium
+	// Hacemos premium al usuario asignï¿½ndole un rol premium
 	public void setPremium() {
 		this.premium = new RolPremium();
 	}
@@ -135,7 +135,7 @@ public class Usuario {
 	}
 
 	public boolean addVideoReciente(Video video) {
-		// Si hay 5 o más videos, quitamos el primero (el que hace más tiempo que reprodujimos)
+		// Si hay 5 o mï¿½s videos, quitamos el primero (el que hace mï¿½s tiempo que reprodujimos)
 		if (listaRecientes.getNumVideos() >= 5) {
 			listaRecientes.removeVideo(0);
 		}
@@ -160,5 +160,14 @@ public class Usuario {
 	public int hashCode() {
 		return login.hashCode();
 	}
-
+	
+	
+	public String infoListasVideos() {
+		StringBuffer buffer = new StringBuffer("");
+		for (ListaVideos i : listas) {
+			buffer.append(i.toString() + "\n");
+		}
+		
+		return buffer.toString();
+	}
 }

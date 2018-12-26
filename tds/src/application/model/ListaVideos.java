@@ -15,9 +15,10 @@ public class ListaVideos {
 	// Constructor
 	public ListaVideos(String nombre) {
 		this.nombre = nombre;
+		videos = new LinkedList<Video>();
 	}
 	
-	// Métodos de consulta y modificado
+	// Mï¿½todos de consulta y modificado
 	public int getCodigo() {
 		return codigo;
 	}
@@ -74,10 +75,20 @@ public class ListaVideos {
 		return videos.contains(video);
 	}
 	
-	public void reproducirLista() {
-		//for (Video i : videos) {
-			// TODO <--- ¿? Vlad no entender este método
-			// reproducirVideo(); 
-		//}
+
+	
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer("");
+		buffer.append("Lista: " + nombre + "\n");
+		for (Video i : videos) {
+			buffer.append("\t" + i.toString() + "\n");
+		}
+		return buffer.toString();
 	}
+	
+	
+	
+
+
 }

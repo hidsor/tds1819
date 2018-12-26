@@ -2,7 +2,10 @@ package application.view;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 
@@ -10,6 +13,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
+import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
@@ -18,12 +22,14 @@ import application.model.Etiqueta;
 import application.model.Usuario;
 import application.model.Video;
 import javafx.animation.FadeTransition;
+import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Node;
@@ -38,11 +44,15 @@ import javafx.scene.layout.BorderPane;
 import com.jfoenix.controls.JFXMasonryPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import tds.video.VideoWeb;
+import umu.tds.videos.CargadorVideos;
+import umu.tds.videos.ComponenteBuscadorVideos;
+
 public class ViewController {
 	///////////////
 	/* ATRIBUTOS */
@@ -52,6 +62,7 @@ public class ViewController {
 	private double xOffset = 0; 
 	private double yOffset = 0;
 	private AppVideo controller = AppVideo.getUnicaInstancia();
+	private ComponenteBuscadorVideos buscador = new ComponenteBuscadorVideos();
 	private boolean isProfileOpen = false;
 	private static VideoWeb videoWeb = new VideoWeb();
 	
@@ -126,6 +137,11 @@ public class ViewController {
     private JFXTextField exploreTitle;
     @FXML
     private JFXButton exploreSearch, exploreClear;
+    @FXML 
+    private JFXListView<String> tagsView = new JFXListView<String>();	// Para visualizar todas las etiquetas disponibles
+    @FXML
+    private JFXListView<String> searchTagsView = new JFXListView<String>(); // Visualizar nuestras etiquetas de búsqueda
+    private Set<Etiqueta> searchTags = new HashSet<Etiqueta>();
     
     ///////////////////////
     /* MANEJO DE EVENTOS */
@@ -155,7 +171,9 @@ public class ViewController {
     }
 
     @FXML
-    public void openExplorarView(ActionEvent event) {
+    public void openExplorarView(ActionEvent event) {	
+    	loadTags(controller.getListaEtiquetas());
+    	
     	// Ocultamos el elemento que hubiese en el frente
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
@@ -165,7 +183,6 @@ public class ViewController {
     	exploreView.setDisable(false);
     	exploreView.setVisible(true);
     	exploreView.toFront();
-  
     	fadeIn(exploreView);
     }
 
@@ -359,7 +376,16 @@ public class ViewController {
 
     @FXML
     public void loadVideos(ActionEvent event) {
-    	//TODO: Componente cargador de vídeos
+    	buscador.addVideosListener(controller);
+    	FileChooser fileChooser = new FileChooser();
+    	fileChooser.setTitle("Abrir XML con videos");
+    	try {
+	    	File file = fileChooser.showOpenDialog(( (Node) event.getSource()).getScene().getWindow());
+	    	buscador.buscarVideo(file.getAbsolutePath());
+    	}
+    	catch (Exception e) {
+			System.out.println("Error: Abra un archivo valido");
+		}
     }
      
     @FXML
@@ -380,6 +406,10 @@ public class ViewController {
     @FXML
     // Busqueda de vídeos
     public void exploreSearch(ActionEvent event) {
+    	// Borramos el resultado de la busqueda anterior
+    	exploreContent.getChildren().clear();
+    	
+    	// Hecho esto, buscamos
     	Set<Video> videos = controller.buscarVideos(exploreTitle.getText());
     	boolean ifExists = false;
     	for (Video video : videos) {
@@ -521,10 +551,7 @@ public class ViewController {
 
 		// Añadimos las etiquetas al contenedor
 		for (Etiqueta tag : video.getEtiquetas()) {
-			Label l = new Label(tag.getNombre());
-			l.setStyle(
-					"-fx-font: 14 system; -fx-background-color: #efefef; -fx-padding : 2 5 2 5; -fx-font-weight: bold;");
-			tags.getChildren().add(l);
+			addTagToPane(tag, tags);
 		}
 
 		// Contenedor de añadir nueva etiqueta
@@ -557,6 +584,19 @@ public class ViewController {
 		add.setStyle("-fx-background-color: #f6444f; -fx-text-fill: #FFFFFF; -fx-font: 14 system;");
 		add.setPrefSize(100, 25);
 		add.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+		add.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    		    @Override
+    		    public void handle(MouseEvent mouseEvent) {
+	                Etiqueta tag =  new Etiqueta(addTagsTextField.getText());
+	                if (controller.addEtiquetaVideo(tag, video)) {
+	        			addTagToPane(tag, tags);
+		                if (controller.addEtiqueta(tag)) {		        			
+		        			tagsView.getItems().add(tag.getNombre());
+		                }
+	                }
+	                addTagsTextField.clear();
+    		    }
+    		});
 
 		dialogContent.setActions(add, close);
 
@@ -611,5 +651,48 @@ public class ViewController {
 		ft.setToValue(1.0);
 		ft.play();
 	}
+	
+	
+	
+	// Cargamos la lista con todas las etiquetas
+	public void loadTags(Set<Etiqueta> etiquetasGuardadas) {
+		tagsView.setItems(etiquetasGuardadas.stream()
+				.map(Etiqueta::getNombre)
+				.collect(Collectors.toCollection(FXCollections::observableArrayList)));
+	}
+	
+	
+	@FXML
+	public boolean addSearchTag(MouseEvent event) {
+		if (event.getClickCount() == 2) {
+			String tagName = tagsView.getSelectionModel().getSelectedItem();
+			if (controller.addEtiquetaBusqueda(tagName)) {
+				searchTagsView.getItems().add(tagName);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@FXML
+	public boolean removeSearchTag(MouseEvent event) {
+		if (controller.isEtiquetasBusquedaEmpty())
+			return false;
+		if (event.getClickCount() == 2) {
+			String tagName = searchTagsView.getSelectionModel().getSelectedItem();
+			controller.removeEtiquetaBusqueda(tagName);
+			searchTagsView.getItems().remove(tagName);
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean addTagToPane(Etiqueta tag, Pane tags) {
+		Label l = new Label(tag.getNombre());
+		l.setStyle(
+				"-fx-font: 14 system; -fx-background-color: #efefef; -fx-padding : 2 5 2 5; -fx-font-weight: bold;");
+		return tags.getChildren().add(l);
+	}
+	
 
 }

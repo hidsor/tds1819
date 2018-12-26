@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<videos xmlns="http://www.videos.es/tds" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+	xs:schemaLocation="http://www.videos.es/tds videos.xsd">
+	<video titulo="Top 5 Hidden Indie Gems of October 2018" url="https://www.youtube.com/watch?v=4uiaZhgren4" >
+		<etiqueta nombre="games"/>
+		<etiqueta nombre="indie"/>
+	</video>
+	<video titulo="The Dø I A Take Away Show" url="https://www.youtube.com/watch?v=qu577tNp1hA" >
+		<etiqueta nombre="music"/>
+		<etiqueta nombre="blogotheque"/>
+		<etiqueta nombre="solo"/>
+	</video>
+	
+</videos>
