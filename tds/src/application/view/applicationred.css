@@ -24,6 +24,43 @@
 	-fx-background-color: #f6444f;
 }
 
+.jfxbutton:hover {
+	-fx-background-color: #e7404b;
+}
+
+.searchbutton:pressed {
+	-fx-graphic: url('../../resources/explorar_secundario_pressed.png');
+}
+
+.clearbutton:pressed {
+	-fx-graphic: url('../../resources/borrar_pressed.png');
+}
+
+.newlistbutton:pressed {
+	-fx-graphic: url('../../resources/nuevalista_pressed.png');
+}
+
+.playlistbutton:pressed {
+	-fx-graphic: url('../../resources/play_pressed.png');
+}
+
+.editplaylistbutton:pressed {
+	-fx-graphic: url('../../resources/edit_pressed.png');
+}
+
+.deletelistbutton:pressed {
+	-fx-graphic: url('../../resources/eliminar_pressed.png');
+}
+
+.optionsbutton:pressed {
+	-fx-graphic: url('../../resources/options_pressed.png');
+}
+
+.jfxbutton .jfx-rippler{
+	-jfx-rippler-fill: #b21821;
+}
+
+
 .sidebarjfxbutton .jfx-rippler{
 	-jfx-rippler-fill: #FFFFFF;
 }

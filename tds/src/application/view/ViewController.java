@@ -22,6 +22,7 @@ import application.model.Etiqueta;
 import application.model.Usuario;
 import application.model.Video;
 import javafx.animation.FadeTransition;
+import javafx.animation.RotateTransition;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
@@ -33,6 +34,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -43,6 +45,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import com.jfoenix.controls.JFXMasonryPane;
+import com.jfoenix.controls.JFXNodesList;
+
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -65,6 +69,7 @@ public class ViewController {
 	private ComponenteBuscadorVideos buscador;
 	private boolean isProfileOpen;
 	private static VideoWeb videoWeb;
+    boolean areOptionsOpened;
 	
 	private final static String DIALOG_BUTTON_STYLE =	"-fx-background-color: #f6444f;"
 														+ " -fx-text-fill: #FFFFFF;"
@@ -90,7 +95,7 @@ public class ViewController {
     
     /* BOTONES DE LA SIDEBAR */
     @FXML
-    private JFXButton mislistas, premium, explorar, recientes, login, nuevalista;
+    private JFXButton mislistas, premium, explorar, recientes, login;
     
     /* STACKPANE PARA CONTENER TODAS LAS VENTANAS */
     @FXML
@@ -152,17 +157,22 @@ public class ViewController {
     @FXML
     private JFXListView<String> searchTagsView = new JFXListView<String>(); // Visualizar nuestras etiquetas de búsqueda utilizadas
  
+    
     /* VENTANA DE NUEVA LISTA */
     @FXML
-    private BorderPane newListView; // Contenedor de la vista de nueva lista
+    private BorderPane myListsView;
     @FXML
-    private JFXMasonryPane newListVideoContent;
+    private TextField myListsTitle;
     @FXML
-    private TextField newListVideoTitle, newListTitle;
+    private JFXMasonryPane myListsContent;
     @FXML
-    private JFXButton newListVideoSearch, newListVideoClear, newListSearch, newListClear;
+    private ComboBox<Text> myListsComboBox;
     @FXML
-    private JFXListView<Label> newList;
+    private JFXNodesList myListsOptions;
+    @FXML
+    private JFXButton myListsSearch, myListsClear, myListExpand, myListsEdit, myListsPlay, myListsDelete, myListsNew;
+    @FXML
+    private JFXListView<Label> myListsList;
     
 	/////////////////
 	/* CONSTRUCTOR */
@@ -217,6 +227,7 @@ public class ViewController {
     	exploreView.setDisable(false);
     	exploreView.setVisible(true);
     	exploreView.toFront();
+    	exploreContent.getChildren().clear();
     	fadeIn(exploreView);
     }
 
@@ -228,19 +239,6 @@ public class ViewController {
     @FXML
     public void openRecientesView(ActionEvent event) {
     	//TODO
-    }
-
-    @FXML
-    public void openNuevalistaView(ActionEvent event) {
-    	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
-    	oldFront.setDisable(true);
-    	oldFront.setVisible(false);
-    		
-    	// Traemos la ventana al frente y la hacemos visible
-    	newListView.setDisable(false);
-    	newListView.setVisible(true);
-    	newListView.toFront();
-    	fadeIn(newListView);
     }
 
     @FXML
@@ -324,7 +322,6 @@ public class ViewController {
     			explorar.setDisable(false);
     			mislistas.setDisable(false);
     			recientes.setDisable(false);
-    			nuevalista.setDisable(false);
     		} else {
     			// Login inválido
     			showDialog("Login inválido", "El nombre y/o la contraseña son incorrectas");
@@ -374,8 +371,7 @@ public class ViewController {
     			// Desbloqueamos la funcionalidad disponible para usuarios
     			explorar.setDisable(false);
     			mislistas.setDisable(false);
-    			recientes.setDisable(false);
-    			nuevalista.setDisable(false);    			
+    			recientes.setDisable(false);			
     		} else {
     			// Registro inválido (shouldn't happen)
     			showDialog("Registro inválido", "No se ha podido registrar al usuario");
@@ -413,7 +409,6 @@ public class ViewController {
 		explorar.setDisable(true);
 		mislistas.setDisable(true);
 		recientes.setDisable(true);
-		nuevalista.setDisable(true);
 		
     	openLoginView(event);
     }
@@ -457,7 +452,6 @@ public class ViewController {
     	
     	// Hecho esto, buscamos
     	Set<Video> videos = controller.buscarVideos(exploreTitle.getText());
-    	System.out.println(videos.toString());
     	boolean ifExists = false;
     	for (Video video : videos) {
     		// Comprobamos que el vídeo que queremos mostrar no esté ya en la vista
@@ -517,25 +511,56 @@ public class ViewController {
     public void exploreClear(ActionEvent event) {
     	exploreContent.getChildren().clear();
     }
-    /* FUNCIONALIDAD VENTANA DE NUEVA LISTA */
-   
+    /* FUNCIONALIDAD VENTANA DE MIS LISTAS */
+ 
     @FXML
-    void newListClear(ActionEvent event) {
+    void displayOptions(ActionEvent event) {
+    	RotateTransition rt = new RotateTransition(Duration.millis(100), myListExpand);
+    	if (!areOptionsOpened) {
+        	rt.setFromAngle(0);
+        	rt.setToAngle(90);
+        	areOptionsOpened = true;
+    	} else {
+        	rt.setFromAngle(90);
+        	rt.setToAngle(0);
+        	areOptionsOpened = false;
+    	}
+    	rt.setAutoReverse(true);
+    	rt.play();
+    }
+    
+    @FXML
+    void addVideoList(ActionEvent event) {
     	//TODO
     }
 
     @FXML
-    void newListSearch(ActionEvent event) {
+    void chooseList(ActionEvent event) {
+    	//TODO
+    }
+    
+    @FXML
+    void deleteVideoList(ActionEvent event) {
+    	//TODO
+    }
+    
+    @FXML
+    void editPlaylist(ActionEvent event) {
+    	//TODO
+    }    
+
+    @FXML
+    void myListsClearVideos(ActionEvent event) {
     	//TODO
     }
 
     @FXML
-    void newListVideoClear(ActionEvent event) {
+    void myListsSearchVideos(ActionEvent event) {
     	//TODO
     }
 
     @FXML
-    void newListVideoSearch(ActionEvent event) {
+    void playVideoList(ActionEvent event) {
     	//TODO
     }
     
