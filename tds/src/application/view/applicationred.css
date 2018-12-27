@@ -56,6 +56,11 @@
 	-fx-graphic: url('../../resources/options_pressed.png');
 }
 
+.validbutton:pressed {
+	-fx-graphic: url('../../resources/valid_pressed.png');
+}
+
+
 .jfxbutton .jfx-rippler{
 	-jfx-rippler-fill: #b21821;
 }
@@ -215,10 +220,36 @@
 
 }
 
-
 .mysearchbar {
 	-fx-background-color: #FFFFFF;
 	-fx-border-color: #dfdfdf;
 	-fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
+    -fx-accent: #f6444f;
+}
+
+.myjfx-check-box {
+     -jfx-checked-color: #f51827;
+     -jfx-unchecked-color: black;
+}
+
+.mycombo-box {
+	-fx-background-color: #ffffff;
+	-fx-border-color: #dfdfdf;
+	-fx-font-size: 14;
+}
+
+.mycombo-box .list-view .list-cell {
+	-fx-background-color: #ffffff;
+}
+.mycombo-box .list-view .list-cell:hover {
+	-fx-background-color: #fdc7c3;
+}
+
+.mytextfieldtest {
+	-fx-background-color: #ffffff;
+	-fx-border-color: #dfdfdf;
+	-fx-border-radius: 40;
+	-fx-pref-width: 80;
+	-fx-pref-height: 40;
 }

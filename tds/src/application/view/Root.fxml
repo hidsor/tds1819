@@ -36,11 +36,11 @@
          <center>
             <StackPane id="stackpane" fx:id="stackpane" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <BorderPane id="myListsView" fx:id="myListsView" prefHeight="200.0" prefWidth="200.0">
+                  <BorderPane id="myListsView" fx:id="myListsView" disable="true" prefHeight="200.0" prefWidth="200.0" visible="false">
                      <top>
                         <HBox alignment="CENTER" BorderPane.alignment="CENTER">
                            <children>
-                              <TextField id="myListsSearch" fx:id="myListsTitle" disable="true" prefHeight="40.0" promptText="Añadir a la lista" style="-fx-border-radius: 0;" styleClass="myListsTitle" HBox.hgrow="ALWAYS">
+                              <TextField id="myListsSearch" fx:id="myListsTitle" disable="true" prefHeight="40.0" promptText="Añadir a la lista" styleClass="mysearchbar" HBox.hgrow="ALWAYS">
                                  <font>
                                     <Font name="System Bold" size="16.0" />
                                  </font>
@@ -86,7 +86,7 @@
                                     <String fx:value="clearbutton" />
                                  </styleClass>
                               </JFXButton>
-                              <Region prefWidth="330.0" />
+                              <Region prefWidth="205.0" />
                            </children>
                            <opaqueInsets>
                               <Insets />
@@ -96,114 +96,133 @@
                            </BorderPane.margin>
                         </HBox>
                      </top>
-                     <center>
-                        <ScrollPane pannable="true" style="-fx-fit-to-width: true;" styleClass="myscrollview" BorderPane.alignment="CENTER">
-                           <content>
-                              <JFXMasonryPane id="myListsContent" fx:id="myListsContent" HSpacing="1.0" VSpacing="1.0" cellHeight="150.0" cellWidth="200.0" />
-                           </content>
-                           <BorderPane.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </BorderPane.margin>
-                        </ScrollPane>
-                     </center>
                      <right>
                         <VBox spacing="10.0" BorderPane.alignment="CENTER">
                            <BorderPane.margin>
                               <Insets bottom="10.0" right="10.0" top="10.0" />
                            </BorderPane.margin>
                            <children>
-                              <HBox alignment="CENTER" spacing="5.0">
+                              <StackPane id="myListsRightRegion" fx:id="myListsRightRegion">
                                  <children>
-                                    <ComboBox id="myListsComboBox" fx:id="myListsComboBox" onAction="#chooseList" prefHeight="40.0" prefWidth="150.0" promptText="Listas" style="-fx-background-color: FFFFFF; -fx-border-color: DFDFDF;" />
-                                    <JFXNodesList id="myListsOptions" fx:id="myListsOptions" spacing="10.0">
+                                    <HBox id="myListsMainSideBar" fx:id="myListsMainSideBar" alignment="CENTER" spacing="5.0">
                                        <children>
-                                          <JFXButton id="myListExpand" fx:id="myListExpand" onAction="#displayOptions" prefHeight="40.0" prefWidth="40.0" ripplerFill="WHITE" style="-fx-background-radius: 40;" text="">
+                                          <ComboBox id="myListsComboBox" fx:id="myListsComboBox" onAction="#chooseList" prefHeight="40.0" prefWidth="150.0" promptText="Listas" styleClass="mycombo-box" />
+                                          <JFXNodesList id="myListsOptions" fx:id="myListsOptions" spacing="10.0">
+                                             <children>
+                                                <JFXButton id="myListExpand" fx:id="myListExpand" onAction="#displayOptions" prefHeight="40.0" prefWidth="40.0" ripplerFill="WHITE" style="-fx-background-radius: 40;" text="">
+                                                   <font>
+                                                      <Font name="System Bold" size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../resources/options.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                   <styleClass>
+                                                      <String fx:value="jfxbutton" />
+                                                      <String fx:value="optionsbutton" />
+                                                   </styleClass>
+                                                </JFXButton>
+                                                <JFXButton id="myListsEdit" fx:id="myListsEdit" layoutX="10.0" layoutY="10.0" onAction="#editPlaylist" prefHeight="40.0" prefWidth="40.0" ripplerFill="WHITE" style="-fx-background-radius: 40;" text="">
+                                                   <font>
+                                                      <Font name="System Bold" size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../resources/edit.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                   <styleClass>
+                                                      <String fx:value="jfxbutton" />
+                                                      <String fx:value="editplaylistbutton" />
+                                                   </styleClass>
+                                                </JFXButton>
+                                                <JFXButton id="myListsPlay" fx:id="myListsPlay" onAction="#playVideoList" prefHeight="40.0" prefWidth="40.0" ripplerFill="WHITE" style="-fx-background-radius: 40;" text="">
+                                                   <font>
+                                                      <Font name="System Bold" size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../resources/play.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                   <styleClass>
+                                                      <String fx:value="jfxbutton" />
+                                                      <String fx:value="playlistbutton" />
+                                                   </styleClass>
+                                                </JFXButton>
+                                                <JFXButton id="myListsDelete" fx:id="myListsDelete" onAction="#deleteVideoList" prefHeight="40.0" prefWidth="40.0" ripplerFill="WHITE" style="-fx-background-radius: 40;" text="">
+                                                   <font>
+                                                      <Font name="System Bold" size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../resources/eliminar.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                   <styleClass>
+                                                      <String fx:value="jfxbutton" />
+                                                      <String fx:value="deletelistbutton" />
+                                                   </styleClass>
+                                                </JFXButton>
+                                                <JFXButton id="myListsNew" fx:id="myListsNew" layoutX="10.0" layoutY="160.0" onAction="#addVideoList" prefHeight="40.0" prefWidth="40.0" ripplerFill="WHITE" style="-fx-background-radius: 40;" text="">
+                                                   <font>
+                                                      <Font name="System Bold" size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../resources/nuevalista.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                   <styleClass>
+                                                      <String fx:value="jfxbutton" />
+                                                      <String fx:value="newlistbutton" />
+                                                   </styleClass>
+                                                </JFXButton>
+                                             </children>
+                                          </JFXNodesList>
+                                       </children>
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                    </HBox>
+                                    <HBox id="myListsSecondarySideBar" fx:id="myListsSecondarySideBar" disable="true" spacing="5.0" visible="false">
+                                       <children>
+                                          <TextField id="myListsNewListTitle" fx:id="myListsNewListTitle" prefHeight="40.0" prefWidth="150.0" promptText="Título de la lista" styleClass="mysearchbar">
+                                             <font>
+                                                <Font name="System Bold" size="16.0" />
+                                             </font>
+                                          </TextField>
+                                          <JFXButton id="myListsAccept" fx:id="myListsAccept" onAction="#acceptNewList" prefHeight="40.0" prefWidth="40.0" ripplerFill="WHITE" style="-fx-background-radius: 40;" text="">
                                              <font>
                                                 <Font name="System Bold" size="14.0" />
                                              </font>
                                              <graphic>
                                                 <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
-                                                      <Image url="@../../resources/options.png" />
+                                                      <Image url="@../../resources/valid.png" />
                                                    </image>
                                                 </ImageView>
                                              </graphic>
                                              <styleClass>
                                                 <String fx:value="jfxbutton" />
-                                                <String fx:value="optionsbutton" />
-                                             </styleClass>
-                                          </JFXButton>
-                                          <JFXButton id="myListsEdit" fx:id="myListsEdit" layoutX="10.0" layoutY="10.0" onAction="#editPlaylist" prefHeight="40.0" prefWidth="40.0" ripplerFill="WHITE" style="-fx-background-radius: 40;" text="">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                             <graphic>
-                                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../resources/edit.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </graphic>
-                                             <styleClass>
-                                                <String fx:value="jfxbutton" />
-                                                <String fx:value="editplaylistbutton" />
-                                             </styleClass>
-                                          </JFXButton>
-                                          <JFXButton id="myListsPlay" fx:id="myListsPlay" onAction="#playVideoList" prefHeight="40.0" prefWidth="40.0" ripplerFill="WHITE" style="-fx-background-radius: 40;" text="">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                             <graphic>
-                                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../resources/play.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </graphic>
-                                             <styleClass>
-                                                <String fx:value="jfxbutton" />
-                                                <String fx:value="playlistbutton" />
-                                             </styleClass>
-                                          </JFXButton>
-                                          <JFXButton id="myListsDelete" fx:id="myListsDelete" onAction="#deleteVideoList" prefHeight="40.0" prefWidth="40.0" ripplerFill="WHITE" style="-fx-background-radius: 40;" text="">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                             <graphic>
-                                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../resources/eliminar.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </graphic>
-                                             <styleClass>
-                                                <String fx:value="jfxbutton" />
-                                                <String fx:value="deletelistbutton" />
-                                             </styleClass>
-                                          </JFXButton>
-                                          <JFXButton id="myListsNew" fx:id="myListsNew" layoutX="10.0" layoutY="160.0" onAction="#addVideoList" prefHeight="40.0" prefWidth="40.0" ripplerFill="WHITE" style="-fx-background-radius: 40;" text="">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                             <graphic>
-                                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../resources/nuevalista.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </graphic>
-                                             <styleClass>
-                                                <String fx:value="jfxbutton" />
-                                                <String fx:value="newlistbutton" />
+                                                <String fx:value="validbutton" />
                                              </styleClass>
                                           </JFXButton>
                                        </children>
-                                    </JFXNodesList>
+                                    </HBox>
                                  </children>
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                              </HBox>
+                              </StackPane>
                               <JFXListView id="myListsList" fx:id="myListsList" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
                                  <styleClass>
                                     <String fx:value="myscrollview" />
@@ -216,6 +235,20 @@
                            </children>
                         </VBox>
                      </right>
+                     <center>
+                        <StackPane id="myListsCenterRegion" fx:id="myListsCenterRegion" BorderPane.alignment="CENTER">
+                           <children>
+                              <ScrollPane pannable="true" style="-fx-fit-to-width: true;" styleClass="myscrollview">
+                                 <content>
+                                    <JFXMasonryPane id="myListsContent" fx:id="myListsContent" HSpacing="1.0" VSpacing="1.0" cellHeight="150.0" cellWidth="200.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                           <BorderPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </BorderPane.margin>
+                        </StackPane>
+                     </center>
                   </BorderPane>
                   <GridPane id="registerView" fx:id="registerView" disable="true" visible="false">
                     <columnConstraints>
@@ -554,7 +587,7 @@
                         </HBox>
                      </top>
                   </BorderPane>
-                  <GridPane id="loginView" fx:id="loginView" visible="false">
+                  <GridPane id="loginView" fx:id="loginView">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="375.0" />

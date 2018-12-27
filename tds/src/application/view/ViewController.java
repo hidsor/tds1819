@@ -3,13 +3,18 @@ package application.view;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URL;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
@@ -19,16 +24,19 @@ import com.jfoenix.controls.JFXTextField;
 
 import application.controller.AppVideo;
 import application.model.Etiqueta;
+import application.model.ListaVideos;
 import application.model.Usuario;
 import application.model.Video;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -57,7 +65,7 @@ import javafx.scene.text.Text;
 import tds.video.VideoWeb;
 import umu.tds.videos.ComponenteBuscadorVideos;
 
-public class ViewController {
+public class ViewController implements Initializable {
 	////////////////////////////
 	/* ATRIBUTOS Y CONSTANTES */
 	////////////////////////////
@@ -160,9 +168,13 @@ public class ViewController {
     
     /* VENTANA DE NUEVA LISTA */
     @FXML
-    private BorderPane myListsView;
+    private BorderPane myListsView; // Contenedor de la vista de listas
     @FXML
-    private TextField myListsTitle;
+    private StackPane myListsCenterRegion, myListsRightRegion;
+    @FXML
+    private HBox myListsMainSideBar, myListsSecondarySideBar;
+    @FXML
+    private TextField myListsTitle, myListsNewListTitle;
     @FXML
     private JFXMasonryPane myListsContent;
     @FXML
@@ -182,7 +194,7 @@ public class ViewController {
 		buscador = new ComponenteBuscadorVideos();
 		videoWeb = new VideoWeb();
     	buscador.addVideosListener(controller);
-		isProfileOpen = false;
+		isProfileOpen = false;	
 	}
 	
     ///////////////////////
@@ -200,8 +212,8 @@ public class ViewController {
         	oldFront.setVisible(false);
         	
     		// Limpiamos los elementos de la vista
-    		loginNick.setText("");
-    		loginPassword.setText("");
+    		loginNick.clear();
+    		loginPassword.clear();
     		
     		// Traemos la ventana al frente y la hacemos visible
         	loginView.setDisable(false);
@@ -222,7 +234,6 @@ public class ViewController {
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
     	oldFront.setVisible(false);
-    		
     	// Traemos la ventana al frente y la hacemos visible
     	exploreView.setDisable(false);
     	exploreView.setVisible(true);
@@ -233,7 +244,18 @@ public class ViewController {
 
     @FXML
     public void openMislistasView(ActionEvent event) {
-    	//TODO
+    	
+    	// Ocultamos el elemento que hubiese en el frente
+    	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
+    	oldFront.setDisable(true);
+    	oldFront.setVisible(false);
+    		
+    	// Traemos la ventana al frente y la hacemos visible
+    	myListsView.setDisable(false);
+    	myListsView.setVisible(true);
+    	myListsView.toFront();
+    	loadMyListsElements();
+    	fadeIn(myListsView);
     }
 
     @FXML
@@ -254,13 +276,13 @@ public class ViewController {
     	oldFront.setVisible(false);
     	
     	// Limpiamos todos los elementos de la ventana
-    	registerNick.setText("");
-    	registerPassword.setText("");
-    	registerPasswordRepeat.setText("");
-    	registerName.setText("");
-    	registerSurname.setText("");
+    	registerNick.clear();
+    	registerPassword.clear();
+    	registerPasswordRepeat.clear();
+    	registerName.clear();
+    	registerSurname.clear();
     	registerDatePicker.setValue(null);
-    	registerEmail.setText("");    	
+    	registerEmail.clear();   	
     	
     	// Traemos la ventana al frente y la hacemos visible
     	registerView.setDisable(false);
@@ -295,7 +317,7 @@ public class ViewController {
 		profileTitle.setText("Bienvenido, " + usuarioActual.getNombre());
 		
 		// Limpiamos los elementos a introducir
-		profileEmail.setText("");
+		profileEmail.clear();
 		profileDatePicker.setValue(null);
 	}
       
@@ -423,7 +445,7 @@ public class ViewController {
 	    	showDialog("Boop!", "Vídeos cargados :)");
     	}
     	catch (Exception e) {
-    		showDialog("Error", "Elija un fichero válido");
+    		showDialog("Error", "No se ha elegido ningún fichero o el fichero indicado es inválido");
 			//System.out.println("Error: Abra un archivo valido");
 		}
     }
@@ -529,14 +551,50 @@ public class ViewController {
     	rt.play();
     }
     
+    // Proporcionamos al usuario la interfaz necesaria para añadir una nueva lista
     @FXML
     void addVideoList(ActionEvent event) {
-    	//TODO
+    	// Ocultamos el panel lateral con las listas y las opciones
+    	myListsMainSideBar.setDisable(true);
+    	myListsMainSideBar.setVisible(false);
+    	
+    	// Mostramos el panel lateral secundario para añadir nuevas listas
+    	
+    	myListsSecondarySideBar.setDisable(false);
+    	myListsSecondarySideBar.setVisible(true);
+    	
+    	myListsNewListTitle.clear();
+    	
+    	fadeIn(myListsSecondarySideBar);
     }
+    
+    // Validamos la lista introducida
+    @FXML
+    void acceptNewList(ActionEvent event) {
+    	//TODO
+    	if (!myListsNewListTitle.getText().equals("")) {
+    		ListaVideos l = new ListaVideos(myListsNewListTitle.getText());
+    		controller.getUsuarioActual().addListaVideos(l);
+    	}
+    	
+    	// Ocultamos  el panel lateral secundario para añadir nuevas listas
+    	myListsSecondarySideBar.setDisable(true);
+    	myListsSecondarySideBar.setVisible(false);
+    	
+    	// Mostramos el panel lateral con las listas y las opciones
+    	myListsMainSideBar.setDisable(false);
+    	myListsMainSideBar.setVisible(true);
+    	
+    	loadMyListsElements();
+    	fadeIn(myListsMainSideBar);
+    }    
+    
 
     @FXML
     void chooseList(ActionEvent event) {
-    	//TODO
+		myListsEdit.setDisable(true);
+		myListsPlay.setDisable(true);
+		myListsDelete.setDisable(true);
     }
     
     @FXML
@@ -739,6 +797,15 @@ public class ViewController {
 		ft.play();
 	}
 	
+	// Método para hacer una transición hacia afuera de un nodo pasado de parámetro
+	// La duración no está parametrizada pero podría parametrizarse también
+	public void fadeOut(Node node) {
+		FadeTransition ft = new FadeTransition(Duration.millis(200), node);
+		ft.setFromValue(1.0);
+		ft.setToValue(0.0);
+		ft.play();
+	}
+	
 	// Cargamos la lista con todas las etiquetas
 	public void loadTags(Set<Etiqueta> etiquetasGuardadas) {
 		tagsView.setItems(etiquetasGuardadas.stream()
@@ -780,4 +847,26 @@ public class ViewController {
 		return tags.getChildren().add(l);
 	}
 	
+	// Cargar todos los elementos de la vista de mis listas
+	private void loadMyListsElements() {
+		// Limpiamos los vídeos buscados
+		myListsContent.getChildren().clear();
+		List<ListaVideos> playlists = controller.getUsuarioActual().getListas();
+		
+		ObservableList<Text> playlistsTitles = FXCollections.observableList(playlists.stream()
+																			.map(ListaVideos::getNombre)
+																			.map(Text::new)
+																			.collect(Collectors.toList())
+																			);
+		myListsComboBox.setItems(playlistsTitles);
+		
+		myListsEdit.setDisable(true);
+		myListsPlay.setDisable(true);
+		myListsDelete.setDisable(true);
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		//TODO: Si no metes nada quita el implements Initializable
+	}
 }
