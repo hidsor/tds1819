@@ -237,19 +237,12 @@
 	-fx-background-color: #ffffff;
 	-fx-border-color: #dfdfdf;
 	-fx-font-size: 14;
+	-fx-font-weight: bold;
+	-fx-text-fill: #000000;
+	-fx-accent:  #fdc7c3;
 }
 
-.mycombo-box .list-view .list-cell {
-	-fx-background-color: #ffffff;
-}
 .mycombo-box .list-view .list-cell:hover {
 	-fx-background-color: #fdc7c3;
 }
 
-.mytextfieldtest {
-	-fx-background-color: #ffffff;
-	-fx-border-color: #dfdfdf;
-	-fx-border-radius: 40;
-	-fx-pref-width: 80;
-	-fx-pref-height: 40;
-}

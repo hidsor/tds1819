@@ -106,7 +106,11 @@
                                  <children>
                                     <HBox id="myListsMainSideBar" fx:id="myListsMainSideBar" alignment="CENTER" spacing="5.0">
                                        <children>
-                                          <ComboBox id="myListsComboBox" fx:id="myListsComboBox" onAction="#chooseList" prefHeight="40.0" prefWidth="150.0" promptText="Listas" styleClass="mycombo-box" />
+                                          <ComboBox id="myListsComboBox" fx:id="myListsComboBox" onAction="#chooseList" prefHeight="40.0" prefWidth="150.0" promptText="Listas">
+                                             <styleClass>
+                                                <String fx:value="mycombo-box" />
+                                                <String fx:value="myscrollview" />
+                                             </styleClass></ComboBox>
                                           <JFXNodesList id="myListsOptions" fx:id="myListsOptions" spacing="10.0">
                                              <children>
                                                 <JFXButton id="myListExpand" fx:id="myListExpand" onAction="#displayOptions" prefHeight="40.0" prefWidth="40.0" ripplerFill="WHITE" style="-fx-background-radius: 40;" text="">

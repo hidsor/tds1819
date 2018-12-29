@@ -112,6 +112,13 @@ public class Usuario {
 	public List<ListaVideos> getListas() {
 		return Collections.unmodifiableList(listas);
 	}
+	
+	public ListaVideos getListaVideos(String titulo) {
+		for (ListaVideos lista : listas) {
+			if (lista.getNombre().equals(titulo)) return lista;
+		}
+		return null;
+	}
 
 	public ListaVideos getListaRecientes() {
 		return listaRecientes;
@@ -130,8 +137,9 @@ public class Usuario {
 		return listas.add(listaVideos);
 	}
 
-	public boolean removeListaVideos(ListaVideos listaVideos) {
-		return listas.remove(listaVideos);
+	public boolean removeListaVideos(String titulo) {
+		ListaVideos lista = getListaVideos(titulo);
+		return listas.remove(lista);
 	}
 
 	public boolean addVideoReciente(Video video) {

@@ -178,7 +178,7 @@ public class ViewController implements Initializable {
     @FXML
     private JFXMasonryPane myListsContent;
     @FXML
-    private ComboBox<Text> myListsComboBox;
+    private ComboBox<String> myListsComboBox;
     @FXML
     private JFXNodesList myListsOptions;
     @FXML
@@ -254,7 +254,16 @@ public class ViewController implements Initializable {
     	myListsView.setDisable(false);
     	myListsView.setVisible(true);
     	myListsView.toFront();
-    	loadMyListsElements();
+    	
+    	// Limpiamos todos los elementos de la vista y cargamos las listas
+		myListsContent.getChildren().clear();
+		loadMyListsComboBox();
+		myListsEdit.setDisable(true);
+		myListsPlay.setDisable(true);
+		myListsDelete.setDisable(true);
+		
+		myListsComboBox.getSelectionModel().clearSelection();
+		
     	fadeIn(myListsView);
     }
 
@@ -487,16 +496,7 @@ public class ViewController implements Initializable {
     		if (ifExists) continue;
     		
     		// Si no está, lo añadimos a la búsqueda actual
-    		Label element = new Label();
-    		
-    		// Propiedades de la label que contiene la miniatura y el título del vídeo
-    		element.setMaxWidth(200.0);
-    		element.setMaxHeight(150.0);
-    		element.setPrefWidth(200.0);
-    		element.setPrefHeight(150.0);
-    		element.setAlignment(Pos.CENTER);
-    		element.getStyleClass().add("videothumbnail");
-    		element.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    		Label element = createVideoThumbnail(video, new EventHandler<MouseEvent>() {
     		    @Override
     		    public void handle(MouseEvent mouseEvent) {
     		        if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
@@ -508,22 +508,6 @@ public class ViewController implements Initializable {
     		        }
     		    }
     		});
-    		element.setContentDisplay(ContentDisplay.TOP);
-    		element.setText(video.getTitulo());
-    		
-    		// Extraemos la miniatura del componente proporcionado
-    		// Hacemos una conversión de ImageIcon (Swing) a ImageView (JavaFX) con SwingFXUtils
-    		ImageIcon icon = videoWeb.getThumb(video.getURL());
-    		BufferedImage bi = new BufferedImage(
-    			    icon.getIconWidth(),
-    			    icon.getIconHeight(),
-    			    BufferedImage.TYPE_INT_RGB);
-    		Graphics g = bi.createGraphics();
-    		icon.paintIcon(null, g, 0,0);
-    		g.dispose();
-    		Image thumbnail = SwingFXUtils.toFXImage(bi, null);
-    		element.setGraphic(new ImageView(thumbnail));
-    		
     		exploreContent.getChildren().add(element);
     	}
     }    
@@ -571,10 +555,16 @@ public class ViewController implements Initializable {
     // Validamos la lista introducida
     @FXML
     void acceptNewList(ActionEvent event) {
-    	//TODO
+    	
+    	// Si se ha introducido un título, lo registramos
+    	// Si no se ha introducido ningún título, lo interpretamos como que el usuario no quiere crear ninguna lista
     	if (!myListsNewListTitle.getText().equals("")) {
-    		ListaVideos l = new ListaVideos(myListsNewListTitle.getText());
-    		controller.getUsuarioActual().addListaVideos(l);
+    		controller.crearListaVideos(myListsNewListTitle.getText());
+    		loadMyListsComboBox();
+    		myListsComboBox.getSelectionModel().select(myListsNewListTitle.getText());   		
+    		myListsEdit.setDisable(false);
+    		myListsPlay.setDisable(false);
+    		myListsDelete.setDisable(false);		
     	}
     	
     	// Ocultamos  el panel lateral secundario para añadir nuevas listas
@@ -584,21 +574,26 @@ public class ViewController implements Initializable {
     	// Mostramos el panel lateral con las listas y las opciones
     	myListsMainSideBar.setDisable(false);
     	myListsMainSideBar.setVisible(true);
-    	
-    	loadMyListsElements();
+    	 	
     	fadeIn(myListsMainSideBar);
     }    
     
 
     @FXML
     void chooseList(ActionEvent event) {
-		myListsEdit.setDisable(true);
-		myListsPlay.setDisable(true);
-		myListsDelete.setDisable(true);
+		myListsEdit.setDisable(false);
+		myListsPlay.setDisable(false);
+		myListsDelete.setDisable(false);
+		loadListToListView(myListsComboBox.getSelectionModel().getSelectedItem());
     }
     
     @FXML
     void deleteVideoList(ActionEvent event) {
+    	controller.removeListaVideos(myListsComboBox.getSelectionModel().getSelectedItem());
+    	loadMyListsComboBox();
+		myListsEdit.setDisable(true);
+		myListsPlay.setDisable(true);
+		myListsDelete.setDisable(true);
     	//TODO
     }
     
@@ -797,6 +792,7 @@ public class ViewController implements Initializable {
 		ft.play();
 	}
 	
+	// TODO: Bórralo si no lo usas
 	// Método para hacer una transición hacia afuera de un nodo pasado de parámetro
 	// La duración no está parametrizada pero podría parametrizarse también
 	public void fadeOut(Node node) {
@@ -807,8 +803,8 @@ public class ViewController implements Initializable {
 	}
 	
 	// Cargamos la lista con todas las etiquetas
-	public void loadTags(Set<Etiqueta> etiquetasGuardadas) {
-		tagsView.setItems(etiquetasGuardadas.stream()
+	public void loadTags(Set<Etiqueta> savedTags) {
+		tagsView.setItems(savedTags.stream()
 				.map(Etiqueta::getNombre)
 				.collect(Collectors.toCollection(FXCollections::observableArrayList)));
 	}
@@ -847,22 +843,66 @@ public class ViewController implements Initializable {
 		return tags.getChildren().add(l);
 	}
 	
-	// Cargar todos los elementos de la vista de mis listas
-	private void loadMyListsElements() {
-		// Limpiamos los vídeos buscados
-		myListsContent.getChildren().clear();
+	// Crear una miniatura de vídeo en nuestro formato
+	// Contiene la miniatura y su título junto al evento que se pase de parámetro
+	private Label createVideoThumbnail(Video video, EventHandler<MouseEvent> e) {		
+		Label label = new Label();
+		
+		// Propiedades de la label que contiene la miniatura y el título del vídeo
+		label.setMaxWidth(200.0);
+		label.setMaxHeight(150.0);
+		label.setPrefWidth(200.0);
+		label.setPrefHeight(150.0);
+		label.setAlignment(Pos.CENTER);
+		label.getStyleClass().add("videothumbnail");
+		label.setOnMouseClicked(e);
+		label.setContentDisplay(ContentDisplay.TOP);
+		label.setText(video.getTitulo());
+		
+		// Extraemos la miniatura del componente proporcionado
+		// Hacemos una conversión de ImageIcon (Swing) a ImageView (JavaFX) con SwingFXUtils
+		ImageIcon icon = videoWeb.getThumb(video.getURL());
+		BufferedImage bi = new BufferedImage(
+			    icon.getIconWidth(),
+			    icon.getIconHeight(),
+			    BufferedImage.TYPE_INT_RGB);
+		Graphics g = bi.createGraphics();
+		icon.paintIcon(null, g, 0,0);
+		g.dispose();
+		Image thumbnail = SwingFXUtils.toFXImage(bi, null);
+		label.setGraphic(new ImageView(thumbnail));
+		return label;
+	}
+	// Carga las listas actuales del usuario al combobox que contendrá dichas listas
+	private void loadMyListsComboBox() {
 		List<ListaVideos> playlists = controller.getUsuarioActual().getListas();
 		
-		ObservableList<Text> playlistsTitles = FXCollections.observableList(playlists.stream()
+		ObservableList<String> playlistsTitles = FXCollections.observableList(playlists.stream()
 																			.map(ListaVideos::getNombre)
-																			.map(Text::new)
 																			.collect(Collectors.toList())
 																			);
 		myListsComboBox.setItems(playlistsTitles);
+	}
+	
+	// Cargar la lista pasada de parámetro al listView del panel de mis listas
+	private void loadListToListView(String title) {
+		ListaVideos list = controller.getListaVideos(title);
 		
-		myListsEdit.setDisable(true);
-		myListsPlay.setDisable(true);
-		myListsDelete.setDisable(true);
+		if (list == null) return;
+
+		EventHandler<MouseEvent> e = new EventHandler<MouseEvent>() {
+		    @Override
+		    public void handle(MouseEvent mouseEvent) {
+		        if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+		            if(mouseEvent.getClickCount() == 2){
+		            	System.out.println("clicked jeje");
+		            }
+		        }
+		    }
+		};
+		myListsList.setItems(list.getVideos().stream()
+											.map(v -> createVideoThumbnail(v, null))
+											.collect(Collectors.toCollection(FXCollections::observableArrayList)));
 	}
 
 	@Override

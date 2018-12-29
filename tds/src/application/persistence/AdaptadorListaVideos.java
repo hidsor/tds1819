@@ -32,6 +32,13 @@ public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
 
 	private AdaptadorListaVideos() { 
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
+		/*
+		//TODO: EL MEGA FLUSH POR SI LA VUELVO A LIAR
+		List<Entidad> eListaVideoss = servPersistencia.recuperarEntidades("listaVideos");
+		for (Entidad e : eListaVideoss) {
+			servPersistencia.borrarEntidad(e);
+		}
+		*/
 	}
 
 	public void registrarListaVideos(ListaVideos listaVideos) {

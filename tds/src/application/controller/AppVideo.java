@@ -236,17 +236,22 @@ public class AppVideo implements VideosListener {
 		return true;
 	}
 
-	public void crearListaVideos(String nombre) {
-		ListaVideos listaVideos = new ListaVideos(nombre);
+	public void crearListaVideos(String titulo) {
+		ListaVideos listaVideos = new ListaVideos(titulo);
 		usuarioActual.addListaVideos(listaVideos);
 		adaptadorListaVideos.registrarListaVideos(listaVideos);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
 
-	public void removeListaVideos(ListaVideos listaVideos) {
-		usuarioActual.removeListaVideos(listaVideos);
+	public void removeListaVideos(String titulo) {
+		ListaVideos listaVideos = usuarioActual.getListaVideos(titulo);
+		usuarioActual.removeListaVideos(titulo);
 		adaptadorListaVideos.borrarListaVideos(listaVideos);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
+	}
+	
+	public ListaVideos getListaVideos(String title) {
+		return usuarioActual.getListaVideos(title);
 	}
 
 	public boolean addVideoALista(Video video, ListaVideos listaVideos) {
