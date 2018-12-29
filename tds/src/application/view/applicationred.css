@@ -1,31 +1,69 @@
-.parent{
+.parent {
 	-fx-background-color: #FFFFFF;
 }
 
-.registerlabel{
+/* Label de "No tienes cuenta? Regístrate" */
+.registerlabel {
 	-fx-underline: true;
 	-fx-text-fill: #000000;
 }
 
-.registerlabel:hover{
+.registerlabel:hover {
 	-fx-text-fill: #f51827;
 }
 
-.registerlabel:pressed{
+.registerlabel:pressed {
 	-fx-text-fill: #fb7a80;
 }
 
-.jfxtextfield{
+/* Estilo genérico de cualquier textfield */
+.jfxtextfield {
 	-jfx-focus-color: #f51827;
 	-jfx-unfocus-color: #4d4d4d;
 }
 
-.jfxbutton{
+/* Estilo genérico de cualquier jfxbutton */
+.jfxbutton {
 	-fx-background-color: #f6444f;
+	-fx-text-fill: #ffffff;
 }
-
 .jfxbutton:hover {
 	-fx-background-color: #e7404b;
+}
+
+.jfxbutton .jfx-rippler{
+	-jfx-rippler-fill: #b21821;
+}
+
+/* Estilo concreto de cualquier botón de una ventana emergente (además del estilo jfxbutton) */
+.jfxdialogbutton {
+	-fx-font-size: 14;
+	-fx-font-weight: bold;
+}
+
+/* Cambios de imagen de cada botón que contiene una imagen */
+.login:pressed {
+	-fx-graphic: url('../../resources/login_pressed.png');
+}
+
+.explorar:pressed {
+	-fx-graphic: url('../../resources/explorar_pressed.png');
+}
+
+.listas:pressed {
+	-fx-graphic: url('../../resources/listas_pressed.png');
+}
+
+.nuevalista:pressed {
+	-fx-graphic: url('../../resources/nuevalista_pressed.png');
+}
+
+.premium:pressed {
+	-fx-graphic: url('../../resources/premium_pressed.png');
+}
+
+.recientes:pressed {
+	-fx-graphic: url('../../resources/recientes_pressed.png');
 }
 
 .searchbutton:pressed {
@@ -60,84 +98,60 @@
 	-fx-graphic: url('../../resources/valid_pressed.png');
 }
 
-
-.jfxbutton .jfx-rippler{
-	-jfx-rippler-fill: #b21821;
-}
-
-
-.sidebarjfxbutton .jfx-rippler{
-	-jfx-rippler-fill: #FFFFFF;
-}
-
+/* Elementos de la barra lateral izquierda */
 .sidebar{
 	-fx-background-color: #fbfbfb;
 }
 
-.sidebarlabel{
+.sidebarlabel {
 	-fx-text-fill: #000000;
 }
 
-.sideseparator{
-	 -fx-background: #FFFFFF;
+.sideseparator {
+	 -fx-background: #ffffff;
 }
 
-.sidebarjfxbutton .jfx-rippler{
+.sidebarjfxbutton .jfx-rippler {
 	-jfx-rippler-fill: #f51827;
 }
 .sidebarjfxbutton:hover {
 	-fx-background-color: #fdc7c3;
 }
 .sidebarjfxbutton:pressed {
-	-fx-text-fill: #FFFFFF;
+	-fx-text-fill: #ffffff;
 }
 
-.login:pressed {
-	-fx-graphic: url('../../resources/login_pressed.png');
-}
-
-.explorar:pressed {
-	-fx-graphic: url('../../resources/explorar_pressed.png');
-}
-
-.listas:pressed {
-	-fx-graphic: url('../../resources/listas_pressed.png');
-}
-
-.nuevalista:pressed {
-	-fx-graphic: url('../../resources/nuevalista_pressed.png');
-}
-
-.premium:pressed {
-	-fx-graphic: url('../../resources/premium_pressed.png');
-}
-
-.recientes:pressed {
-	-fx-graphic: url('../../resources/recientes_pressed.png');
-}
-
+/* Elementos de la barra superior */
 .topbar{
 	-fx-background-color: #f6f6f6;
 }
 
-.topjfxbutton:hover{
+.topjfxbutton:hover {
 	-fx-background-color: #efefef;
 }
 
-.topjfxbutton .jfx-rippler{
+.topjfxbutton .jfx-rippler {
 	-jfx-rippler-fill: #cfcfcf;
 }
 
-.removebutton:hover{
+.removebutton:hover {
 	-fx-background-color: #fb7a80;
 	-fx-graphic: url('../../resources/close_hover.png');
-	
 }
 
+.removebutton .jfx-rippler {
+	-jfx-rippler-fill: #f51827;
+}
+
+/* Propiedades genéricas de cualquier miniatura de vídeo */
 .videothumbnail {
 	-fx-font-weight: bold;
 }
 
+.videothumbnail:hover {
+	-fx-background-color: #cfcfcf;
+}
+/* Propiedades genéricas de cualquier etiqueta de un vídeo */
 .videotag {
 	-fx-font: 14 system;
 	-fx-background-color: #efefef; 
@@ -145,31 +159,31 @@
 	-fx-font-weight: bold;
 }
 
-.videothumbnail:hover {
-	-fx-background-color: #cfcfcf;
+/*
+.videotag:hover {
+	-fx-graphic: url('../../resources/close.png');
 }
-
-.removebutton .jfx-rippler{
-	-jfx-rippler-fill: #f51827;
-}
-.myjfxlistview .jfx-list-cell{
+ */
+/* Propiedades genéricas de cualquier listview de la aplicación */
+.myjfxlistview .jfx-list-cell {
 	-fx-font-size: 14;
 }
-.myjfxlistview .jfx-list-cell .jfx-rippler{
+.myjfxlistview .jfx-list-cell .jfx-rippler {
 	-jfx-rippler-fill: #f51827;
 	
 }
-.myjfxlistview .jfx-list-cell:hover{
+.myjfxlistview .jfx-list-cell:hover {
 	-fx-background-color: #fdc7c3;
 	-fx-font-size: 14;
 }
 
-.myjfxlistview .jfx-list-cell:selected{
+.myjfxlistview .jfx-list-cell:selected {
 	-fx-background-color: #fb7a80;
 	-fx-text-fill: #FFFFFF;
 	
 }
-.myscrollview{
+/* Propiedades genéricas de cualquier panel o elemento que pueda tener un scroll */
+.myscrollview {
 	-fx-border-color: #dfdfdf;
 	-fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
@@ -177,7 +191,7 @@
 
 /* The main scrollbar **track** CSS class  */
 .myscrollview .scroll-bar:horizontal .track,
-.myscrollview .scroll-bar:vertical .track{
+.myscrollview .scroll-bar:vertical .track {
 	-fx-background-color:transparent;
 	-fx-border-color:transparent;
 	-fx-background-radius: 0em;
@@ -190,23 +204,18 @@
     -fx-background-color:transparent;
 	-fx-background-radius: 0em;
 	-fx-padding:0 0 10 0;
-
 }
 
 /* The increment and decrement button CSS class of scrollbar */
-
 .myscrollview .scroll-bar:vertical .increment-button ,
 .myscrollview .scroll-bar:vertical .decrement-button {
-
     -fx-background-color:transparent;
 	-fx-background-radius: 0em;
 	-fx-padding:0 10 0 0;
-
 }
 
 .myscrollview  .scroll-bar .increment-arrow,
-.myscrollview  .scroll-bar .decrement-arrow
- {
+.myscrollview  .scroll-bar .decrement-arrow {
 	-fx-shape: " ";	
 	-fx-padding:0;
 }
@@ -217,9 +226,9 @@
     -fx-background-color: #f6444f;
 	-fx-background-insets: 2, 0, 0;
 	-fx-background-radius: 2em;
-
 }
 
+/* Propiedades genéricas de cualquier textfield que no sea JFX */
 .mysearchbar {
 	-fx-background-color: #FFFFFF;
 	-fx-border-color: #dfdfdf;
@@ -228,6 +237,7 @@
     -fx-accent: #f6444f;
 }
 
+/* Propiedades genéricas de cualquier checkbox y combobox */
 .myjfx-check-box {
      -jfx-checked-color: #f51827;
      -jfx-unchecked-color: black;
