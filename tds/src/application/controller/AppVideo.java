@@ -4,9 +4,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.itextpdf.text.Document;
@@ -29,7 +31,7 @@ public class AppVideo implements VideosListener {
 	private CatalogoUsuarios catalogoUsuarios;
 	private CatalogoVideos catalogoVideos;
 	private ListaVideos topten;
-	private Set<Etiqueta> listaEtiquetas;
+	private Map<Etiqueta, Integer> listaEtiquetas;
 	
 	private Set<Etiqueta> etiquetasBusqueda;
 
@@ -70,12 +72,13 @@ public class AppVideo implements VideosListener {
 		for (int i = 0; i < 10 && i < videos.size(); i++)
 			catalogoVideos.addVideo(videos.get(i));
 
-		// Conjunto de etiquetas
-		// Recorremos todos los videos aï¿½adiendo todas las etiquetas de cada uno al
-		// conjunto
-		listaEtiquetas = new HashSet<Etiqueta>();
-		for (Video i : videos) {
-			listaEtiquetas.addAll(i.getEtiquetas());
+		// Actualizamos la "lista" de etiquetas global con el número de referencias de cada etiqueta para luego poder borrar
+		// correctamente
+		listaEtiquetas = new HashMap<Etiqueta, Integer>();
+		for (Video video : videos) {
+			for (Etiqueta etiqueta : video.getEtiquetas()) {
+				incrementarReferenciasEtiqueta(etiqueta);
+			}
 		}
 		
 		
@@ -104,15 +107,24 @@ public class AppVideo implements VideosListener {
 	}
 
 	public Set<Etiqueta> getListaEtiquetas() {
-		return Collections.unmodifiableSet(listaEtiquetas);
+		return Collections.unmodifiableSet(listaEtiquetas.keySet());
 	}
 	
+	public boolean containsEtiqueta(Etiqueta etiqueta) {
+		Integer contadorReferencias = listaEtiquetas.get(etiqueta);
+		if (contadorReferencias == null) return false;
+		return true;
+	}
 	public Set<Etiqueta> getEtiquetasBusqueda() {
 		return Collections.unmodifiableSet(etiquetasBusqueda);
 	}
 
 	public Usuario getUsuarioActual() {
 		return usuarioActual;
+	}
+	
+	public Video getVideo(String URL) {
+		return catalogoVideos.getVideo(URL);
 	}
 
 	// Funcionalidad
@@ -173,11 +185,6 @@ public class AppVideo implements VideosListener {
 	
 	public void salirUsuario() {
 		usuarioActual = null;
-	}
-	
-	public boolean addEtiqueta(String nombre) {
-		Etiqueta etiqueta = new Etiqueta(nombre);
-		return listaEtiquetas.add(etiqueta);
 	}
 	
 	public boolean addEtiquetaBusqueda(String nombre) {
@@ -253,7 +260,17 @@ public class AppVideo implements VideosListener {
 		if (video == null) return false;
 		
 		if (!video.addEtiqueta(etiqueta)) return false;
-		listaEtiquetas.add(etiqueta);
+		incrementarReferenciasEtiqueta(etiqueta);
+		adaptadorVideo.modificarVideo(video);
+		return true;
+	}
+	
+	public boolean borrarEtiquetaVideo(Etiqueta etiqueta, String URL) {
+		Video video = catalogoVideos.getVideo(URL);
+		if (video == null) return false;
+		
+		if (!video.removeEtiqueta(etiqueta)) return false;
+		decrementarReferenciasEtiqueta(etiqueta);
 		adaptadorVideo.modificarVideo(video);
 		return true;
 	}
@@ -344,10 +361,10 @@ public class AppVideo implements VideosListener {
 	@Override
 	public void nuevosVideos(VideosEvent evento) {
 		List<Video> videos = adaptarVideos(evento.getVideos());
-		for (Video i : videos) {
-			registrarVideo(i);
-			for (Etiqueta j : i.getEtiquetas()) {
-				listaEtiquetas.add(j);
+		for (Video video : videos) {
+			registrarVideo(video);
+			for (Etiqueta etiqueta : video.getEtiquetas()) {
+				incrementarReferenciasEtiqueta(etiqueta);
 			}
 		}
 	}
@@ -363,5 +380,22 @@ public class AppVideo implements VideosListener {
 			videosAdaptados.add(video);			
 		}	
 		return videosAdaptados;		
+	}
+	
+	private void incrementarReferenciasEtiqueta(Etiqueta etiqueta) {
+		Integer contadorReferencias = listaEtiquetas.get(etiqueta);
+		if (contadorReferencias == null) contadorReferencias = 0;
+		listaEtiquetas.put(etiqueta, ++contadorReferencias);
+	}
+	
+	private void decrementarReferenciasEtiqueta(Etiqueta etiqueta) {
+		Integer contadorReferencias = listaEtiquetas.get(etiqueta);
+		if (contadorReferencias == null) return;
+		if (contadorReferencias == 1) {
+			listaEtiquetas.remove(etiqueta);
+		} else {
+			listaEtiquetas.put(etiqueta, --contadorReferencias);
+		}
+		
 	}
 }

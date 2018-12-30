@@ -102,7 +102,7 @@
                               <Insets bottom="10.0" right="10.0" top="10.0" />
                            </BorderPane.margin>
                            <children>
-                              <StackPane id="myListsRightRegion" fx:id="myListsRightRegion">
+                              <StackPane>
                                  <children>
                                     <HBox id="myListsMainSideBar" fx:id="myListsMainSideBar" alignment="CENTER" spacing="5.0">
                                        <children>
@@ -240,18 +240,14 @@
                         </VBox>
                      </right>
                      <center>
-                        <StackPane id="myListsCenterRegion" fx:id="myListsCenterRegion" BorderPane.alignment="CENTER">
-                           <children>
-                              <ScrollPane pannable="true" style="-fx-fit-to-width: true;" styleClass="myscrollview">
-                                 <content>
-                                    <JFXMasonryPane id="myListsContent" fx:id="myListsContent" HSpacing="1.0" VSpacing="1.0" cellHeight="150.0" cellWidth="200.0" />
-                                 </content>
-                              </ScrollPane>
-                           </children>
+                        <ScrollPane id="myListsSearchView" fx:id="myListsSearchView" pannable="true" style="-fx-fit-to-width: true;" styleClass="myscrollview" BorderPane.alignment="CENTER">
+                           <content>
+                              <JFXMasonryPane id="myListsContent" fx:id="myListsContent" HSpacing="1.0" VSpacing="1.0" cellHeight="150.0" cellWidth="200.0" />
+                           </content>
                            <BorderPane.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </BorderPane.margin>
-                        </StackPane>
+                        </ScrollPane>
                      </center>
                   </BorderPane>
                   <GridPane id="registerView" fx:id="registerView" disable="true" visible="false">

@@ -172,8 +172,6 @@ public class ViewController implements Initializable {
     @FXML
     private BorderPane myListsView; // Contenedor de la vista de listas
     @FXML
-    private StackPane myListsCenterRegion, myListsRightRegion;
-    @FXML
     private HBox myListsMainSideBar, myListsSecondarySideBar;
     @FXML
     private TextField myListsTitle, myListsNewListTitle;
@@ -266,8 +264,10 @@ public class ViewController implements Initializable {
 		myListsEdit.setDisable(true);
 		myListsPlay.setDisable(true);
 		myListsDelete.setDisable(true);
+		myListsSearch.setDisable(true);
+		myListsClear.setDisable(true);
+		myListsTitle.clear();
 		myListsList.getItems().clear();
-		
 		myListsComboBox.getSelectionModel().clearSelection();
 		
     	fadeIn(myListsView);
@@ -751,7 +751,7 @@ public class ViewController implements Initializable {
 
     @FXML
     void myListsClearVideos(ActionEvent event) {
-    	//TODO
+    	myListsContent.getChildren().clear();
     }
 
     @FXML 
@@ -780,26 +780,24 @@ public class ViewController implements Initializable {
     	//TODO
     }
     
-    
-
     @FXML
     // Manejo de la interacción con la lista de reproducción actual
     void playOrRemoveVideoFromList(MouseEvent event) {
+		if (myListsList.getItems().isEmpty())
+			return;
+		Label label = myListsList.getSelectionModel().getSelectedItem();
     	// Si estamos en modo de edición, borramos el vídeo seleccionado
-    	if (editPlayListMode) {	
-    		if (myListsList.getItems().isEmpty())
-    			return;
-    		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-    			Label label = myListsList.getSelectionModel().getSelectedItem();
-    			controller.removeVideoDeLista(label.getId(), myListsComboBox.getSelectionModel().getSelectedItem());
-    			myListsList.getItems().remove(label);
-    			fadeIn(myListsList);
-    		}
-    	} else {
-        	// Sino, lo reproducimos
-    	}
-
+		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+			if (editPlayListMode) {	
+				controller.removeVideoDeLista(label.getId(), myListsComboBox.getSelectionModel().getSelectedItem());
+				myListsList.getItems().remove(label);
+				fadeIn(myListsList);
+			} else {	
+	        	showVideoDialog(controller.getVideo(label.getId()));		
+	    	}
+		}
     }
+
     /* FUNCIONALIDAD BARRA SUPERIOR */
     @FXML
     public void minimizeWindow(ActionEvent event) {
@@ -866,8 +864,9 @@ public class ViewController implements Initializable {
 	public void showVideoDialog(Video video) {		
 		
 		JFXDialogLayout dialogContent = new JFXDialogLayout();
-
-		dialogContent.setHeading(new Text(video.getTitulo()));
+		Text dialogTitle = new Text(video.getTitulo());
+		dialogTitle.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
+		dialogContent.setHeading(dialogTitle);
 
 		SwingNode videoComponent = new SwingNode();
 		videoComponent.setContent(videoWeb);
@@ -882,27 +881,44 @@ public class ViewController implements Initializable {
 
 		// Añadimos las etiquetas al contenedor
 		for (Etiqueta tag : video.getEtiquetas()) {
-			addTagToPane(tag, tags);
+			addTagToPane(tag, video.getURL(), tags);
 		}
 
 		// Contenedor de añadir nueva etiqueta
 		HBox addTags = new HBox();
 		addTags.setSpacing(10.0);
-
-		Label addTagsText = new Label("Añadir nueva etiqueta:");
-		
-		addTagsText.setStyle(DIALOG_LABEL_STYLE + " -fx-font-weight: bold;");
-
+		//addTags.setStyle("-fx-padding: 10 0 0 0;");
 		JFXTextField addTagsTextField = new JFXTextField();
-		addTagsTextField.setStyle(DIALOG_JFXTEXTFIELD_STYLE);
+		addTagsTextField.setPromptText("Añadir etiqueta");
+		addTagsTextField.getStyleClass().add("jfxtextfield");
+		
+		JFXButton add = new JFXButton("");
+		add.getStyleClass().addAll("jfxbutton", "jfxdialogbutton", "addtagbutton");
+		add.setPrefSize(30, 30);
+		add.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+		add.setOnMouseClicked(e -> {
+	            Etiqueta tag =  new Etiqueta(addTagsTextField.getText());
+	            boolean TagExisted = controller.containsEtiqueta(tag);
+	            if (controller.addEtiquetaVideo(tag, video.getURL())) {
+	            	addTagToPane(tag, video.getURL(), tags);
+	            	if (!TagExisted) {	
+		        		tagsView.getItems().add(tag.getNombre());
+	            	}
+	            }
+	            addTagsTextField.clear();
+			}
+		);
 
-		addTags.getChildren().addAll(addTagsText, addTagsTextField);
+		addTags.getChildren().addAll(addTagsTextField, add);
 
+		
+		// Número de reproducciones
+		Text views = new Text("Reproducciones: " + video.getNumReproducciones());
+		views.setStyle("-fx-font-size: 14; -fx-font-weight: bold;");
 		// Contenedor del reproductor de vídeos
 		VBox body = new VBox();
-		body.setSpacing(5.0);
-		body.getChildren().addAll(videoComponent, tags, addTags,
-				new Text("Reproducciones: " + video.getNumReproducciones()));
+		body.setSpacing(10.0);
+		body.getChildren().addAll(videoComponent, tags, views, addTags);
 
 		dialogContent.setBody(body);
 
@@ -911,21 +927,7 @@ public class ViewController implements Initializable {
 		close.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
 		close.setPrefSize(100, 25);
 		close.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-
-		JFXButton add = new JFXButton("Añadir");
-		add.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
-		add.setPrefSize(100, 25);
-		add.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-		add.setOnMouseClicked(e -> {
-	            Etiqueta tag =  new Etiqueta(addTagsTextField.getText());
-	            if (controller.addEtiquetaVideo(tag, video.getURL())) {
-	    			addTagToPane(tag, tags);     			
-	        		tagsView.getItems().add(tag.getNombre());
-	            }
-	            addTagsTextField.clear();
-			}
-		);
-		dialogContent.setActions(add, close);
+		dialogContent.setActions(close);
 
 		JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
 
@@ -977,9 +979,20 @@ public class ViewController implements Initializable {
 	}
 	
 	// Añadir una etiqueta a un contenedor pasado de parámetro
-	private boolean addTagToPane(Etiqueta tag, Pane tags) {
+	private boolean addTagToPane(Etiqueta tag, String URL, Pane tags) {
 		Label l = new Label(tag.getNombre());
 		l.getStyleClass().add("videotag");
+		
+		l.setOnMouseClicked(e -> {
+			tags.getChildren().remove(l);
+			controller.borrarEtiquetaVideo(tag, URL);
+			if (!controller.containsEtiqueta(tag)) {
+				controller.removeEtiquetaBusqueda(tag.getNombre());
+				tagsView.getItems().remove(tag.getNombre());
+				searchTagsView.getItems().remove(tag.getNombre());
+			}
+		});
+
 		return tags.getChildren().add(l);
 	}
 	
@@ -1073,7 +1086,7 @@ public class ViewController implements Initializable {
 		myListsList.getItems().add(label);
 		fadeIn(myListsList);
 	}
-
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		//TODO: Si no metes nada quita el implements Initializable

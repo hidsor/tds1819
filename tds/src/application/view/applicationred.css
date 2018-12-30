@@ -20,6 +20,7 @@
 .jfxtextfield {
 	-jfx-focus-color: #f51827;
 	-jfx-unfocus-color: #4d4d4d;
+	-fx-font-size: 14;
 }
 
 /* Estilo genérico de cualquier jfxbutton */
@@ -98,6 +99,14 @@
 	-fx-graphic: url('../../resources/valid_pressed.png');
 }
 
+.addtagbutton:pressed {
+	-fx-graphic: url('../../resources/addtag_pressed.png');
+}
+
+.addtagbutton {
+	-fx-graphic: url('../../resources/addtag.png');
+}
+
 /* Elementos de la barra lateral izquierda */
 .sidebar{
 	-fx-background-color: #fbfbfb;
@@ -157,13 +166,16 @@
 	-fx-background-color: #efefef; 
 	-fx-padding : 2 5 2 5; 
 	-fx-font-weight: bold;
+	-fx-graphic: url('../../resources/tag.png');
 }
 
-/*
 .videotag:hover {
 	-fx-graphic: url('../../resources/close.png');
 }
- */
+
+.videotag:pressed {
+	-fx-background-color: #dfdfdf;
+}
 /* Propiedades genéricas de cualquier listview de la aplicación */
 .myjfxlistview .jfx-list-cell {
 	-fx-font-size: 14;
