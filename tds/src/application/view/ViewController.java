@@ -266,6 +266,7 @@ public class ViewController implements Initializable {
 		myListsEdit.setDisable(true);
 		myListsPlay.setDisable(true);
 		myListsDelete.setDisable(true);
+		myListsList.getItems().clear();
 		
 		myListsComboBox.getSelectionModel().clearSelection();
 		
@@ -490,7 +491,7 @@ public class ViewController implements Initializable {
     	// Hecho esto, buscamos
     	Set<Video> videos = controller.buscarVideos(exploreTitle.getText());
     	for (Video video : videos) {
-    		Label element = createVideoThumbnail(video);
+    		Label element = createVideoThumbnail(video, 200, 150);
     		element.setOnMouseClicked(e -> {
 			        if(e.getButton().equals(MouseButton.PRIMARY)){
 			            if(e.getClickCount() == 2){
@@ -507,17 +508,40 @@ public class ViewController implements Initializable {
     @FXML
     // Limpiar la búsqueda actual de vídeos
     public void exploreClear(ActionEvent event) {
-    	
-    	for (Node node : exploreContent.getChildren()) {
-    		node = null;
-    	}
     	exploreContent.getChildren().clear();
     }
     
-    
+	// Añadir una etiqueta a las etiquetas utilizadas para la búsqueda
+	@FXML
+	public boolean addSearchTag(MouseEvent event) {
+		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+			String tagName = tagsView.getSelectionModel().getSelectedItem();
+			if (controller.addEtiquetaBusqueda(tagName)) {
+				searchTagsView.getItems().add(tagName);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	// Eliminar una etiqueta de las etiquetas utilizadas para la búsqueda
+	@FXML
+	public boolean removeSearchTag(MouseEvent event) {
+		if (controller.isEtiquetasBusquedaEmpty())
+			return false;
+		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+			String tagName = searchTagsView.getSelectionModel().getSelectedItem();
+			controller.removeEtiquetaBusqueda(tagName);
+			searchTagsView.getItems().remove(tagName);
+			return true;
+		}
+		return false;
+	}
+       
     /* FUNCIONALIDAD VENTANA DE MIS LISTAS */
-    // Añadir un efecto visual al despliegue de las opciones del panel lateral de la vista
+    
     @FXML
+    // Añadir un efecto visual al despliegue de las opciones del panel lateral de la vista
     void displayOptions(ActionEvent event) {
     	RotateTransition rt = new RotateTransition(Duration.millis(100), myListExpand);
     	if (!areOptionsOpened) {
@@ -533,8 +557,9 @@ public class ViewController implements Initializable {
     	rt.play();
     }
     
-    // Proporcionamos al usuario la interfaz necesaria para añadir una nueva lista
+    
     @FXML
+    // Proporcionamos al usuario la interfaz necesaria para añadir una nueva lista
     void addVideoList(ActionEvent event) {
     	// Ocultamos el panel lateral con las listas y las opciones
     	myListsMainSideBar.setDisable(true);
@@ -550,19 +575,21 @@ public class ViewController implements Initializable {
     	fadeIn(myListsSecondarySideBar);
     }
     
-    // Validamos la lista introducida
+    
     @FXML
+    // Validamos la lista introducida
     void acceptNewList(ActionEvent event) {
     	
     	// Si se ha introducido un título, lo registramos
     	// Si no se ha introducido ningún título, lo interpretamos como que el usuario no quiere crear ninguna lista
     	if (!myListsNewListTitle.getText().equals("")) {
-    		controller.crearListaVideos(myListsNewListTitle.getText());
-    		loadMyListsComboBox();
-    		myListsComboBox.getSelectionModel().select(myListsNewListTitle.getText());   		
-    		myListsEdit.setDisable(false);
-    		myListsPlay.setDisable(false);
-    		myListsDelete.setDisable(false);		
+    		if (controller.crearListaVideos(myListsNewListTitle.getText())) {
+        		loadMyListsComboBox();
+        		myListsComboBox.getSelectionModel().select(myListsNewListTitle.getText());   		
+        		myListsEdit.setDisable(false);
+        		myListsPlay.setDisable(false);
+        		myListsDelete.setDisable(false);
+    		}
     	}
     	
     	// Ocultamos  el panel lateral secundario para añadir nuevas listas
@@ -578,6 +605,7 @@ public class ViewController implements Initializable {
     
 
     @FXML
+    // Elegir una lista de las listas disponibles
     void chooseList(ActionEvent event) {
     	// Cuando se elige una lista del comboBox con todas las listas de reproducción
     	// activamos sus controles y cargamos los vídeos de la lista
@@ -588,8 +616,8 @@ public class ViewController implements Initializable {
     }
     
     @FXML
+    // Borrar la lista de vídeos seleccionada
     void deleteVideoList(ActionEvent event) {
-    	
     	if (showDeleteNotification) {
         	// Generamos una ventana emergente para preguntar al usuario si está seguro de la operación
         	// Asimismo, incluimos un checkbox por si el usuario no quiere que vuelva a mostrarse el diálogo emergente
@@ -637,6 +665,7 @@ public class ViewController implements Initializable {
         		myListsEdit.setDisable(true);
         		myListsPlay.setDisable(true);
         		myListsDelete.setDisable(true);
+        		myListsList.getItems().clear();
     			dialog.close();
     		});
 		
@@ -647,10 +676,12 @@ public class ViewController implements Initializable {
     		myListsEdit.setDisable(true);
     		myListsPlay.setDisable(true);
     		myListsDelete.setDisable(true);
+    		myListsList.getItems().clear();
     	}
     }
     
     @FXML
+    // Editar la lista de vídeos seleccionada
     void editPlaylist(ActionEvent event) {
     	if (!editPlayListMode) {
 	    	if (showEditNotification) {
@@ -713,6 +744,8 @@ public class ViewController implements Initializable {
 	    	myListsTitle.setDisable(true);
 	    	myListsSearch.setDisable(true);
 	    	myListsClear.setDisable(true);
+	    	myListsTitle.clear();
+	    	myListsContent.getChildren().clear();
     	}	
     }    
 
@@ -721,7 +754,7 @@ public class ViewController implements Initializable {
     	//TODO
     }
 
-    @FXML
+    @FXML 
     void myListsSearchVideos(ActionEvent event) {
     	// Borramos el resultado de la busqueda anterior
     	myListsContent.getChildren().clear();
@@ -729,16 +762,12 @@ public class ViewController implements Initializable {
     	// Hecho esto, buscamos
     	Set<Video> videos = controller.buscarVideos(myListsTitle.getText());
     	for (Video video : videos) {
-    		Label element = createVideoThumbnail(video);
+    		Label element = createVideoThumbnail(video, 200, 150);
     		element.setOnMouseClicked(e -> {
 			        if(e.getButton().equals(MouseButton.PRIMARY)){
 			            if(e.getClickCount() == 2){
-			            	//TODO
-			            	addVideoToCurrentList(video);
-			            	
-			            	// Si se hace doble click sobre la miniatura del vídeo, abrimos una ventana para reproducirlo
-			            	//controller.reproducir(video.getURL());
-			            	//showVideoDialog(video);
+			            	if (controller.addVideoALista(video.getURL(), myListsComboBox.getSelectionModel().getSelectedItem()))
+			            		addVideoToCurrentList(video);
 			            }
 			        }
     		});
@@ -751,6 +780,26 @@ public class ViewController implements Initializable {
     	//TODO
     }
     
+    
+
+    @FXML
+    // Manejo de la interacción con la lista de reproducción actual
+    void playOrRemoveVideoFromList(MouseEvent event) {
+    	// Si estamos en modo de edición, borramos el vídeo seleccionado
+    	if (editPlayListMode) {	
+    		if (myListsList.getItems().isEmpty())
+    			return;
+    		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+    			Label label = myListsList.getSelectionModel().getSelectedItem();
+    			controller.removeVideoDeLista(label.getId(), myListsComboBox.getSelectionModel().getSelectedItem());
+    			myListsList.getItems().remove(label);
+    			fadeIn(myListsList);
+    		}
+    	} else {
+        	// Sino, lo reproducimos
+    	}
+
+    }
     /* FUNCIONALIDAD BARRA SUPERIOR */
     @FXML
     public void minimizeWindow(ActionEvent event) {
@@ -869,7 +918,7 @@ public class ViewController implements Initializable {
 		add.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		add.setOnMouseClicked(e -> {
 	            Etiqueta tag =  new Etiqueta(addTagsTextField.getText());
-	            if (controller.addEtiquetaVideo(tag, video)) {
+	            if (controller.addEtiquetaVideo(tag, video.getURL())) {
 	    			addTagToPane(tag, tags);     			
 	        		tagsView.getItems().add(tag.getNombre());
 	            }
@@ -920,48 +969,11 @@ public class ViewController implements Initializable {
 		ft.play();
 	}
 	
-	// TODO: Bórralo si no lo usas
-	// Método para hacer una transición hacia afuera de un nodo pasado de parámetro
-	// La duración no está parametrizada pero podría parametrizarse también
-	public void fadeOut(Node node) {
-		FadeTransition ft = new FadeTransition(Duration.millis(200), node);
-		ft.setFromValue(1.0);
-		ft.setToValue(0.0);
-		ft.play();
-	}
-	
 	// Cargamos la lista con todas las etiquetas
 	public void loadTags(Set<Etiqueta> savedTags) {
 		tagsView.setItems(savedTags.stream()
 				.map(Etiqueta::getNombre)
 				.collect(Collectors.toCollection(FXCollections::observableArrayList)));
-	}
-	
-	// Añadir una etiqueta a las etiquetas utilizadas para la búsqueda
-	@FXML
-	public boolean addSearchTag(MouseEvent event) {
-		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-			String tagName = tagsView.getSelectionModel().getSelectedItem();
-			if (controller.addEtiquetaBusqueda(tagName)) {
-				searchTagsView.getItems().add(tagName);
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	// Eliminar una etiqueta de las etiquetas utilizadas para la búsqueda
-	@FXML
-	public boolean removeSearchTag(MouseEvent event) {
-		if (controller.isEtiquetasBusquedaEmpty())
-			return false;
-		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-			String tagName = searchTagsView.getSelectionModel().getSelectedItem();
-			controller.removeEtiquetaBusqueda(tagName);
-			searchTagsView.getItems().remove(tagName);
-			return true;
-		}
-		return false;
 	}
 	
 	// Añadir una etiqueta a un contenedor pasado de parámetro
@@ -973,14 +985,14 @@ public class ViewController implements Initializable {
 	
 	// Crear una miniatura de vídeo en nuestro formato
 	// Contiene la miniatura y su título
-	private Label createVideoThumbnail(Video video) {		
+	private Label createVideoThumbnail(Video video, int width, int height) {		
 		Label label = new Label();
-		
+		label.setId(video.getURL());
 		// Propiedades de la label que contiene la miniatura y el título del vídeo
-		label.setMaxWidth(200.0);
-		label.setMaxHeight(150.0);
-		label.setPrefWidth(200.0);
-		label.setPrefHeight(150.0);
+		label.setMaxWidth(width);
+		label.setMaxHeight(height);
+		label.setPrefWidth(width);
+		label.setPrefHeight(height);
 		label.setAlignment(Pos.CENTER);
 		label.getStyleClass().add("videothumbnail");
 		label.setContentDisplay(ContentDisplay.TOP);
@@ -1000,6 +1012,35 @@ public class ViewController implements Initializable {
 		label.setGraphic(new ImageView(thumbnail));
 		return label;
 	}
+	
+	// Crear una miniatura en nuestro formato de menor tamaño
+	private Label createSmallVideoThumbnail(Video video, int width, int height) {
+		Label label = new Label();	
+		label.setId(video.getURL());
+		label.setMaxWidth(width);
+		label.setMaxHeight(height);
+		label.setPrefWidth(width);
+		label.setPrefHeight(height);
+		label.setAlignment(Pos.CENTER);
+		label.setContentDisplay(ContentDisplay.TOP);
+		label.setText(video.getTitulo());
+		label.setStyle("-fx-font-weight: bold;");
+		
+		// Extraemos la miniatura del componente proporcionado
+		// Hacemos una conversión de ImageIcon (Swing) a ImageView (JavaFX) con SwingFXUtils
+		ImageIcon icon = videoWeb.getSmallThumb(video.getURL());
+		BufferedImage bi = new BufferedImage(
+			    icon.getIconWidth(),
+			    icon.getIconHeight(),
+			    BufferedImage.TYPE_INT_RGB);
+		Graphics g = bi.createGraphics();
+		icon.paintIcon(null, g, 0,0);
+		g.dispose();
+		Image thumbnail = SwingFXUtils.toFXImage(bi, null);
+		label.setGraphic(new ImageView(thumbnail));
+		return label;
+		
+	}
 	// Carga las listas actuales del usuario al combobox que contendrá dichas listas
 	private void loadMyListsComboBox() {
 		List<ListaVideos> playlists = controller.getUsuarioActual().getListas();
@@ -1014,36 +1055,23 @@ public class ViewController implements Initializable {
 	// Cargar la lista pasada de parámetro al listView del panel de mis listas
 	private void loadListToListView(String title) {
 		ListaVideos list = controller.getListaVideos(title);
-		if (list == null) return;
+		if (list == null) 
+			return;
 		myListsList.setItems(list.getVideos().stream()
-											.map(v -> createVideoThumbnail(v))
+											.map(v -> createSmallVideoThumbnail(v, 120, 70))
 											.collect(Collectors.toCollection(FXCollections::observableArrayList)));
+		fadeIn(myListsList);
 	}
 	
 	private void addVideoToCurrentList(Video video) {
-		Label label = new Label();
-		
-		label.setMaxWidth(100.0);
-		label.setMaxHeight(50.0);
-		label.setPrefWidth(100.0);
-		label.setPrefHeight(50.0);
-		label.setAlignment(Pos.CENTER);
-		label.setContentDisplay(ContentDisplay.TOP);
-		label.setText(video.getTitulo());
-		ImageIcon icon = videoWeb.getThumb(video.getURL());
-		BufferedImage bi = new BufferedImage(
-			    icon.getIconWidth(),
-			    icon.getIconHeight(),
-			    BufferedImage.TYPE_INT_RGB);
-		Graphics g = bi.createGraphics();
-		icon.paintIcon(null, g, 0,0);
-		g.dispose();
-		Image thumbnail = SwingFXUtils.toFXImage(bi, null);
-		ImageView image = new ImageView(thumbnail);
-		image.setFitWidth(100);
-		image.setFitHeight(50);
-		label.setGraphic(image);
+		// Comprobamos que el vídeo no esté ya en la lista
+		for (Label l : myListsList.getItems()) {
+			if (l.getId().equals(video.getURL())) 
+				return;
+		}
+		Label label = createSmallVideoThumbnail(video, 120, 70);
 		myListsList.getItems().add(label);
+		fadeIn(myListsList);
 	}
 
 	@Override

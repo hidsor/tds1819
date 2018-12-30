@@ -82,7 +82,7 @@ public class AppVideo implements VideosListener {
 		etiquetasBusqueda = new HashSet<Etiqueta>();
 	}
 
-	// Patrï¿½n singleton
+	// Patrón singleton
 	public static AppVideo getUnicaInstancia() {
 		if (unicaInstancia == null) {
 			unicaInstancia = new AppVideo();
@@ -90,7 +90,7 @@ public class AppVideo implements VideosListener {
 		return unicaInstancia;
 	}
 
-	// Mï¿½todos de consulta
+	// Métodos de consulta
 	public CatalogoUsuarios getCatalogoUsuarios() {
 		return catalogoUsuarios;
 	}
@@ -155,19 +155,28 @@ public class AppVideo implements VideosListener {
 		return false;
 	}
 	
-	public void borrarVideo(String URL) {
+	public boolean registrarVideo(String URL, String titulo) {
+		Video video = new Video(URL, titulo, 0);
+		return registrarVideo(video);
+	}
+	
+	public boolean borrarVideo(String URL) {
 		Video video = catalogoVideos.getVideo(URL);
-		if (video != null) {
-			catalogoVideos.borrarVideo(video);
-			adaptadorVideo.borrarVideo(video);
-		}
+		if (video == null)
+			return false;
+		if (!catalogoVideos.borrarVideo(video))
+			return false;
+		adaptadorVideo.borrarVideo(video);
+		return true;
+		
 	}
 	
 	public void salirUsuario() {
 		usuarioActual = null;
 	}
 	
-	public boolean addEtiqueta(Etiqueta etiqueta) {
+	public boolean addEtiqueta(String nombre) {
+		Etiqueta etiqueta = new Etiqueta(nombre);
 		return listaEtiquetas.add(etiqueta);
 	}
 	
@@ -188,6 +197,8 @@ public class AppVideo implements VideosListener {
 
 	// Buscar un vï¿½deo que contenga la cadena pasada de parï¿½metro (case insensitive)
 	public Set<Video> buscarVideos(String cadena) {
+		if (usuarioActual == null) return null;
+		
 		Set<Video> resultados = new HashSet<>();
 		Filtro filtro = usuarioActual.getFiltro();
 
@@ -204,7 +215,9 @@ public class AppVideo implements VideosListener {
 
 	// Modifica los campos del usuarioActual pasados de parï¿½metro
 	// Solo se modifican los campos que no sean nulos o vacï¿½os
-	public void modificarUsuarioActual(String email, String password, LocalDate fechaNac) {
+	public boolean modificarUsuarioActual(String email, String password, LocalDate fechaNac) {
+		if (usuarioActual == null) return false;
+		
 		boolean cambiado = false;
 
 		if (email != null && !email.equals("")) {
@@ -221,57 +234,92 @@ public class AppVideo implements VideosListener {
 		}
 		if (cambiado)
 			adaptadorUsuario.modificarUsuario(usuarioActual);
+		return true;
 	}
 
 	// Convertir un usuario en premium
-	public void obtenerPremium() {
+	public boolean obtenerPremium() {
+		if (usuarioActual == null) return false;
+		
 		usuarioActual.setPremium();
 		adaptadorUsuario.modificarUsuario(usuarioActual);
+		return true;
 	}
 
-	public boolean addEtiquetaVideo(Etiqueta etiqueta, Video video) {
+	// Añade una etiqueta al vídeo, si este existe en el catálogo
+	// Consideramos oportuno trabajar directamente con una etiqueta en vez de crearla porque es una clase contenedor
+	public boolean addEtiquetaVideo(Etiqueta etiqueta, String URL) {
+		Video video = catalogoVideos.getVideo(URL);
+		if (video == null) return false;
+		
 		if (!video.addEtiqueta(etiqueta)) return false;
 		listaEtiquetas.add(etiqueta);
 		adaptadorVideo.modificarVideo(video);
 		return true;
 	}
 
-	public void crearListaVideos(String titulo) {
+	public boolean crearListaVideos(String titulo) {
+		if (usuarioActual == null) return false;
+		
 		ListaVideos listaVideos = new ListaVideos(titulo);
-		usuarioActual.addListaVideos(listaVideos);
+		if (!usuarioActual.addListaVideos(listaVideos)) return false;
+		
 		adaptadorListaVideos.registrarListaVideos(listaVideos);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
+		return true;
 	}
 
-	public void removeListaVideos(String titulo) {
+	public boolean removeListaVideos(String titulo) {
 		ListaVideos listaVideos = usuarioActual.getListaVideos(titulo);
-		usuarioActual.removeListaVideos(titulo);
+		if (!usuarioActual.borrarListaVideos(titulo)) return false;
+		
 		adaptadorListaVideos.borrarListaVideos(listaVideos);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
+		return true;
 	}
 	
-	public ListaVideos getListaVideos(String title) {
-		return usuarioActual.getListaVideos(title);
+	public ListaVideos getListaVideos(String titulo) {
+		return usuarioActual.getListaVideos(titulo);
 	}
 
-	public boolean addVideoALista(Video video, ListaVideos listaVideos) {
+	// Añade un vídeo, si existe en el catálogo, a la lista especificada, si existe en el usuario actual
+	public boolean addVideoALista(String videoURL, String tituloLista) {
+		if (usuarioActual == null) return false;
+		
+		Video video = catalogoVideos.getVideo(videoURL);
+		if (video == null) return false;
+		
+		ListaVideos listaVideos = usuarioActual.getListaVideos(tituloLista);
+		if (listaVideos == null) return false;	
+		
 		listaVideos.addVideo(video);
 		adaptadorListaVideos.modificarListaVideos(listaVideos);
 		return true;
 	}
-
-	public boolean removeVideoDeLista(Video video, ListaVideos listaVideos) {
+	
+	// Borra un vídeo, si existe en el catálogo, de la lista especificada, si existe en el usuario actual
+	public boolean removeVideoDeLista(String videoURL, String tituloLista) {
+		if (usuarioActual == null) return false;
+		
+		Video video = catalogoVideos.getVideo(videoURL);
+		if (video == null) return false;
+		
+		ListaVideos listaVideos = usuarioActual.getListaVideos(tituloLista);
+		if (listaVideos == null) return false;	
+		
 		listaVideos.removeVideo(video);
 		adaptadorListaVideos.modificarListaVideos(listaVideos);
 		return true;
 	}
 
-	public void reproducir(String URL) {
+	// Reproduce un vídeo del catálogo actual, si está
+	public boolean reproducir(String URL) {
 		Video video = catalogoVideos.getVideo(URL);
-		if (video == null) return;
+		if (video == null) return false;
 		
 		video.reproducir();
 		adaptadorVideo.modificarVideo(video);
+		return true;
 
 	}
 	
@@ -304,6 +352,7 @@ public class AppVideo implements VideosListener {
 		}
 	}
 	
+	// Funcionalidad auxiliar
 	private List<Video> adaptarVideos(Videos videos) {
 		List<Video> videosAdaptados = new LinkedList<Video>();
 		for (umu.tds.videos.Video i : videos.getVideo()) {
@@ -315,5 +364,4 @@ public class AppVideo implements VideosListener {
 		}	
 		return videosAdaptados;		
 	}
-	
 }

@@ -137,7 +137,7 @@ public class Usuario {
 		return listas.add(listaVideos);
 	}
 
-	public boolean removeListaVideos(String titulo) {
+	public boolean borrarListaVideos(String titulo) {
 		ListaVideos lista = getListaVideos(titulo);
 		return listas.remove(lista);
 	}
