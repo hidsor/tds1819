@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.base.ValidatorBase;
 
 import application.controller.AppVideo;
 import application.model.Etiqueta;
@@ -42,12 +44,18 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -182,7 +190,7 @@ public class ViewController implements Initializable {
     @FXML
     private JFXNodesList myListsOptions;
     @FXML
-    private JFXButton myListsSearch, myListsClear, myListExpand, myListsEdit, myListsPlay, myListsDelete, myListsNew;
+    private JFXButton myListsSearch, myListsClear, myListExpand, myListsEdit, myListsPlay, myListsDelete, myListsNew, myListsAccept;
     @FXML
     private JFXListView<Label> myListsList;
     
@@ -297,7 +305,7 @@ public class ViewController implements Initializable {
     	registerName.clear();
     	registerSurname.clear();
     	registerDatePicker.setValue(null);
-    	registerEmail.clear();   	
+    	registerEmail.clear();   
     	
     	// Traemos la ventana al frente y la hacemos visible
     	registerView.setDisable(false);
@@ -1092,8 +1100,44 @@ public class ViewController implements Initializable {
 		fadeIn(myListsList);
 	}
 	
+	
+	
+	
+	
+	
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		//TODO: Si no metes nada quita el implements Initializable
+		assignEnterKeyToButton(loginView, loginButton);
+		
+		assignEnterKeyToButton(registerView, registerRegister);
+		//assignKeyToButton(rootBorderPane, KeyCode.ESCAPE, registerCancel);
+		
+		assignEnterKeyToButton(exploreView, exploreSearch);
+		assignEnterKeyToButton(myListsView, myListsAccept);
+		
+		// Abrimos la primera ventana
+		openLoginView(null);
 	}
-}
+	
+	
+	
+	
+	
+	////////////////////////////
+	/*   METODOS AUXILIARES   */
+	////////////////////////////
+	
+	private static void assignKeyToButton(Node view, KeyCode key, ButtonBase button) {
+		view.setOnKeyPressed(e -> {
+            if (e.getCode() == key) {
+            	System.out.println("Fired: " + button.getId());
+                button.fire();
+            }	       
+	    });	
+	}
+	
+	private static void assignEnterKeyToButton(Node view, ButtonBase button) {
+		assignKeyToButton(view, KeyCode.ENTER, button);
+	}
+}	

@@ -31,10 +31,12 @@ ENRIQUE:
 - 18/11/2018 - 3 horas (Hacer UML)
 - 19/11/2018 - 30 minutos (Implementar la búsqueda en la clase CatálogoVideos)
 - 23/11/2018 - 3 horas (Entender persistencia e implementada para el usuario)
-- 25/11/2018 - 3 horas implementar el resto de persistencia
+- 25/11/2018 - 3 horas (implementar el resto de persistencia)
 - 13/12/2018 - 1h 30 min (pulir la persistencia)
 - 14/12/2018 - 1h (integrar persistencia en el modelo)
 - 16/12/2018 - 4h (nuevos métodos del controlador y ver como se usa el iText)
 - 17/12/2018 - 1h 30 min (terminar métodos y entender el componente)
-- 21/12/2018 - 3h Busqueda Etiquetas
-- 24/12/2018 - 6h busqueda etiquetas, carga de video y añadir métodos variados
+- 21/12/2018 - 3h (Busqueda Etiquetas)
+- 24/12/2018 - 6h (busqueda etiquetas, carga de video y añadir métodos variados)
+- 31/12/2018 - 30 min (separacion de etiquetas)
+- 31/12/2018 - 1h 45 min (HotKeys)
