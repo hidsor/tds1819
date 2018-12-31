@@ -897,14 +897,19 @@ public class ViewController implements Initializable {
 		add.setPrefSize(30, 30);
 		add.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		add.setOnMouseClicked(e -> {
-	            Etiqueta tag =  new Etiqueta(addTagsTextField.getText());
-	            boolean TagExisted = controller.containsEtiqueta(tag);
-	            if (controller.addEtiquetaVideo(tag, video.getURL())) {
-	            	addTagToPane(tag, video.getURL(), tags);
-	            	if (!TagExisted) {	
-		        		tagsView.getItems().add(tag.getNombre());
-	            	}
-	            }
+				String[] allTags = addTagsTextField.getText().split("\\s+");
+				for (String i : allTags) {
+					if (!i.equals("")) {
+			            Etiqueta tag =  new Etiqueta(i);
+			            boolean TagExisted = controller.containsEtiqueta(tag);
+			            if (controller.addEtiquetaVideo(tag, video.getURL())) {
+			            	addTagToPane(tag, video.getURL(), tags);
+			            	if (!TagExisted) {	
+				        		tagsView.getItems().add(tag.getNombre());
+			            	}
+			            }
+					}
+				}
 	            addTagsTextField.clear();
 			}
 		);

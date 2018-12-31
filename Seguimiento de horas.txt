@@ -36,3 +36,5 @@ ENRIQUE:
 - 14/12/2018 - 1h (integrar persistencia en el modelo)
 - 16/12/2018 - 4h (nuevos métodos del controlador y ver como se usa el iText)
 - 17/12/2018 - 1h 30 min (terminar métodos y entender el componente)
+- 21/12/2018 - 3h Busqueda Etiquetas
+- 24/12/2018 - 6h busqueda etiquetas, carga de video y añadir métodos variados
