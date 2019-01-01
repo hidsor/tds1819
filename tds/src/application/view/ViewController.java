@@ -4,12 +4,11 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.Timer;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
@@ -22,21 +21,22 @@ import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.validation.base.ValidatorBase;
 
 import application.controller.AppVideo;
 import application.model.Etiqueta;
 import application.model.ListaVideos;
 import application.model.Usuario;
 import application.model.Video;
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
 import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -44,18 +44,16 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -94,9 +92,6 @@ public class ViewController implements Initializable {
     boolean editPlayListMode;
 	
 	private final static String DIALOG_LABEL_STYLE = "-fx-text-fill: #000000;"
-														+ " -fx-font: 14 system;";
-	private final static String DIALOG_JFXTEXTFIELD_STYLE = "-jfx-focus-color: #f51827;"
-														+ " -jfx-unfocus-color: #4d4d4d;"
 														+ " -fx-font: 14 system;";
 
 	/* STACKPANE EXTERIOR PARA JFXDIALOG */
@@ -208,6 +203,21 @@ public class ViewController implements Initializable {
 		editPlayListMode = false;
 	}
 	
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		assignEnterKeyToButton(loginView, loginButton);
+		
+		assignEnterKeyToButton(registerView, registerRegister);
+		//assignKeyToButton(rootBorderPane, KeyCode.ESCAPE, registerCancel);
+		
+		//assignEnterKeyToButton(exploreView, exploreSearch);
+		//assignEnterKeyToButton(myListsView, myListsAccept);
+		
+		// Abrimos la primera ventana
+		openLoginView(null);
+	}
+
+	
     ///////////////////////
     /* MANEJO DE EVENTOS */
     ///////////////////////
@@ -269,6 +279,7 @@ public class ViewController implements Initializable {
     	// Limpiamos todos los elementos de la vista y cargamos las listas
 		myListsContent.getChildren().clear();
 		loadMyListsComboBox();
+		System.out.println("we got here chief");
 		myListsEdit.setDisable(true);
 		myListsPlay.setDisable(true);
 		myListsDelete.setDisable(true);
@@ -277,6 +288,7 @@ public class ViewController implements Initializable {
 		myListsTitle.clear();
 		myListsList.getItems().clear();
 		myListsComboBox.getSelectionModel().clearSelection();
+		editPlayListMode = false;
 		
     	fadeIn(myListsView);
     }
@@ -617,6 +629,7 @@ public class ViewController implements Initializable {
     void chooseList(ActionEvent event) {
     	// Cuando se elige una lista del comboBox con todas las listas de reproducción
     	// activamos sus controles y cargamos los vídeos de la lista
+    	if (myListsComboBox.getValue() == null) return; // Evitamos que se dispare la funcionalidad cuando se limpia el elemento seleccionado
 		myListsEdit.setDisable(false);
 		myListsPlay.setDisable(false);
 		myListsDelete.setDisable(false);
@@ -786,6 +799,82 @@ public class ViewController implements Initializable {
     @FXML
     void playVideoList(ActionEvent event) {
     	//TODO
+    	
+    	// Generamos una ventana emergente para preguntar el usuario el tiempo que quiere dejar entre vídeo y vídeo
+		JFXDialogLayout dialogContent = new JFXDialogLayout();
+
+		// Título de la ventana emergente
+		Text dialogTitle = new Text("Reproducir lista de vídeos");
+		dialogTitle.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
+		dialogContent.setHeading(dialogTitle);
+		
+		// Contenido de la ventana emergente
+		VBox dialogBody = new VBox();
+		dialogBody.setSpacing(10);
+		
+		Text dialogMessage = new Text("Introduzca el intervalo entre vídeo y vídeo (en segundos)");
+		
+		JFXTextField interval = new JFXTextField();
+		interval.getStyleClass().add("jfxtextfield");
+		interval.setPrefWidth(50);
+		interval.setMaxWidth(interval.getPrefWidth());
+		
+		// Permitimos únicamente números en el textfield
+		UnaryOperator<Change> filter = change -> {
+		    String text = change.getText();
+		    
+		    if (text.matches("[0-9]*")) {
+		        return change;
+		    }
+
+		    return null;
+		};
+		TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+		interval.setTextFormatter(textFormatter);
+		
+		dialogBody.getChildren().addAll(dialogMessage, interval);
+		
+		dialogContent.setBody(dialogBody);
+		dialogContent.setStyle(DIALOG_LABEL_STYLE);
+
+		// Botones de la ventana emergente
+		JFXButton cancel = new JFXButton("Cancelar");
+		cancel.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
+		cancel.setPrefSize(100, 25);
+		cancel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+		dialogContent.setActions(cancel);
+		
+		JFXButton accept = new JFXButton("Aceptar");
+		accept.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
+		accept.setPrefSize(100, 25);
+		accept.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+		
+		dialogContent.setActions(accept, cancel);		
+		JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.BOTTOM);
+		
+		cancel.setOnAction(e -> {
+			dialog.close();	
+		}); 
+		
+		accept.setOnAction(e -> {
+			dialog.close();	
+			// No comprobamos que el texto incluya únicamente números porque ya hemos prohibido que se introduzca algo que no sea un número
+			if (interval.getText().equals("") || Integer.parseInt(interval.getText()) == 0) {
+				showDialog("Error", "No se ha introducido un intervalo o no es un intervalo válido");
+			} else {
+				/*
+				//TODO: Meter el timer de JavaFX
+				Timeline timeline = new Timeline(new KeyFrame(
+				        Duration.millis(2500),
+				        ae -> doSomething()));
+				timeline.setCycleCount(Animation.INDEFINITE);
+				timeline.play();
+				*/
+			}
+		});
+		
+	
+		dialog.show();    	
     }
     
     @FXML
@@ -851,8 +940,10 @@ public class ViewController implements Initializable {
         stg.setX(event.getScreenX() - xOffset);
         stg.setY(event.getScreenY() - yOffset);
     }
- 
-    /* FUNCIONALIDAD AUXILIAR */  
+    ////////////////////////////
+    /* FUNCIONALIDAD AUXILIAR */
+    ////////////////////////////
+    
     // Ocultar todas las labels de "*Este campo es obligatorio" de la vista del login
     public void hideLoginLabels() {
     	loginLabelNick.setVisible(false);
@@ -868,8 +959,9 @@ public class ViewController implements Initializable {
     	registerLabelDate.setVisible(false);  	
     }
     
-	// Generar un JFXDialog con un vídeo pasado de parámetro
-	public void showVideoDialog(Video video) {		
+	// Generar y mostrar un JFXDialog con un vídeo pasado de parámetro
+    // Se devuelve el diálogo generado
+	public JFXDialog showVideoDialog(Video video) {		
 		
 		JFXDialogLayout dialogContent = new JFXDialogLayout();
 		Text dialogTitle = new Text(video.getTitulo());
@@ -923,7 +1015,6 @@ public class ViewController implements Initializable {
 		);
 
 		addTags.getChildren().addAll(addTagsTextField, add);
-
 		
 		// Número de reproducciones
 		Text views = new Text("Reproducciones: " + video.getNumReproducciones());
@@ -951,6 +1042,8 @@ public class ViewController implements Initializable {
 		);
 		videoWeb.playVideo(video.getURL());
 		dialog.show();
+		
+		return dialog;
 	}
 
 	// Generar un JFXDialog textual sobre la aplicación
@@ -1086,6 +1179,8 @@ public class ViewController implements Initializable {
 		myListsList.setItems(list.getVideos().stream()
 											.map(v -> createSmallVideoThumbnail(v, 120, 70))
 											.collect(Collectors.toCollection(FXCollections::observableArrayList)));
+		if (myListsList.getItems().size() == 0) myListsPlay.setDisable(true);
+			else myListsPlay.setDisable(false);
 		fadeIn(myListsList);
 	}
 	
@@ -1099,34 +1194,6 @@ public class ViewController implements Initializable {
 		myListsList.getItems().add(label);
 		fadeIn(myListsList);
 	}
-	
-	
-	
-	
-	
-	
-	
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		assignEnterKeyToButton(loginView, loginButton);
-		
-		assignEnterKeyToButton(registerView, registerRegister);
-		//assignKeyToButton(rootBorderPane, KeyCode.ESCAPE, registerCancel);
-		
-		assignEnterKeyToButton(exploreView, exploreSearch);
-		assignEnterKeyToButton(myListsView, myListsAccept);
-		
-		// Abrimos la primera ventana
-		openLoginView(null);
-	}
-	
-	
-	
-	
-	
-	////////////////////////////
-	/*   METODOS AUXILIARES   */
-	////////////////////////////
 	
 	private static void assignKeyToButton(Node view, KeyCode key, ButtonBase button) {
 		view.setOnKeyPressed(e -> {
