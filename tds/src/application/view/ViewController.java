@@ -1,13 +1,16 @@
 package application.view;
 
 import java.awt.Graphics;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -30,8 +33,10 @@ import application.model.Video;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -86,10 +91,12 @@ public class ViewController implements Initializable {
 	private ComponenteBuscadorVideos buscador;
 	private boolean isProfileOpen;
 	private static VideoWeb videoWeb;
-    boolean areOptionsOpened;
-    boolean showDeleteNotification;
-    boolean showEditNotification;
-    boolean editPlayListMode;
+	private boolean areOptionsOpened;
+	private boolean showDeleteNotification;
+	private boolean showEditNotification;
+	private boolean editPlayListMode;
+    private Timer globalTimer;
+    
 	
 	private final static String DIALOG_LABEL_STYLE = "-fx-text-fill: #000000;"
 														+ " -fx-font: 14 system;";
@@ -279,7 +286,6 @@ public class ViewController implements Initializable {
     	// Limpiamos todos los elementos de la vista y cargamos las listas
 		myListsContent.getChildren().clear();
 		loadMyListsComboBox();
-		System.out.println("we got here chief");
 		myListsEdit.setDisable(true);
 		myListsPlay.setDisable(true);
 		myListsDelete.setDisable(true);
@@ -288,7 +294,12 @@ public class ViewController implements Initializable {
 		myListsTitle.clear();
 		myListsList.getItems().clear();
 		myListsComboBox.getSelectionModel().clearSelection();
+		myListsSecondarySideBar.setDisable(true);
+		myListsSecondarySideBar.setVisible(false);
+		myListsMainSideBar.setDisable(false);
+		myListsMainSideBar.setVisible(true);
 		editPlayListMode = false;
+		
 		
     	fadeIn(myListsView);
     }
@@ -516,8 +527,7 @@ public class ViewController implements Initializable {
 			        if(e.getButton().equals(MouseButton.PRIMARY)){
 			            if(e.getClickCount() == 2){
 			            	// Si se hace doble click sobre la miniatura del vídeo, abrimos una ventana para reproducirlo
-			            	controller.reproducir(video.getURL());
-			            	showVideoDialog(video);
+			            	showVideoDialog(video, "videoDialog");
 			            }
 			        }
     		});
@@ -852,24 +862,50 @@ public class ViewController implements Initializable {
 		dialogContent.setActions(accept, cancel);		
 		JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.BOTTOM);
 		
-		cancel.setOnAction(e -> {
-			dialog.close();	
-		}); 
+		cancel.setOnAction(e -> dialog.close()); 
 		
 		accept.setOnAction(e -> {
 			dialog.close();	
+			
 			// No comprobamos que el texto incluya únicamente números porque ya hemos prohibido que se introduzca algo que no sea un número
 			if (interval.getText().equals("") || Integer.parseInt(interval.getText()) == 0) {
 				showDialog("Error", "No se ha introducido un intervalo o no es un intervalo válido");
 			} else {
-				/*
-				//TODO: Meter el timer de JavaFX
-				Timeline timeline = new Timeline(new KeyFrame(
-				        Duration.millis(2500),
-				        ae -> doSomething()));
-				timeline.setCycleCount(Animation.INDEFINITE);
-				timeline.play();
-				*/
+				// Obtenemos los vídeos de la lista a reproducir y mediante un timer vamos reproduciendo el siguiente vídeo
+				String listName = myListsComboBox.getSelectionModel().getSelectedItem();
+				ListaVideos listToPlay = controller.getListaVideos(listName);
+				Iterator<Video> it = listToPlay.getVideos().iterator();
+				showVideoDialog(it.next(), "videoDialog"); // Como no se puede reproducir una lista si no tiene vídeos, no comprobamos if .hasNext()
+				
+				TimerTask timerTask = new TimerTask() {
+		            @Override
+		            public void run() {
+		            	// Como estamos usando diálogos sobre toda la interfaz, miramos si se está reproduciendo un vídeo
+		            	// Si cerramos el vídeo, el temporizador no se dará cuenta hasta su siguiente llamada
+		            	
+		            	Node frontItem = rootStackPane.getChildren().get(rootStackPane.getChildren().size() - 1);
+		            	if (frontItem.getId().equals("videoDialog")) {
+		            		// Si se está reproduciendo un vídeo, lo cerramos y cargamos el siguiente
+		            		((JFXDialog) frontItem).close();
+		            		videoWeb.cancel();
+		            		// Vemos si quedan vídeos por reproducir
+		            		if (it.hasNext()) {
+		            			Platform.runLater(new Runnable() {
+		            			    @Override
+		            			    public void run() {
+		            			    	showVideoDialog(it.next(), "videoDialog");
+		            			    }
+		            			});
+		            			
+		            		} 
+		            		
+		            	} else {
+		            		// Sino, es que el usuario ha salido de la reproducción, por lo que finalizamos el timer
+		            		stopGlobalTimer();
+		            	}
+		            }
+		        };
+				startGlobalTimer(timerTask, Integer.parseInt(interval.getText())*1000);
 			}
 		});
 		
@@ -890,7 +926,8 @@ public class ViewController implements Initializable {
 				myListsList.getItems().remove(label);
 				fadeIn(myListsList);
 			} else {	
-	        	showVideoDialog(controller.getVideo(label.getId()));		
+				Video video = controller.getVideo(label.getId());
+	        	showVideoDialog(video, "videoDialog");		
 	    	}
 		}
     }
@@ -959,9 +996,11 @@ public class ViewController implements Initializable {
     	registerLabelDate.setVisible(false);  	
     }
     
-	// Generar y mostrar un JFXDialog con un vídeo pasado de parámetro
-    // Se devuelve el diálogo generado
-	public JFXDialog showVideoDialog(Video video) {		
+	// Generar y mostrar un JFXDialog con un vídeo pasado de parámetro. 
+    // El diálogo tendrá de id el que se pasa de parámetro.
+	public void showVideoDialog(Video video, String id) {		
+		// Incrementamos el número de visitas del vídeo
+		controller.reproducir(video.getURL());
 		
 		JFXDialogLayout dialogContent = new JFXDialogLayout();
 		Text dialogTitle = new Text(video.getTitulo());
@@ -1034,16 +1073,18 @@ public class ViewController implements Initializable {
 		dialogContent.setActions(close);
 
 		JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
-
+		dialog.setId(id);
+		dialog.setOverlayClose(false);
+		
 		close.setOnAction(e -> {
 				dialog.close();
 				videoWeb.cancel();
+				stopGlobalTimer(); // Paramos el temporizador global independientemente de si está siendo usado o no
 			}
 		);
+		
 		videoWeb.playVideo(video.getURL());
 		dialog.show();
-		
-		return dialog;
 	}
 
 	// Generar un JFXDialog textual sobre la aplicación
@@ -1206,5 +1247,23 @@ public class ViewController implements Initializable {
 	
 	private static void assignEnterKeyToButton(Node view, ButtonBase button) {
 		assignKeyToButton(view, KeyCode.ENTER, button);
+	}
+	
+	// Manejo de la clase Timer en la aplicación, para reproducir listas de vídeos
+	// Por la estructura de la aplicación, solo puede haber un timer ejecutándose a la vez
+	private void startGlobalTimer(TimerTask task, int delay) {
+		// Pseudo "singleton"
+		if (globalTimer != null) {
+			System.out.println("Timer already in play, closing it...");
+			globalTimer.cancel();
+		}
+		globalTimer = new Timer();
+		globalTimer.schedule(task, delay, delay);
+	}
+	
+	private void stopGlobalTimer() {
+		System.out.println("Called method to close global timer...");
+		if (globalTimer != null) globalTimer.cancel();
+		globalTimer = null;
 	}
 }	
