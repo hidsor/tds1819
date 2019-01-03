@@ -2,8 +2,10 @@ package application.model;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import application.persistence.DAOException;
 import application.persistence.FactoriaDAO;
@@ -40,8 +42,8 @@ public class CatalogoVideos {
 	}
 	
 	// Métodos de consulta
-	public Map<String, Video> getVideos() {
-		return Collections.unmodifiableMap(videos);
+	public Set<Video> getVideos() {
+		return new HashSet<Video>(videos.values());
 	}
 	
 	public Video getVideo(String URL) {

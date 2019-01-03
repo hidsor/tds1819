@@ -30,8 +30,9 @@ public class AppVideo implements VideosListener {
 
 	private CatalogoUsuarios catalogoUsuarios;
 	private CatalogoVideos catalogoVideos;
-	private ListaVideos topten;
 	private Map<Etiqueta, Integer> listaEtiquetas;
+	
+	// private ListaVideos topten;
 	
 	private Set<Etiqueta> etiquetasBusqueda;
 
@@ -57,25 +58,10 @@ public class AppVideo implements VideosListener {
 		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
 		catalogoVideos = CatalogoVideos.getUnicaInstancia();
 
-		// Obtenemos una lista con todos los vï¿½deos del sistema
-		List<Video> videos = new LinkedList<Video>(catalogoVideos.getVideos().values());
-
-		// Inicializaciï¿½n de los 10 vï¿½deos mï¿½s visualizados del sistema
-		topten = new ListaVideos("topten");
-		// Ordenamos los vï¿½deos por nï¿½mero de reproducciones
-		// TODO: Por quï¿½ pones un - a las reproducciones ????
-		videos.sort((v1, v2) -> {
-			return ((Integer) (-v1.getNumReproducciones())).compareTo(-v2.getNumReproducciones());
-		});
-
-		// Aï¿½adimos los 10 vï¿½deos mï¿½s reproducidos
-		for (int i = 0; i < 10 && i < videos.size(); i++)
-			topten.addVideo((videos.get(i)));
-
 		// Actualizamos la "lista" de etiquetas global con el número de referencias de cada etiqueta para luego poder borrar
 		// correctamente
 		listaEtiquetas = new HashMap<Etiqueta, Integer>();
-		for (Video video : videos) {
+		for (Video video : catalogoVideos.getVideos()) {
 			for (Etiqueta etiqueta : video.getEtiquetas()) {
 				incrementarReferenciasEtiqueta(etiqueta);
 			}
@@ -103,6 +89,21 @@ public class AppVideo implements VideosListener {
 	}
 
 	public ListaVideos getTopten() {
+		// Inicializacion de los 10 videos mas visualizados del sistema
+		ListaVideos topten = new ListaVideos("topten");
+		
+		// Obtenemos una lista con todos los videos del sistema para ordenarla
+		List<Video> videos = new LinkedList<Video>(catalogoVideos.getVideos());
+		
+		// Ordenamos los videos por numero de reproducciones
+		videos.sort((v1, v2) -> {
+			return ((Integer) (-v1.getNumReproducciones())).compareTo(-v2.getNumReproducciones());
+		});
+
+		// Anadimos los 10 videos mas reproducidos
+		for (int i = 0; i < 10 && i < videos.size(); i++)
+			topten.addVideo((videos.get(i)));
+		
 		return topten;
 	}
 
@@ -153,6 +154,7 @@ public class AppVideo implements VideosListener {
 		Usuario usuario = new Usuario(login, password, nombre, apellidos, fechaNac, email);
 		if (catalogoUsuarios.addUsuario(usuario)) {
 			adaptadorUsuario.registrarUsuario(usuario);
+			adaptadorListaVideos.registrarListaVideos(usuario.getListaRecientes());
 			usuarioActual = usuario;
 			return true;
 		}
@@ -211,7 +213,7 @@ public class AppVideo implements VideosListener {
 
 		// Recorremos todos los videos. Si el video contiene la cadena que buscamos
 		// y la condiciï¿½n del filtro se cumple, es un posible resultado.
-		for (Video i : catalogoVideos.getVideos().values()) {
+		for (Video i : catalogoVideos.getVideos()) {
 			if (i.contieneTitulo(cadena) && filtro.filtrarVideo(usuarioActual, i) 
 					&& ( etiquetasBusqueda.isEmpty() || i.containsAllEtiquetas(etiquetasBusqueda) )) {
 				resultados.add(i);
@@ -248,7 +250,7 @@ public class AppVideo implements VideosListener {
 	public boolean obtenerPremium() {
 		if (usuarioActual == null) return false;
 		
-		usuarioActual.setPremium();
+		usuarioActual.setPremium(true);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 		return true;
 	}
@@ -277,6 +279,7 @@ public class AppVideo implements VideosListener {
 
 	public boolean crearListaVideos(String titulo) {
 		if (usuarioActual == null) return false;
+		if (usuarioActual.containsListaMismaTitulo(titulo)) return false;
 		
 		ListaVideos listaVideos = new ListaVideos(titulo);
 		if (!usuarioActual.addListaVideos(listaVideos)) return false;
@@ -335,7 +338,9 @@ public class AppVideo implements VideosListener {
 		if (video == null) return false;
 		
 		video.reproducir();
+		usuarioActual.addVideoReciente(video);
 		adaptadorVideo.modificarVideo(video);
+		adaptadorListaVideos.modificarListaVideos(usuarioActual.getListaRecientes());
 		return true;
 
 	}
@@ -369,6 +374,11 @@ public class AppVideo implements VideosListener {
 		}
 	}
 	
+	public ListaVideos getRecientes() {
+		return usuarioActual.getListaRecientes();
+	}
+	
+	
 	// Funcionalidad auxiliar
 	private List<Video> adaptarVideos(Videos videos) {
 		List<Video> videosAdaptados = new LinkedList<Video>();
@@ -398,4 +408,5 @@ public class AppVideo implements VideosListener {
 		}
 		
 	}
+	
 }

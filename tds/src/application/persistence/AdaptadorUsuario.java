@@ -140,10 +140,10 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 		
 		Usuario usuario = new Usuario(login, password, nombre, apellidos, fechaNac, email);
 		usuario.setCodigo(codigo);
-		// Si es premium, le asignamos un rol premium
-		if (Boolean.parseBoolean(servPersistencia.recuperarPropiedadEntidad(eUsuario, propPremium))) {
-			usuario.setPremium();
-		}
+		
+		// Configuramos si es premium
+		usuario.setPremium(Boolean.parseBoolean(servPersistencia.recuperarPropiedadEntidad(eUsuario, propPremium)));
+		
 
 		// IMPORTANTE: añadir el usuario al pool antes de llamar a otros adaptadores
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, usuario);

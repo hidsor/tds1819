@@ -324,7 +324,7 @@ public class ViewController implements Initializable {
     	// Cargamos las dos listas de vídeos
     	
     	loadVideosToList(controller.getTopten(), recentTopTenList);
-    	//loadVideosToList(controller.getRecientes(), recentVideosList);
+    	loadVideosToList(controller.getRecientes(), recentVideosList);
     	
     	fadeIn(recentView);
     }
@@ -640,6 +640,9 @@ public class ViewController implements Initializable {
         		myListsEdit.setDisable(false);
         		myListsPlay.setDisable(false);
         		myListsDelete.setDisable(false);
+    		}
+    		else {
+    			showDialog("Error", "Ya existe una lista con ese nombre");
     		}
     	}
     	
@@ -1261,6 +1264,8 @@ public class ViewController implements Initializable {
 	
 	// Cargar la lista pasada de parámetro (su título) al listView del panel de mis listas
 	private void loadListToListView(String title) {
+		if (title.equals("Recientes")) return;
+		
 		ListaVideos list = controller.getListaVideos(title);
 		if (list == null) 
 			return;
@@ -1274,7 +1279,7 @@ public class ViewController implements Initializable {
 	
 	// Cargar la lista pasada de parámetro a la lista especificada
 	private void loadVideosToList(ListaVideos videos, JFXListView<Label> list) {
-		System.out.println(list.toString());
+		// System.out.println(list.toString());
 		list.setItems((videos.getVideos().stream()
 				.map(v -> createVideoThumbnail(v, 120, 80))
 				/*

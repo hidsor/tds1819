@@ -15,7 +15,8 @@ public class Usuario {
 	private String apellidos;
 	private LocalDate fechaNac;
 	private String email;
-	private RolPremium premium;
+	private boolean premium;
+	private Filtro filtroPremium;
 	private List<ListaVideos> listas;
 	private ListaVideos listaRecientes;
 
@@ -28,9 +29,10 @@ public class Usuario {
 		this.apellidos = apellidos;
 		this.fechaNac = fechaNac;
 		this.email = email;
-		this.premium = null;
+		this.premium = false;
+		this.filtroPremium = new NoFiltro();
 		listas = new LinkedList<ListaVideos>();
-		listaRecientes = new ListaVideos("Reciente");
+		listaRecientes = new ListaVideos("Recientes");
 	}
 
 	public Usuario(String login, String password) {
@@ -87,26 +89,24 @@ public class Usuario {
 	}
 
 	public boolean isPremium() {
-		return premium != null;
+		return premium;
 	}
 
 	// Hacemos premium al usuario asignï¿½ndole un rol premium
-	public void setPremium() {
-		this.premium = new RolPremium();
+	public void setPremium(boolean valor) {
+		this.premium = valor;
 	}
 
-	public void removePremium() {
-		this.premium = null;
-	}
+
 
 	public String getLogin() {
 		return login;
 	}
 
 	public Filtro getFiltro() {
-		if (premium == null)
+		if (!premium)
 			return new NoFiltro();
-		return premium.getFiltro();
+		return filtroPremium;
 	}
 
 	public List<ListaVideos> getListas() {
@@ -129,9 +129,6 @@ public class Usuario {
 	}
 
 	// Funcionalidad
-	public void obtenerPremium() {
-		premium = new RolPremium();
-	}
 
 	public boolean addListaVideos(ListaVideos listaVideos) {
 		return listas.add(listaVideos);
@@ -141,13 +138,27 @@ public class Usuario {
 		ListaVideos lista = getListaVideos(titulo);
 		return listas.remove(lista);
 	}
+	
+	public boolean containsListaMismaTitulo(String titulo) {
+		if (listaRecientes.getNombre().toLowerCase().equals(titulo.toLowerCase()))
+			return true;
+		
+		for (ListaVideos i : listas) {
+			if (i.getNombre().toLowerCase().equals(titulo.toLowerCase()))
+				return true;
+		}
+		return false;
+	}
 
 	public boolean addVideoReciente(Video video) {
-		// Si hay 5 o mï¿½s videos, quitamos el primero (el que hace mï¿½s tiempo que reprodujimos)
-		if (listaRecientes.getNumVideos() >= 5) {
-			listaRecientes.removeVideo(0);
+		while (listaRecientes.removeVideo(video)) {};
+		listaRecientes.addVideo(0, video);
+		
+		// Si tras añadir hay más de 5 videos, quitamos el ultimo (posicion 5)
+		if (listaRecientes.getNumVideos() > 5) {
+			listaRecientes.removeVideo(5);
 		}
-		return listaRecientes.addVideo(video);
+		return true;
 	}
 
 	@Override

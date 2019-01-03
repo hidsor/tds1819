@@ -15,7 +15,7 @@ public class ListaVideos {
 	// Constructor
 	public ListaVideos(String nombre) {
 		this.nombre = nombre;
-		videos = new LinkedList<Video>();
+		this.videos = new LinkedList<Video>();
 	}
 	
 	// M�todos de consulta y modificado
@@ -40,38 +40,28 @@ public class ListaVideos {
 	}
 
 	public List<Video> getVideos() {
-		if (videos == null) {
-			videos = new LinkedList<Video>();
-		}
 		return Collections.unmodifiableList(videos);
 	}
 
 	// Funcionalidad
 	public boolean addVideo(Video video) {
-		if (videos == null) {
-			videos = new LinkedList<Video>();
-		}
 		return videos.add(video);
 	}
 	
+	public boolean addVideo(int index, Video video) {
+		videos.add(index, video);
+		return true;
+	}
+	
 	public Video removeVideo(int index) {
-		if (videos == null) {
-			videos = new LinkedList<Video>();
-		}
 		return videos.remove(index);
 	}
 	
 	public boolean removeVideo(Video video) {
-		if (videos == null) {
-			videos = new LinkedList<Video>();
-		}
 		return videos.remove(video);
 	}
 	
 	public boolean containsVideo(Video video) {
-		if (videos == null) {
-			videos = new LinkedList<Video>();
-		}
 		return videos.contains(video);
 	}
 	
@@ -86,6 +76,7 @@ public class ListaVideos {
 		}
 		return buffer.toString();
 	}
+	
 	
 	
 	
