@@ -107,6 +107,10 @@ public class AppVideo implements VideosListener {
 		return topten;
 	}
 
+	public ListaVideos getRecientes() {
+		return usuarioActual.getListaRecientes();
+	}
+	
 	public Set<Etiqueta> getListaEtiquetas() {
 		return Collections.unmodifiableSet(listaEtiquetas.keySet());
 	}
@@ -373,12 +377,7 @@ public class AppVideo implements VideosListener {
 			}
 		}
 	}
-	
-	public ListaVideos getRecientes() {
-		return usuarioActual.getListaRecientes();
-	}
-	
-	
+
 	// Funcionalidad auxiliar
 	private List<Video> adaptarVideos(Videos videos) {
 		List<Video> videosAdaptados = new LinkedList<Video>();

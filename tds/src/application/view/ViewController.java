@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -832,110 +833,10 @@ public class ViewController implements Initializable {
     }
 
     @FXML
-    void playVideoList(ActionEvent event) {
-    	//TODO
-    	
-    	// Generamos una ventana emergente para preguntar el usuario el tiempo que quiere dejar entre vídeo y vídeo
-		JFXDialogLayout dialogContent = new JFXDialogLayout();
-
-		// Título de la ventana emergente
-		Text dialogTitle = new Text("Reproducir lista de vídeos");
-		dialogTitle.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
-		dialogContent.setHeading(dialogTitle);
-		
-		// Contenido de la ventana emergente
-		VBox dialogBody = new VBox();
-		dialogBody.setSpacing(10);
-		
-		Text dialogMessage = new Text("Introduzca el intervalo entre vídeo y vídeo (en segundos)");
-		
-		JFXTextField interval = new JFXTextField();
-		interval.getStyleClass().add("jfxtextfield");
-		interval.setPrefWidth(50);
-		interval.setMaxWidth(interval.getPrefWidth());
-		
-		// Permitimos únicamente números en el textfield
-		UnaryOperator<Change> filter = change -> {
-		    String text = change.getText();
-		    
-		    if (text.matches("[0-9]*")) {
-		        return change;
-		    }
-
-		    return null;
-		};
-		TextFormatter<String> textFormatter = new TextFormatter<>(filter);
-		interval.setTextFormatter(textFormatter);
-		
-		dialogBody.getChildren().addAll(dialogMessage, interval);
-		
-		dialogContent.setBody(dialogBody);
-		dialogContent.setStyle(DIALOG_LABEL_STYLE);
-
-		// Botones de la ventana emergente
-		JFXButton cancel = new JFXButton("Cancelar");
-		cancel.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
-		cancel.setPrefSize(100, 25);
-		cancel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-		dialogContent.setActions(cancel);
-		
-		JFXButton accept = new JFXButton("Aceptar");
-		accept.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
-		accept.setPrefSize(100, 25);
-		accept.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-		
-		dialogContent.setActions(accept, cancel);		
-		JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.BOTTOM);
-		
-		cancel.setOnAction(e -> dialog.close()); 
-		
-		accept.setOnAction(e -> {
-			dialog.close();	
-			
-			// No comprobamos que el texto incluya únicamente números porque ya hemos prohibido que se introduzca algo que no sea un número
-			if (interval.getText().equals("") || Integer.parseInt(interval.getText()) == 0) {
-				showDialog("Error", "No se ha introducido un intervalo o no es un intervalo válido");
-			} else {
-				// Obtenemos los vídeos de la lista a reproducir y mediante un timer vamos reproduciendo el siguiente vídeo
-				String listName = myListsComboBox.getSelectionModel().getSelectedItem();
-				ListaVideos listToPlay = controller.getListaVideos(listName);
-				Iterator<Video> it = listToPlay.getVideos().iterator();
-				showVideoDialog(it.next(), "videoDialog"); // Como no se puede reproducir una lista si no tiene vídeos, no comprobamos if .hasNext()
-				
-				TimerTask timerTask = new TimerTask() {
-		            @Override
-		            public void run() {
-		            	// Como estamos usando diálogos sobre toda la interfaz, miramos si se está reproduciendo un vídeo
-		            	// Si cerramos el vídeo, el temporizador no se dará cuenta hasta su siguiente llamada
-		            	
-		            	Node frontItem = rootStackPane.getChildren().get(rootStackPane.getChildren().size() - 1);
-		            	if (frontItem.getId().equals("videoDialog")) {
-		            		// Si se está reproduciendo un vídeo, lo cerramos y cargamos el siguiente
-		            		((JFXDialog) frontItem).close();
-		            		videoWeb.cancel();
-		            		// Vemos si quedan vídeos por reproducir
-		            		if (it.hasNext()) {
-		            			Platform.runLater(new Runnable() {
-		            			    @Override
-		            			    public void run() {
-		            			    	showVideoDialog(it.next(), "videoDialog");
-		            			    }
-		            			});
-		            			
-		            		} 
-		            		
-		            	} else {
-		            		// Sino, es que el usuario ha salido de la reproducción, por lo que finalizamos el timer
-		            		stopGlobalTimer();
-		            	}
-		            }
-		        };
-				startGlobalTimer(timerTask, Integer.parseInt(interval.getText())*1000);
-			}
-		});
-		
-	
-		dialog.show();    	
+    void playVideoList(ActionEvent event) { 	 	
+		String listName = myListsComboBox.getSelectionModel().getSelectedItem();
+		ListaVideos listToPlay = controller.getListaVideos(listName);  
+		playAllVideosFromList(listToPlay);
     }
     
     @FXML
@@ -958,28 +859,31 @@ public class ViewController implements Initializable {
     }
     
     /* FUNCIONALIDAD VENTANA RECIENTES */
-    
-    
+   
     @FXML
     // Reproducir todos los vídeos de la lista de recientes
     void playRecentVideos(ActionEvent event) {
-    	//TODO
+    	playAllVideosFromList(controller.getRecientes());
     }
 
     @FXML
-    // Reproducir todos los vídeos de la lista de recientes
+    // Reproducir todos los vídeos de la lista de top ten
     void playTopTen(ActionEvent event) {
-    	//TODO
+    	playAllVideosFromList(controller.getTopten());
     }
 
     @FXML
+    // Reproducir un vídeo de alguna de las dos listas de la ventana de recientes
     void playVideoFromList(MouseEvent event) {	
     	if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
     		@SuppressWarnings("unchecked")
 			JFXListView<Label> list = (JFXListView<Label>) event.getSource();
         	Label label = list.getSelectionModel().getSelectedItem();
+        	if (label == null)
+        		return;
     		Video video = controller.getVideo(label.getId());
         	showVideoDialog(video, "videoDialog");	
+        	loadVideosToList(controller.getRecientes(), recentVideosList);
     	}
     }
 
@@ -1294,6 +1198,7 @@ public class ViewController implements Initializable {
 				.collect(Collectors.toCollection(FXCollections::observableArrayList))));
 	}
 	
+	// Añadir vídeo a la lista actual de la ventana de mis listas
 	private void addVideoToCurrentList(Video video) {
 		// Comprobamos que el vídeo no esté ya en la lista
 		for (Label l : myListsList.getItems()) {
@@ -1303,6 +1208,111 @@ public class ViewController implements Initializable {
 		Label label = createSmallVideoThumbnail(video, 120, 70);
 		myListsList.getItems().add(label);
 		fadeIn(myListsList);
+	}
+	
+	
+	private void playAllVideosFromList(ListaVideos listToPlay) {
+		if (listToPlay.getVideos().size() == 0) return;
+    	// Generamos una ventana emergente para preguntar el usuario el tiempo que quiere dejar entre vídeo y vídeo
+		JFXDialogLayout dialogContent = new JFXDialogLayout();
+
+		// Título de la ventana emergente
+		Text dialogTitle = new Text("Reproducir lista de vídeos");
+		dialogTitle.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
+		dialogContent.setHeading(dialogTitle);
+		
+		// Contenido de la ventana emergente
+		VBox dialogBody = new VBox();
+		dialogBody.setSpacing(10);
+		
+		Text dialogMessage = new Text("Introduzca el intervalo entre vídeo y vídeo (en segundos)");
+		
+		JFXTextField interval = new JFXTextField();
+		interval.getStyleClass().add("jfxtextfield");
+		interval.setPrefWidth(50);
+		interval.setMaxWidth(interval.getPrefWidth());
+		
+		// Permitimos únicamente números en el textfield
+		UnaryOperator<Change> filter = change -> {
+		    String text = change.getText();
+		    
+		    if (text.matches("[0-9]*")) {
+		        return change;
+		    }
+
+		    return null;
+		};
+		TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+		interval.setTextFormatter(textFormatter);
+		
+		dialogBody.getChildren().addAll(dialogMessage, interval);
+		
+		dialogContent.setBody(dialogBody);
+		dialogContent.setStyle(DIALOG_LABEL_STYLE);
+
+		// Botones de la ventana emergente
+		JFXButton cancel = new JFXButton("Cancelar");
+		cancel.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
+		cancel.setPrefSize(100, 25);
+		cancel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+		dialogContent.setActions(cancel);
+		
+		JFXButton accept = new JFXButton("Aceptar");
+		accept.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
+		accept.setPrefSize(100, 25);
+		accept.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+		
+		dialogContent.setActions(accept, cancel);		
+		JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.BOTTOM);
+		
+		cancel.setOnAction(e -> dialog.close()); 
+		
+		accept.setOnAction(e -> {
+			dialog.close();	
+			
+			// No comprobamos que el texto incluya únicamente números porque ya hemos prohibido que se introduzca algo que no sea un número
+			if (interval.getText().equals("") || Integer.parseInt(interval.getText()) == 0) {
+				showDialog("Error", "No se ha introducido un intervalo o no es un intervalo válido");
+			} else {
+				// Obtenemos los vídeos de la lista a reproducir y mediante un timer vamos reproduciendo el siguiente vídeo
+				// Utilizamos un constructor de copia puesto que en el caso de que reproduzcamos la lista de recientes, esta se va a modificar
+				Iterator<Video> it = new LinkedList<Video>(listToPlay.getVideos()).iterator();
+				showVideoDialog(it.next(), "videoDialog"); 
+				
+				TimerTask timerTask = new TimerTask() {
+		            @Override
+		            public void run() {
+		            	// Como estamos usando diálogos sobre toda la interfaz, miramos si se está reproduciendo un vídeo
+		            	// Si cerramos el vídeo, el temporizador no se dará cuenta hasta su siguiente llamada
+		            	
+		            	Node frontItem = rootStackPane.getChildren().get(rootStackPane.getChildren().size() - 1);
+		            	if (frontItem.getId().equals("videoDialog")) {
+		            		// Si se está reproduciendo un vídeo, lo cerramos y cargamos el siguiente
+		            		((JFXDialog) frontItem).close();
+		            		videoWeb.cancel();
+		            		// Vemos si quedan vídeos por reproducir
+		            		if (it.hasNext()) {
+		            			Platform.runLater(new Runnable() {
+		            			    @Override
+		            			    public void run() {
+		            			    	showVideoDialog(it.next(), "videoDialog");
+		            			    }
+		            			});
+		            			
+		            		} 
+		            		
+		            	} else {
+		            		// Sino, es que el usuario ha salido de la reproducción, por lo que finalizamos el timer
+		            		stopGlobalTimer();
+		            	}
+		            }
+		        };
+				startGlobalTimer(timerTask, Integer.parseInt(interval.getText())*1000);
+			}
+		});
+		
+	
+		dialog.show();    	
 	}
 	
 	private static void assignKeyToButton(Node view, KeyCode key, ButtonBase button) {
