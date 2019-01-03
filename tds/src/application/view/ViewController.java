@@ -120,8 +120,6 @@ public class ViewController implements Initializable {
     /* STACKPANE PARA CONTENER TODAS LAS VENTANAS */
     @FXML
     private StackPane stackpane;  
-    @FXML
-    private AnchorPane testwindow; 
     
     /* VENTANA DE LOGIN */ 
     @FXML
@@ -196,6 +194,14 @@ public class ViewController implements Initializable {
     @FXML
     private JFXListView<Label> myListsList;
     
+    /* VENTANA DE RECIENTES */
+    @FXML
+    private GridPane recentView; // Contenedor de la vista de recientes
+    @FXML
+    private JFXListView<Label> recentVideosList, recentTopTenList;
+    @FXML
+    private JFXButton recentPlayRecentVideos, recentPlayTopTen;
+
 	/////////////////
 	/* CONSTRUCTOR */
 	/////////////////	
@@ -306,7 +312,21 @@ public class ViewController implements Initializable {
 
     @FXML
     public void openRecientesView(ActionEvent event) {
-    	//TODO
+    	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
+    	oldFront.setDisable(true);
+    	oldFront.setVisible(false);
+    		
+    	// Traemos la ventana al frente y la hacemos visible
+    	recentView.setDisable(false);
+    	recentView.setVisible(true);
+    	recentView.toFront();
+    	
+    	// Cargamos las dos listas de vídeos
+    	
+    	loadVideosToList(controller.getTopten(), recentTopTenList);
+    	//loadVideosToList(controller.getRecientes(), recentVideosList);
+    	
+    	fadeIn(recentView);
     }
 
     @FXML
@@ -523,6 +543,7 @@ public class ViewController implements Initializable {
     	Set<Video> videos = controller.buscarVideos(exploreTitle.getText());
     	for (Video video : videos) {
     		Label element = createVideoThumbnail(video, 200, 150);
+    		element.getStyleClass().add("videothumbnail");
     		element.setOnMouseClicked(e -> {
 			        if(e.getButton().equals(MouseButton.PRIMARY)){
 			            if(e.getClickCount() == 2){
@@ -794,6 +815,7 @@ public class ViewController implements Initializable {
     	Set<Video> videos = controller.buscarVideos(myListsTitle.getText());
     	for (Video video : videos) {
     		Label element = createVideoThumbnail(video, 200, 150);
+    		element.getStyleClass().add("videothumbnail");
     		element.setOnMouseClicked(e -> {
 			        if(e.getButton().equals(MouseButton.PRIMARY)){
 			            if(e.getClickCount() == 2){
@@ -931,6 +953,32 @@ public class ViewController implements Initializable {
 	    	}
 		}
     }
+    
+    /* FUNCIONALIDAD VENTANA RECIENTES */
+    
+    
+    @FXML
+    // Reproducir todos los vídeos de la lista de recientes
+    void playRecentVideos(ActionEvent event) {
+    	//TODO
+    }
+
+    @FXML
+    // Reproducir todos los vídeos de la lista de recientes
+    void playTopTen(ActionEvent event) {
+    	//TODO
+    }
+
+    @FXML
+    void playVideoFromList(MouseEvent event) {	
+    	if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+    		@SuppressWarnings("unchecked")
+			JFXListView<Label> list = (JFXListView<Label>) event.getSource();
+        	Label label = list.getSelectionModel().getSelectedItem();
+    		Video video = controller.getVideo(label.getId());
+        	showVideoDialog(video, "videoDialog");	
+    	}
+    }
 
     /* FUNCIONALIDAD BARRA SUPERIOR */
     @FXML
@@ -982,13 +1030,13 @@ public class ViewController implements Initializable {
     ////////////////////////////
     
     // Ocultar todas las labels de "*Este campo es obligatorio" de la vista del login
-    public void hideLoginLabels() {
+    private void hideLoginLabels() {
     	loginLabelNick.setVisible(false);
     	loginLabelPassword.setVisible(false);
     }
     
     // Ocultar todas las labels de "*Este campo es obligatorio" de la vista de registro
-    public void hideRegisterLabels() {
+    private void hideRegisterLabels() {
     	registerLabelNick.setVisible(false);
     	registerLabelPassword.setVisible(false);
     	registerLabelPassRepeat.setVisible(false);
@@ -998,7 +1046,7 @@ public class ViewController implements Initializable {
     
 	// Generar y mostrar un JFXDialog con un vídeo pasado de parámetro. 
     // El diálogo tendrá de id el que se pasa de parámetro.
-	public void showVideoDialog(Video video, String id) {		
+	private void showVideoDialog(Video video, String id) {		
 		// Incrementamos el número de visitas del vídeo
 		controller.reproducir(video.getURL());
 		
@@ -1088,7 +1136,7 @@ public class ViewController implements Initializable {
 	}
 
 	// Generar un JFXDialog textual sobre la aplicación
-	public void showDialog(String title, String content) {
+	private void showDialog(String title, String content) {
 		JFXDialogLayout dialogContent = new JFXDialogLayout();
 
 		dialogContent.setHeading(new Text(title));
@@ -1111,7 +1159,7 @@ public class ViewController implements Initializable {
 
 	// Método para hacer una transición de un nodo pasado de parámetro
 	// La duración no está parametrizada pero podría parametrizarse también
-	public void fadeIn(Node node) {
+	private void fadeIn(Node node) {
 		FadeTransition ft = new FadeTransition(Duration.millis(200), node);
 		ft.setFromValue(0.0);
 		ft.setToValue(1.0);
@@ -1119,7 +1167,7 @@ public class ViewController implements Initializable {
 	}
 	
 	// Cargamos la lista con todas las etiquetas
-	public void loadTags(Set<Etiqueta> savedTags) {
+	private void loadTags(Set<Etiqueta> savedTags) {
 		tagsView.setItems(savedTags.stream()
 				.map(Etiqueta::getNombre)
 				.collect(Collectors.toCollection(FXCollections::observableArrayList)));
@@ -1154,7 +1202,6 @@ public class ViewController implements Initializable {
 		label.setPrefWidth(width);
 		label.setPrefHeight(height);
 		label.setAlignment(Pos.CENTER);
-		label.getStyleClass().add("videothumbnail");
 		label.setContentDisplay(ContentDisplay.TOP);
 		label.setText(video.getTitulo());
 		
@@ -1212,7 +1259,7 @@ public class ViewController implements Initializable {
 		myListsComboBox.setItems(playlistsTitles);
 	}
 	
-	// Cargar la lista pasada de parámetro al listView del panel de mis listas
+	// Cargar la lista pasada de parámetro (su título) al listView del panel de mis listas
 	private void loadListToListView(String title) {
 		ListaVideos list = controller.getListaVideos(title);
 		if (list == null) 
@@ -1223,6 +1270,23 @@ public class ViewController implements Initializable {
 		if (myListsList.getItems().size() == 0) myListsPlay.setDisable(true);
 			else myListsPlay.setDisable(false);
 		fadeIn(myListsList);
+	}
+	
+	// Cargar la lista pasada de parámetro a la lista especificada
+	private void loadVideosToList(ListaVideos videos, JFXListView<Label> list) {
+		System.out.println(list.toString());
+		list.setItems((videos.getVideos().stream()
+				.map(v -> createVideoThumbnail(v, 120, 80))
+				/*
+				.peek(l -> l.setOnMouseClicked(e -> {
+			        if(e.getButton().equals(MouseButton.PRIMARY)){
+			            if(e.getClickCount() == 2){
+			            	showVideoDialog(controller.getVideo(l.getId()), "videoDialog");
+			        }
+				}}))
+				*/
+				.peek(l -> l.setStyle("-fx-font-weight: bold"))
+				.collect(Collectors.toCollection(FXCollections::observableArrayList))));
 	}
 	
 	private void addVideoToCurrentList(Video video) {
@@ -1254,7 +1318,6 @@ public class ViewController implements Initializable {
 	private void startGlobalTimer(TimerTask task, int delay) {
 		// Pseudo "singleton"
 		if (globalTimer != null) {
-			System.out.println("Timer already in play, closing it...");
 			globalTimer.cancel();
 		}
 		globalTimer = new Timer();
@@ -1262,7 +1325,6 @@ public class ViewController implements Initializable {
 	}
 	
 	private void stopGlobalTimer() {
-		System.out.println("Called method to close global timer...");
 		if (globalTimer != null) globalTimer.cancel();
 		globalTimer = null;
 	}

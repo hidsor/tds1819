@@ -268,3 +268,10 @@
 	-fx-background-color: #fdc7c3;
 }
 
+
+/* Estilo genérico de cualquier contenedor que queramos que tenga un borde y color de fondo */
+
+.mybordercontainer {
+	-fx-border-color: #dfdfdf;
+	-fx-background-color: #f4f4f4;
+}

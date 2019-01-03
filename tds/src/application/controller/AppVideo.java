@@ -70,7 +70,7 @@ public class AppVideo implements VideosListener {
 
 		// Aï¿½adimos los 10 vï¿½deos mï¿½s reproducidos
 		for (int i = 0; i < 10 && i < videos.size(); i++)
-			catalogoVideos.addVideo(videos.get(i));
+			topten.addVideo((videos.get(i)));
 
 		// Actualizamos la "lista" de etiquetas global con el número de referencias de cada etiqueta para luego poder borrar
 		// correctamente
