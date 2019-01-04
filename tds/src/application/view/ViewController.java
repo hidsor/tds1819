@@ -202,6 +202,17 @@ public class ViewController implements Initializable {
     private JFXListView<Label> recentVideosList, recentTopTenList;
     @FXML
     private JFXButton recentPlayRecentVideos, recentPlayTopTen;
+    @FXML
+    private VBox recentTopTenContainer;
+    
+    /* VENTANA DDE PREMIUM */
+    
+    @FXML
+    private BorderPane premiumView; // Contenedor de la vista de premium
+    @FXML
+    private JFXButton premiumActivate;
+    @FXML
+    private Label premiumLabel;
 
 	/////////////////
 	/* CONSTRUCTOR */
@@ -279,7 +290,6 @@ public class ViewController implements Initializable {
 
     @FXML
     public void openMislistasView(ActionEvent event) {
-    	
     	// Ocultamos el elemento que hubiese en el frente
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
@@ -313,6 +323,7 @@ public class ViewController implements Initializable {
 
     @FXML
     public void openRecientesView(ActionEvent event) {
+    	// Ocultamos el elemento que hubiese en el frente
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
     	oldFront.setVisible(false);
@@ -323,16 +334,30 @@ public class ViewController implements Initializable {
     	recentView.toFront();
     	
     	// Cargamos las dos listas de vídeos
-    	
-    	loadVideosToList(controller.getTopten(), recentTopTenList);
     	loadVideosToList(controller.getRecientes(), recentVideosList);
-    	
+    	if (controller.getUsuarioActual().isPremium()) {
+    		recentTopTenContainer.setDisable(false);
+    		loadVideosToList(controller.getTopten(), recentTopTenList); 		
+    	}
     	fadeIn(recentView);
     }
 
     @FXML
     public void openPremiumView(ActionEvent event) {
-    	//TODO
+    	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
+    	oldFront.setDisable(true);
+    	oldFront.setVisible(false);
+    		
+    	// Traemos la ventana al frente y la hacemos visible
+    	premiumView.setDisable(false);
+    	premiumView.setVisible(true);
+    	premiumView.toFront();
+    	
+    	if (controller.getUsuarioActual().isPremium()) {
+    		premiumActivate.setDisable(true);
+    		premiumLabel.setText("¡Gracias por activar premium!");
+    	}  	
+    	fadeIn(premiumView);
     }
         	
     @FXML
@@ -377,7 +402,6 @@ public class ViewController implements Initializable {
 		fadeIn(profileView);
 		
 		// Actualizamos elementos de la vista de perfil
-		login.setText("Mi perfil");
 		profileNick.setText(usuarioActual.getLogin());
 		profileEmail.setPromptText(usuarioActual.getEmail());
 		profileDatePicker.setPromptText(usuarioActual.getFechaNac().toString());
@@ -406,11 +430,10 @@ public class ViewController implements Initializable {
     		// Hay datos introducidos, intentamos identificarnos.
     		if (controller.verificarUsuario(loginNick.getText(), loginPassword.getText())) {
     			// Login válido
-    			openProfileView();
+    			openRecientesView(event);
+    			setProfileFunctionsTo(true);
     			// Desbloqueamos la funcionalidad disponible para usuarios
-    			explorar.setDisable(false);
-    			mislistas.setDisable(false);
-    			recientes.setDisable(false);
+    			setUserFunctionsTo(true);
     		} else {
     			// Login inválido
     			showDialog("Login inválido", "El nombre y/o la contraseña son incorrectas");
@@ -456,11 +479,10 @@ public class ViewController implements Initializable {
 			if (controller.registrarUsuario(registerNick.getText(), registerPassword.getText(), registerName.getText(),
 					registerSurname.getText(), registerDatePicker.getValue(), registerEmail.getText())) {
     			// Registro válido
-    			openProfileView();
+				openRecientesView(event);
+				setProfileFunctionsTo(true);
     			// Desbloqueamos la funcionalidad disponible para usuarios
-    			explorar.setDisable(false);
-    			mislistas.setDisable(false);
-    			recientes.setDisable(false);			
+				setUserFunctionsTo(true);
     		} else {
     			// Registro inválido (shouldn't happen)
     			showDialog("Registro inválido", "No se ha podido registrar al usuario");
@@ -471,18 +493,6 @@ public class ViewController implements Initializable {
     @FXML
     public void registerCancel(ActionEvent event) {
     	//TODO: HACE LO MISMO QUE openLoginView pero lo dejo separado de mientras
-    	/*
-    	// Ocultamos el elemento que hubiese en el frente
-    	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
-    	oldFront.setDisable(true);
-    	oldFront.setVisible(false);
-    	
-    	// Traemos la ventana al frente y la hacemos visible
-    	loginView.setDisable(false);
-    	loginView.setVisible(true);
-    	loginView.toFront();
-    	fadeIn(loginView);
-    	*/
     	openLoginView(event);
     }
     
@@ -491,13 +501,10 @@ public class ViewController implements Initializable {
     // Salir de la cuenta actualmente utilizada
     public void profileLogout(ActionEvent event) {
     	controller.salirUsuario();
-    	isProfileOpen = false;
-    	login.setText("Log in");
+    	setProfileFunctionsTo(false);
     	
     	// Bloqueamos la funcionalidad disponible para usuarios
-		explorar.setDisable(true);
-		mislistas.setDisable(true);
-		recientes.setDisable(true);
+    	setUserFunctionsTo(false);
 		
     	openLoginView(event);
     }
@@ -858,8 +865,7 @@ public class ViewController implements Initializable {
 		}
     }
     
-    /* FUNCIONALIDAD VENTANA RECIENTES */
-   
+    /* FUNCIONALIDAD VENTANA RECIENTES */   
     @FXML
     // Reproducir todos los vídeos de la lista de recientes
     void playRecentVideos(ActionEvent event) {
@@ -884,6 +890,17 @@ public class ViewController implements Initializable {
     		Video video = controller.getVideo(label.getId());
         	showVideoDialog(video, "videoDialog");	
         	loadVideosToList(controller.getRecientes(), recentVideosList);
+    	}
+    }
+    
+    /* FUNCIONALIDAD VENTANA DE PREMIUM */
+    @FXML
+    void activatePremium(ActionEvent event) {
+    	if (!controller.getUsuarioActual().isPremium()) {
+    		controller.obtenerPremium();
+    		showDialog("Premium activado", "*Le cobraremos el +0.25 a nuestra nota final en la convocatoria correspondiente");
+    		premiumActivate.setDisable(true);
+    		premiumLabel.setText("¡Gracias por activar premium!");
     	}
     }
 
@@ -932,6 +949,7 @@ public class ViewController implements Initializable {
         stg.setX(event.getScreenX() - xOffset);
         stg.setY(event.getScreenY() - yOffset);
     }
+    
     ////////////////////////////
     /* FUNCIONALIDAD AUXILIAR */
     ////////////////////////////
@@ -949,6 +967,24 @@ public class ViewController implements Initializable {
     	registerLabelPassRepeat.setVisible(false);
     	registerLabelName.setVisible(false);
     	registerLabelDate.setVisible(false);  	
+    }
+    
+    // Activar o desactivar la funcionalidad del usuario
+    private void setUserFunctionsTo(boolean value) {
+		explorar.setDisable(!value);
+		mislistas.setDisable(!value);
+		recientes.setDisable(!value);
+		premium.setDisable(!value);
+    }
+    
+    private void setProfileFunctionsTo(boolean value) {
+    	isProfileOpen = value;
+    	
+    	if (isProfileOpen) {
+    		login.setText("Mi perfil");
+    	} else {
+    		login.setText("Log in");
+    	}
     }
     
 	// Generar y mostrar un JFXDialog con un vídeo pasado de parámetro. 

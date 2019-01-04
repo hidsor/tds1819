@@ -58,7 +58,7 @@
                                           <Font name="System Bold" size="20.0" />
                                        </font>
                                     </Label>
-                                    <JFXButton id="recentPlayRecent" fx:id="recentPlayRecentVideos" minHeight="-Infinity" minWidth="-Infinity" onAction="#playRecentVideos" prefHeight="30.0" prefWidth="30.0" ripplerFill="WHITE" text="">
+                                    <JFXButton id="recentPlayRecent" fx:id="recentPlayRecentVideos" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" onAction="#playRecentVideos" prefHeight="30.0" prefWidth="30.0" ripplerFill="WHITE" text="">
                                        <font>
                                           <Font name="System Bold" size="14.0" />
                                        </font>
@@ -90,16 +90,21 @@
                               </JFXListView>
                            </children>
                         </VBox>
-                        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <VBox id="recentTopTenContainer" fx:id="recentTopTenContainer" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <children>
                               <HBox alignment="CENTER_LEFT" spacing="10.0">
                                  <children>
+                                    <ImageView fitHeight="15.0" fitWidth="15.0" opacity="0.44" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../resources/premium_secondary.png" />
+                                       </image>
+                                    </ImageView>
                                     <Label text="Top 10">
                                        <font>
                                           <Font name="System Bold" size="20.0" />
                                        </font>
                                     </Label>
-                                    <JFXButton id="recentPlayTopTen" fx:id="recentPlayTopTen" minHeight="-Infinity" minWidth="-Infinity" onAction="#playTopTen" prefHeight="30.0" prefWidth="30.0" ripplerFill="WHITE" text="">
+                                    <JFXButton id="recentPlayTopTen" fx:id="recentPlayTopTen" focusTraversable="false" minHeight="-Infinity" minWidth="-Infinity" onAction="#playTopTen" prefHeight="30.0" prefWidth="30.0" ripplerFill="WHITE" text="">
                                        <font>
                                           <Font name="System Bold" size="14.0" />
                                        </font>
@@ -674,6 +679,24 @@
                            </BorderPane.margin>
                         </HBox>
                      </top>
+                  </BorderPane>
+                  <BorderPane id="premiumView" fx:id="premiumView" disable="true" prefHeight="200.0" prefWidth="200.0" visible="false">
+                     <center>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <JFXButton id="premiumActivate" fx:id="premiumActivate" onAction="#activatePremium" prefHeight="35.0" prefWidth="150.0" ripplerFill="WHITE" styleClass="jfxbutton" text="Activar" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </JFXButton>
+                              <Label id="premiumLabel" fx:id="premiumLabel" text="¡Por un módico precio de 0.00€!*">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </center>
                   </BorderPane>
                   <GridPane id="loginView" fx:id="loginView" disable="true" visible="false">
                     <columnConstraints>

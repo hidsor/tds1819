@@ -28,6 +28,8 @@ VLAD:
 01/01/2019 - 2h (Avances en la vista: Ventana de mis listas)
 02/01/2019 - 3h (Avances en la vista: Ventana de mis listas)
 02/01/2019 - 2h 30 min (Avances en la vista: Ventana de recientes)
+03/01/2019 - 15 min (Arreglos en la ventana de recientes)
+04/01/2019 - 45 min (Avances en la vista: Ventana de premium)
 
 ENRIQUE:
 - 17/11/2018 - 1 hora (Hacer UML)
