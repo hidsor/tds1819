@@ -107,6 +107,10 @@
 	-fx-graphic: url('../../resources/addtag.png');
 }
 
+.generatePDFbutton:pressed {
+	-fx-graphic: url('../../resources/pdf_pressed.png');
+}
+
 /* Elementos de la barra lateral izquierda */
 .sidebar{
 	-fx-background-color: #fbfbfb;

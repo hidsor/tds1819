@@ -105,7 +105,7 @@ public class Video {
 	
 	@Override
 	public String toString() {
-		return "Titulo: " + titulo + "\t Reproducciones: " + numReproducciones;
+		return "Titulo: " + titulo + " \t Reproducciones: " + numReproducciones;
 	}
 	
 

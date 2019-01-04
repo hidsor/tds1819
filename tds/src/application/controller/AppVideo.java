@@ -13,6 +13,8 @@ import java.util.Set;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
@@ -316,7 +318,8 @@ public class AppVideo implements VideosListener {
 		ListaVideos listaVideos = usuarioActual.getListaVideos(tituloLista);
 		if (listaVideos == null) return false;	
 		
-		listaVideos.addVideo(video);
+		if (!listaVideos.addVideo(video)) return false;
+		
 		adaptadorListaVideos.modificarListaVideos(listaVideos);
 		return true;
 	}
@@ -349,21 +352,29 @@ public class AppVideo implements VideosListener {
 
 	}
 	
-	public void crearPDF(String nombre){
+	public boolean crearPDF(String nombre){
+		if (usuarioActual == null) return false;
+		
 		try {
-			FileOutputStream archivo = new FileOutputStream(nombre);
+			FileOutputStream archivo = new FileOutputStream(nombre + ".pdf");
 			Document documento = new Document();
 			PdfWriter.getInstance(documento, archivo);
 		    documento.open();
-		    documento.add(new Paragraph(nombre + "\n\n"));
+			Paragraph title = new Paragraph("Listas de reproducción del usuario '" + usuarioActual.getLogin() + "'\n",
+					new Font(FontFamily.UNDEFINED, 16, Font.BOLD));
+		    documento.addTitle("OurTube: Listas de reproducción generadas por el usuario '" + usuarioActual.getLogin() + "'");
+		    documento.add(title);
 		    documento.add(new Paragraph(usuarioActual.infoListasVideos()));
 		    documento.close();
+		    return true;
+		} catch (FileNotFoundException e) {		
 			
-		} catch (FileNotFoundException e) {			
 			System.err.println("No se pudo crear el archivo " + nombre);
+			return false;
 		}
 		catch (DocumentException e) {
 			System.err.println("No se pudo escribir en el documento");
+			return false;
 		}
 	}
 

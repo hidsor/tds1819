@@ -295,6 +295,22 @@
                                                       <String fx:value="newlistbutton" />
                                                    </styleClass>
                                                 </JFXButton>
+                                                <JFXButton id="myListsCreatePDF" fx:id="myListsCreatePDF" layoutX="10.0" layoutY="210.0" onAction="#generateListPDF" prefHeight="40.0" prefWidth="40.0" ripplerFill="WHITE" style="-fx-background-radius: 40;" text="">
+                                                   <font>
+                                                      <Font name="System Bold" size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../resources/pdf.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                   <styleClass>
+                                                      <String fx:value="jfxbutton" />
+                                                      <String fx:value="generatePDFbutton" />
+                                                   </styleClass>
+                                                </JFXButton>
                                              </children>
                                           </JFXNodesList>
                                        </children>
@@ -576,7 +592,7 @@
                               <Insets left="10.0" right="15.0" />
                            </GridPane.margin>
                         </Separator>
-                        <JFXButton id="profleLoad" fx:id="profileLoad" alignment="CENTER" onAction="#loadVideos" ripplerFill="WHITE" style="-fx-background-color: #000000;" text="Cargar vídeos" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+                        <JFXButton id="profleLoad" fx:id="profileLoad" alignment="CENTER" onAction="#loadVideos" ripplerFill="WHITE" styleClass="jfxbutton" text="Cargar vídeos" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
@@ -622,7 +638,7 @@
                            </BorderPane.margin></VBox>
                      </right>
                      <center>
-                        <ScrollPane pannable="true" style="-fx-fit-to-width: true;" styleClass="myscrollview" BorderPane.alignment="CENTER">
+                        <ScrollPane id="exploreScroll" fx:id="exploreScroll" pannable="true" style="-fx-fit-to-width: true;" styleClass="myscrollview" BorderPane.alignment="CENTER">
                            <content>
                               <JFXMasonryPane id="exploreContent" fx:id="exploreContent" HSpacing="1.0" VSpacing="1.0" cellHeight="150.0" cellWidth="200.0" />
                            </content>

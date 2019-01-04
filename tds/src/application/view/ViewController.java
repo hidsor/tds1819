@@ -54,6 +54,7 @@ import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextFormatter.Change;
@@ -166,6 +167,8 @@ public class ViewController implements Initializable {
     @FXML
     private BorderPane exploreView; // Contenedor de la vista de explorar
     @FXML
+    private ScrollPane exploreScroll;
+    @FXML
     private JFXMasonryPane exploreContent; // Contenedor de los vídeos buscados
     @FXML
     private TextField exploreTitle;
@@ -185,13 +188,15 @@ public class ViewController implements Initializable {
     @FXML
     private TextField myListsTitle, myListsNewListTitle;
     @FXML
+    private ScrollPane myListsSearchView;
+    @FXML
     private JFXMasonryPane myListsContent;
     @FXML
     private ComboBox<String> myListsComboBox;
     @FXML
     private JFXNodesList myListsOptions;
     @FXML
-    private JFXButton myListsSearch, myListsClear, myListExpand, myListsEdit, myListsPlay, myListsDelete, myListsNew, myListsAccept;
+    private JFXButton myListsSearch, myListsClear, myListExpand, myListsEdit, myListsPlay, myListsDelete, myListsNew, myListsAccept, myListsCreatePDF;
     @FXML
     private JFXListView<Label> myListsList;
     
@@ -249,7 +254,7 @@ public class ViewController implements Initializable {
 	
 	/* ABRIR VENTANAS */
     @FXML
-    public void openLoginView(ActionEvent event) {
+    void openLoginView(ActionEvent event) {
     	// Abrimos una ventana u otra en función del estado
     	if (!isProfileOpen) {
         	// Ocultamos el elemento que hubiese en el frente
@@ -273,7 +278,7 @@ public class ViewController implements Initializable {
     }
 
     @FXML
-    public void openExplorarView(ActionEvent event) {	
+    void openExplorarView(ActionEvent event) {	
     	loadTags(controller.getListaEtiquetas());
     	
     	// Ocultamos el elemento que hubiese en el frente
@@ -289,7 +294,7 @@ public class ViewController implements Initializable {
     }
 
     @FXML
-    public void openMislistasView(ActionEvent event) {
+    void openMislistasView(ActionEvent event) {
     	// Ocultamos el elemento que hubiese en el frente
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
@@ -317,12 +322,15 @@ public class ViewController implements Initializable {
 		myListsMainSideBar.setVisible(true);
 		editPlayListMode = false;
 		
+		if (controller.getUsuarioActual().isPremium()) {
+			myListsCreatePDF.setDisable(false);
+		}
 		
     	fadeIn(myListsView);
     }
 
     @FXML
-    public void openRecientesView(ActionEvent event) {
+    void openRecientesView(ActionEvent event) {
     	// Ocultamos el elemento que hubiese en el frente
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
@@ -343,7 +351,7 @@ public class ViewController implements Initializable {
     }
 
     @FXML
-    public void openPremiumView(ActionEvent event) {
+    void openPremiumView(ActionEvent event) {
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
     	oldFront.setVisible(false);
@@ -361,7 +369,7 @@ public class ViewController implements Initializable {
     }
         	
     @FXML
-    public void openRegisterView(MouseEvent event) {
+    void openRegisterView(MouseEvent event) {
     	// Ocultamos el elemento que hubiese en el frente
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
@@ -385,7 +393,7 @@ public class ViewController implements Initializable {
     	fadeIn(registerView);
     }
 
-    public void openProfileView() {
+    void openProfileView() {
     	// Actualizamos al usuario actual por si se han producido cambios
 		Usuario usuarioActual = controller.getUsuarioActual();
 		isProfileOpen = true;
@@ -415,7 +423,7 @@ public class ViewController implements Initializable {
     /* FUNCIONALIDAD VENTANA LOGIN */
     @FXML
     // Validación de la cuenta introducida en el login
-    public void loginEnter(ActionEvent event) {
+    void loginEnter(ActionEvent event) {
     	boolean valid = true;
     	// Comprobamos que ambos campos hayan sido introducidos
     	if (loginNick.getText().equals("")) {
@@ -444,7 +452,7 @@ public class ViewController implements Initializable {
     /* FUNCIONALIDAD VENTANA DE REGISTRO */
     @FXML
     // Registrar un usuario
-    public void registerUser(ActionEvent event) {
+    void registerUser(ActionEvent event) {
     	// Comprobamos que ninguno de los campos obligatorios esté vacío.
     	// Si alguno lo está, activamos su etiqueta de "*Campo obligatorio"
     	boolean valid = true;
@@ -491,7 +499,7 @@ public class ViewController implements Initializable {
     }
     
     @FXML
-    public void registerCancel(ActionEvent event) {
+    void registerCancel(ActionEvent event) {
     	//TODO: HACE LO MISMO QUE openLoginView pero lo dejo separado de mientras
     	openLoginView(event);
     }
@@ -499,7 +507,7 @@ public class ViewController implements Initializable {
     /* FUNCIONALIDAD VENTANA DE PERFIL */
     @FXML
     // Salir de la cuenta actualmente utilizada
-    public void profileLogout(ActionEvent event) {
+    void profileLogout(ActionEvent event) {
     	controller.salirUsuario();
     	setProfileFunctionsTo(false);
     	
@@ -510,7 +518,7 @@ public class ViewController implements Initializable {
     }
 
     @FXML
-    public void loadVideos(ActionEvent event) {
+    void loadVideos(ActionEvent event) {
     	FileChooser fileChooser = new FileChooser();
     	fileChooser.setTitle("Abrir XML con videos");
     	try {
@@ -526,7 +534,7 @@ public class ViewController implements Initializable {
      
     @FXML
 	// Actualizar todos los campos introducidos en la ventana de perfil.
-    public void profileUpdate(ActionEvent event) {
+    void profileUpdate(ActionEvent event) {
     	// La comprobación de si un campo contiene información o no se delega al controlador.
     	// Asimismo, si la contraseña nueva no se escribe dos veces correctamente, no se realizan los cambios
 		if (profilePassword.getText().equals(profilePassRepeat.getText())) {
@@ -542,10 +550,11 @@ public class ViewController implements Initializable {
     /* FUNCIONALIDAD VENTANA DE EXPLORAR */
     @FXML
     // Busqueda de vídeos
-    public void exploreSearch(ActionEvent event) {
+    void exploreSearch(ActionEvent event) {
     	 	
     	// Borramos el resultado de la busqueda anterior
     	exploreContent.getChildren().clear();
+    	exploreScroll.setFitToHeight(false);
     	
     	// Hecho esto, buscamos
     	Set<Video> videos = controller.buscarVideos(exploreTitle.getText());
@@ -566,13 +575,14 @@ public class ViewController implements Initializable {
     
     @FXML
     // Limpiar la búsqueda actual de vídeos
-    public void exploreClear(ActionEvent event) {
+    void exploreClear(ActionEvent event) {
     	exploreContent.getChildren().clear();
+    	exploreScroll.setFitToHeight(true);
     }
     
 	// Añadir una etiqueta a las etiquetas utilizadas para la búsqueda
 	@FXML
-	public boolean addSearchTag(MouseEvent event) {
+	boolean addSearchTag(MouseEvent event) {
 		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
 			String tagName = tagsView.getSelectionModel().getSelectedItem();
 			if (controller.addEtiquetaBusqueda(tagName)) {
@@ -585,7 +595,7 @@ public class ViewController implements Initializable {
 	
 	// Eliminar una etiqueta de las etiquetas utilizadas para la búsqueda
 	@FXML
-	public boolean removeSearchTag(MouseEvent event) {
+	boolean removeSearchTag(MouseEvent event) {
 		if (controller.isEtiquetasBusquedaEmpty())
 			return false;
 		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
@@ -793,15 +803,18 @@ public class ViewController implements Initializable {
 	    	myListsDelete.setDisable(true);
 	    	myListsNew.setDisable(true);
 	    	myListsPlay.setDisable(true);
+	    	myListsCreatePDF.setDisable(true);
 	    	editPlayListMode = true;
 	    	
 	    	myListsTitle.setDisable(false);
 	    	myListsSearch.setDisable(false);
 	    	myListsClear.setDisable(false);
+	    	
     	} else {
 	    	myListsDelete.setDisable(false);
 	    	myListsNew.setDisable(false);
 	    	myListsPlay.setDisable(false);
+	    	myListsCreatePDF.setDisable(false);
 	    	editPlayListMode = false;
 	    	
 	    	myListsTitle.setDisable(true);
@@ -815,12 +828,14 @@ public class ViewController implements Initializable {
     @FXML
     void myListsClearVideos(ActionEvent event) {
     	myListsContent.getChildren().clear();
+    	myListsSearchView.setFitToHeight(true); // Evita que la barra de scroll se quede
     }
 
     @FXML 
     void myListsSearchVideos(ActionEvent event) {
     	// Borramos el resultado de la busqueda anterior
     	myListsContent.getChildren().clear();
+    	myListsSearchView.setFitToHeight(false);
     	
     	// Hecho esto, buscamos
     	Set<Video> videos = controller.buscarVideos(myListsTitle.getText());
@@ -830,8 +845,7 @@ public class ViewController implements Initializable {
     		element.setOnMouseClicked(e -> {
 			        if(e.getButton().equals(MouseButton.PRIMARY)){
 			            if(e.getClickCount() == 2){
-			            	if (controller.addVideoALista(video.getURL(), myListsComboBox.getSelectionModel().getSelectedItem()))
-			            		addVideoToCurrentList(video);
+			            	addVideoToCurrentList(video);
 			            }
 			        }
     		});
@@ -863,6 +877,77 @@ public class ViewController implements Initializable {
 	        	showVideoDialog(video, "videoDialog");		
 	    	}
 		}
+    }
+    
+
+    @FXML
+    // Generar archivo PDF con todas las listas disponibles
+    void generateListPDF(ActionEvent event) {
+       	// Generamos una ventana emergente para preguntar el usuario el tiempo que quiere dejar entre vídeo y vídeo
+    		JFXDialogLayout dialogContent = new JFXDialogLayout();
+
+    		// Título de la ventana emergente
+    		Text dialogTitle = new Text("Crear archivo PDF con todas las listas del usuario");
+    		dialogTitle.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
+    		dialogContent.setHeading(dialogTitle);
+    		
+    		// Contenido de la ventana emergente
+    		VBox dialogBody = new VBox();
+    		dialogBody.setSpacing(10);
+    		
+    		Text dialogMessage = new Text("Esta funcionalidad es para usuarios premium, siéntete afortunado :^)\n\nIntroduzca el nombre del archivo a generar:");
+    		
+    		JFXTextField fileName = new JFXTextField();
+    		fileName.getStyleClass().add("jfxtextfield");
+    		fileName.setPrefWidth(170);
+    		fileName.setMaxWidth(fileName.getPrefWidth());
+    		
+    		// Limitamos el nombre del fichero a 20 caracteres
+    		UnaryOperator<Change> filter = change -> {
+    		    if (change.getControlNewText().matches(".{0,20}")) {
+    		        return change;
+    		    }
+    		    return null;
+    		};
+    		TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+    		
+    		fileName.setTextFormatter(textFormatter);
+    		
+    		dialogBody.getChildren().addAll(dialogMessage, fileName);
+    		
+    		dialogContent.setBody(dialogBody);
+    		dialogContent.setStyle(DIALOG_LABEL_STYLE);
+
+    		// Botones de la ventana emergente
+    		JFXButton cancel = new JFXButton("Cancelar");
+    		cancel.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
+    		cancel.setPrefSize(100, 25);
+    		cancel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+    		dialogContent.setActions(cancel);
+    		
+    		JFXButton accept = new JFXButton("Aceptar");
+    		accept.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
+    		accept.setPrefSize(100, 25);
+    		accept.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+    		
+    		dialogContent.setActions(accept, cancel);		
+    		JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.BOTTOM);
+    		
+    		cancel.setOnAction(e -> dialog.close()); 
+    		
+    		accept.setOnAction(e -> {
+    			dialog.close();	
+    			if (!fileName.getText().equals("")) {
+    				if (controller.crearPDF(fileName.getText())) {
+    					showDialog("Boop!", "El fichero ha sido generado correctamente en el directorio de la aplicación :)");
+    				} else {
+    					showDialog("Error", "No se ha podido generar el fichero");
+    				}
+    			} else {
+    				showDialog("Error", "No se puede crear un fichero sin nombre...");
+    			}
+    		});
+    		dialog.show();    	
     }
     
     /* FUNCIONALIDAD VENTANA RECIENTES */   
@@ -906,12 +991,12 @@ public class ViewController implements Initializable {
 
     /* FUNCIONALIDAD BARRA SUPERIOR */
     @FXML
-    public void minimizeWindow(ActionEvent event) {
+    void minimizeWindow(ActionEvent event) {
     	((Stage)((JFXButton)event.getSource()).getScene().getWindow()).setIconified(true);  	
     }
 
     @FXML
-    public void maximizeWindow(ActionEvent event) {
+    void maximizeWindow(ActionEvent event) {
 		Stage stg = ((Stage) ((JFXButton) event.getSource()).getScene().getWindow());
 		// Si la ventana estaba maximizada, restauramos su tamaño anterior
 		if (stg.isMaximized()) {
@@ -928,21 +1013,21 @@ public class ViewController implements Initializable {
 
     @FXML
     // Cerrar la ventana y la aplicación
-    public void closeWindow(ActionEvent event) {
+    void closeWindow(ActionEvent event) {
     	((Stage)((JFXButton)event.getSource()).getScene().getWindow()).close();
     	System.exit(0);
     }
     
     @FXML
     // TODO: NOT USED
-    public void saveWindowPosition(MouseEvent event) {
+    void saveWindowPosition(MouseEvent event) {
         xOffset = event.getSceneX();
         yOffset = event.getSceneY();
     }
     
     @FXML
     //TODO: NOT USED
-    public void dragWindow(MouseEvent event) {
+    void dragWindow(MouseEvent event) {
     	Region rg = (Region) event.getSource();
     	rg.getScene();
     	Stage stg = (Stage) rg.getScene().getWindow();
@@ -1237,10 +1322,12 @@ public class ViewController implements Initializable {
 	// Añadir vídeo a la lista actual de la ventana de mis listas
 	private void addVideoToCurrentList(Video video) {
 		// Comprobamos que el vídeo no esté ya en la lista
+		// TODO: Quita el for para permitir repeticiones
 		for (Label l : myListsList.getItems()) {
 			if (l.getId().equals(video.getURL())) 
 				return;
 		}
+		controller.addVideoALista(video.getURL(), myListsComboBox.getSelectionModel().getSelectedItem());
 		Label label = createSmallVideoThumbnail(video, 120, 70);
 		myListsList.getItems().add(label);
 		fadeIn(myListsList);

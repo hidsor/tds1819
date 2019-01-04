@@ -70,7 +70,7 @@ public class ListaVideos {
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer("");
-		buffer.append("Lista: " + nombre + "\n");
+		buffer.append("Título de la lista: " + nombre + "\n");
 		for (Video i : videos) {
 			buffer.append("\t" + i.toString() + "\n");
 		}
