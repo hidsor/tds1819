@@ -1357,12 +1357,10 @@ public class ViewController implements Initializable {
 		
 		// Permitimos únicamente números en el textfield
 		UnaryOperator<Change> filter = change -> {
-		    String text = change.getText();
-		    
+		    String text = change.getText();		    
 		    if (text.matches("[0-9]*")) {
 		        return change;
 		    }
-
 		    return null;
 		};
 		TextFormatter<String> textFormatter = new TextFormatter<>(filter);
