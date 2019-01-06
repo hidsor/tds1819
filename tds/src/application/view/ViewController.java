@@ -324,6 +324,8 @@ public class ViewController implements Initializable {
 		
 		if (controller.getUsuarioActual().isPremium()) {
 			myListsCreatePDF.setDisable(false);
+		} else {
+			myListsCreatePDF.setDisable(true);
 		}
 		
     	fadeIn(myListsView);
@@ -344,9 +346,11 @@ public class ViewController implements Initializable {
     	// Cargamos las dos listas de vídeos
     	loadVideosToList(controller.getRecientes(), recentVideosList);
     	if (controller.getUsuarioActual().isPremium()) {
-    		recentTopTenContainer.setDisable(false);
-    		loadVideosToList(controller.getTopten(), recentTopTenList); 		
+    		recentTopTenContainer.setDisable(false);	
+    	} else {
+    		recentTopTenContainer.setDisable(true);
     	}
+    	loadVideosToList(controller.getTopten(), recentTopTenList); 
     	fadeIn(recentView);
     }
 
@@ -364,7 +368,10 @@ public class ViewController implements Initializable {
     	if (controller.getUsuarioActual().isPremium()) {
     		premiumActivate.setDisable(true);
     		premiumLabel.setText("¡Gracias por activar premium!");
-    	}  	
+    	} else {
+    		premiumActivate.setDisable(false);
+    		premiumLabel.setText("¡Por un módico precio de 0.00€*!");
+    	}
     	fadeIn(premiumView);
     }
         	
@@ -1085,11 +1092,13 @@ public class ViewController implements Initializable {
 
 		SwingNode videoComponent = new SwingNode();
 		videoComponent.setContent(videoWeb);
-
-		// Contenedor de etiquetas
-		//HBox tags = new HBox();
-		//tags.setSpacing(5.0);
 		
+		// Lo metemos en un HBox para poder centrar únicamente el vídeo
+		HBox videoComponentContainer = new HBox();
+		videoComponentContainer.setAlignment(Pos.CENTER);
+		videoComponentContainer.getChildren().add(videoComponent);
+		
+		// Contenedor de etiquetas
 		FlowPane tags = new FlowPane();
 		tags.setHgap(5.0);
 		tags.setVgap(5.0);
@@ -1102,11 +1111,13 @@ public class ViewController implements Initializable {
 		// Contenedor de añadir nueva etiqueta
 		HBox addTags = new HBox();
 		addTags.setSpacing(10.0);
-		//addTags.setStyle("-fx-padding: 10 0 0 0;");
+		
+		// TextField para introducir una etiqueta
 		JFXTextField addTagsTextField = new JFXTextField();
 		addTagsTextField.setPromptText("Añadir etiqueta");
 		addTagsTextField.getStyleClass().add("jfxtextfield");
 		
+		// Botón para añadir una etiqueta
 		JFXButton add = new JFXButton("");
 		add.getStyleClass().addAll("jfxbutton", "jfxdialogbutton", "addtagbutton");
 		add.setPrefSize(30, 30);
@@ -1119,6 +1130,7 @@ public class ViewController implements Initializable {
 			            boolean TagExisted = controller.containsEtiqueta(tag);
 			            if (controller.addEtiquetaVideo(tag, video.getURL())) {
 			            	addTagToPane(tag, video.getURL(), tags);
+			            	// Si la etiqueta no existía en ningún vídeo, la añadimos al panel con las etiquetas disponibles
 			            	if (!TagExisted) {	
 				        		tagsView.getItems().add(tag.getNombre());
 			            	}
@@ -1137,7 +1149,7 @@ public class ViewController implements Initializable {
 		// Contenedor del reproductor de vídeos
 		VBox body = new VBox();
 		body.setSpacing(10.0);
-		body.getChildren().addAll(videoComponent, tags, views, addTags);
+		body.getChildren().addAll(videoComponentContainer, tags, views, addTags);
 
 		dialogContent.setBody(body);
 
@@ -1150,8 +1162,7 @@ public class ViewController implements Initializable {
 
 		JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
 		dialog.setId(id);
-		dialog.setOverlayClose(false);
-		
+		dialog.setOverlayClose(false);		
 		close.setOnAction(e -> {
 				dialog.close();
 				videoWeb.cancel();
