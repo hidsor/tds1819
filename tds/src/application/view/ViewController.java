@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -447,6 +448,7 @@ public class ViewController implements Initializable {
     			// Login válido
     			openRecientesView(event);
     			setProfileFunctionsTo(true);
+    			checkForUserBirthday();
     			// Desbloqueamos la funcionalidad disponible para usuarios
     			setUserFunctionsTo(true);
     		} else {
@@ -1458,6 +1460,18 @@ public class ViewController implements Initializable {
 	
 	private static void assignEnterKeyToButton(Node view, ButtonBase button) {
 		assignKeyToButton(view, KeyCode.ENTER, button);
+	}
+	
+	// Mostramos una ventana emergente felicitando al usuario si es premium y si es su cumpleaños
+	private void checkForUserBirthday() {
+		Usuario currentUser = controller.getUsuarioActual();
+		if (currentUser.isPremium()) {
+			LocalDate userBirthday = currentUser.getFechaNac();
+			LocalDate today = LocalDate.now();
+			if (userBirthday.getDayOfMonth() == today.getDayOfMonth() && userBirthday.getMonth().equals(today.getMonth())) {
+				showDialog("¡Felicidades!", "Acorde a tus datos introducidos en el sistema, ¡hoy es tu cumpleaños!");
+			}
+		}
 	}
 	
 	// Manejo de la clase Timer en la aplicación, para reproducir listas de vídeos
