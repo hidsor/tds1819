@@ -2,11 +2,19 @@ package application.model;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class Usuario {
 
+	// Enumerado con los filtros disponibles para el usuario
+	public enum Filtros {
+		NOFILTRO, MISLISTASFILTRO;
+		// TODO: Aññadir un filtro más
+	}
+	
 	// Atributos
 	private int codigo; // Necesario para rescatar un usuario del servidor de persistencia
 	private String login;
@@ -19,6 +27,8 @@ public class Usuario {
 	private Filtro filtroPremium;
 	private List<ListaVideos> listas;
 	private ListaVideos listaRecientes;
+	private Map<Filtros, Filtro> filtros;
+	private Map<Filtros, String> titulosFiltros;
 
 	// Constructores
 	public Usuario(String login, String password, String nombre, String apellidos, LocalDate fechaNac, String email) {
@@ -30,9 +40,11 @@ public class Usuario {
 		this.fechaNac = fechaNac;
 		this.email = email;
 		this.premium = false;
-		this.filtroPremium = new NoFiltro();
+		
 		listas = new LinkedList<ListaVideos>();
 		listaRecientes = new ListaVideos("Recientes");
+		inicializarFiltros();
+		this.filtroPremium = filtros.get(Filtros.NOFILTRO);
 	}
 
 	public Usuario(String login, String password) {
@@ -97,16 +109,18 @@ public class Usuario {
 		this.premium = valor;
 	}
 
-
-
 	public String getLogin() {
 		return login;
 	}
 
 	public Filtro getFiltro() {
 		if (!premium)
-			return new NoFiltro();
+			return filtros.get(Filtros.NOFILTRO);
 		return filtroPremium;
+	}
+	
+	public String getTituloFiltro(Filtros filtro) {
+		return titulosFiltros.get(filtro);
 	}
 
 	public List<ListaVideos> getListas() {
@@ -160,7 +174,15 @@ public class Usuario {
 		}
 		return true;
 	}
-
+	
+	public boolean aplicarFiltro(Filtros filtro) {
+		if (!premium) return false;
+	
+		filtroPremium = filtros.get(filtro);
+		return true;
+	}
+	
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -180,7 +202,6 @@ public class Usuario {
 		return login.hashCode();
 	}
 	
-	
 	public String infoListasVideos() {
 		StringBuffer buffer = new StringBuffer("");
 		for (ListaVideos i : listas) {
@@ -188,5 +209,20 @@ public class Usuario {
 		}
 		
 		return buffer.toString();
+	}
+	
+	// Funcionalidad auxiliar
+	private void inicializarFiltros() {
+		// Lo separamos en un método auxiliar para aumentar legibilidad
+		// Asimismo, si se desean añadir nuevos filtros, basta con agregar un elemento al enumerado e inicializarlo aquí
+		filtros = new HashMap<Filtros, Filtro>();
+		titulosFiltros = new HashMap<Filtros, String>();
+		filtros.put(Filtros.NOFILTRO, new NoFiltro());
+		filtros.put(Filtros.MISLISTASFILTRO, new MisListasFiltro());
+		
+		titulosFiltros.put(Filtros.NOFILTRO, "Ningún filtro");
+		titulosFiltros.put(Filtros.MISLISTASFILTRO, "Filtrar mis listas");
+		
+		// TODO: Añadir un filtro más
 	}
 }

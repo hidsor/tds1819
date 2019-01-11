@@ -1320,14 +1320,6 @@ public class ViewController implements Initializable {
 		// System.out.println(list.toString());
 		list.setItems((videos.getVideos().stream()
 				.map(v -> createVideoThumbnail(v, 120, 80))
-				/*
-				.peek(l -> l.setOnMouseClicked(e -> {
-			        if(e.getButton().equals(MouseButton.PRIMARY)){
-			            if(e.getClickCount() == 2){
-			            	showVideoDialog(controller.getVideo(l.getId()), "videoDialog");
-			        }
-				}}))
-				*/
 				.peek(l -> l.setStyle("-fx-font-weight: bold"))
 				.collect(Collectors.toCollection(FXCollections::observableArrayList))));
 	}
@@ -1426,15 +1418,15 @@ public class ViewController implements Initializable {
 		            		videoWeb.cancel();
 		            		// Vemos si quedan vídeos por reproducir
 		            		if (it.hasNext()) {
+		            			// Puesto que un timer se ejecuta en un hilo diferente, no se puede modificar la aplicación JavaFX desde este
+		            			// Tenemos que hacer una llamada a runLater para que sea posible mostar un diálogo de vídeo
 		            			Platform.runLater(new Runnable() {
 		            			    @Override
 		            			    public void run() {
 		            			    	showVideoDialog(it.next(), "videoDialog");
 		            			    }
 		            			});
-		            			
 		            		} 
-		            		
 		            	} else {
 		            		// Sino, es que el usuario ha salido de la reproducción, por lo que finalizamos el timer
 		            		stopGlobalTimer();
@@ -1444,11 +1436,11 @@ public class ViewController implements Initializable {
 				startGlobalTimer(timerTask, Integer.parseInt(interval.getText())*1000);
 			}
 		});
-		
 	
 		dialog.show();    	
 	}
 	
+	// TODO: Comenta esto Enrique
 	private static void assignKeyToButton(Node view, KeyCode key, ButtonBase button) {
 		view.setOnKeyPressed(e -> {
             if (e.getCode() == key) {
@@ -1458,6 +1450,7 @@ public class ViewController implements Initializable {
 	    });	
 	}
 	
+	// TODO: Comenta esto Enrique
 	private static void assignEnterKeyToButton(Node view, ButtonBase button) {
 		assignKeyToButton(view, KeyCode.ENTER, button);
 	}

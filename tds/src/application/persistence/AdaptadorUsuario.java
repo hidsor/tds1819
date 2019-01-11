@@ -24,6 +24,7 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 	public static final String propPremium = "premium";
 	public static final String propListas = "listas";
 	public static final String propRecientes = "lista recientes";
+	public static final String propFiltro = "filtro";
 	
 	private final static DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	

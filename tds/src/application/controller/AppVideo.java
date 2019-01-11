@@ -19,6 +19,7 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import application.model.*;
+import application.model.Usuario.Filtros;
 import application.persistence.*;
 import umu.tds.videos.Videos;
 import umu.tds.videos.VideosEvent;
@@ -376,6 +377,15 @@ public class AppVideo implements VideosListener {
 			System.err.println("No se pudo escribir en el documento");
 			return false;
 		}
+	}
+	
+	public boolean aplicarFiltro(Filtros filtro) {
+		if (usuarioActual == null) return false;
+		if (!usuarioActual.isPremium()) return false;
+		if (!usuarioActual.aplicarFiltro(filtro)) return false;
+		
+		adaptadorUsuario.modificarUsuario(usuarioActual);
+		return true;
 	}
 
 	@Override
