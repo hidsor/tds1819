@@ -19,7 +19,6 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import application.model.*;
-import application.model.Usuario.Filtros;
 import application.persistence.*;
 import umu.tds.videos.Videos;
 import umu.tds.videos.VideosEvent;
@@ -379,13 +378,14 @@ public class AppVideo implements VideosListener {
 		}
 	}
 	
-	public boolean aplicarFiltro(Filtros filtro) {
+	public boolean aplicarFiltro(Filtro filtro) {
 		if (usuarioActual == null) return false;
-		if (!usuarioActual.isPremium()) return false;
-		if (!usuarioActual.aplicarFiltro(filtro)) return false;
 		
-		adaptadorUsuario.modificarUsuario(usuarioActual);
-		return true;
+		if (usuarioActual.setFiltro(filtro)) {
+			adaptadorUsuario.modificarUsuario(usuarioActual);
+			return true;
+		}
+		return false;
 	}
 
 	@Override

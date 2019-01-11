@@ -9,11 +9,6 @@ import java.util.Map;
 
 public class Usuario {
 
-	// Enumerado con los filtros disponibles para el usuario
-	public enum Filtros {
-		NOFILTRO, MISLISTASFILTRO;
-		// TODO: Aññadir un filtro más
-	}
 	
 	// Atributos
 	private int codigo; // Necesario para rescatar un usuario del servidor de persistencia
@@ -27,8 +22,7 @@ public class Usuario {
 	private Filtro filtroPremium;
 	private List<ListaVideos> listas;
 	private ListaVideos listaRecientes;
-	private Map<Filtros, Filtro> filtros;
-	private Map<Filtros, String> titulosFiltros;
+
 
 	// Constructores
 	public Usuario(String login, String password, String nombre, String apellidos, LocalDate fechaNac, String email) {
@@ -43,8 +37,7 @@ public class Usuario {
 		
 		listas = new LinkedList<ListaVideos>();
 		listaRecientes = new ListaVideos("Recientes");
-		inicializarFiltros();
-		this.filtroPremium = filtros.get(Filtros.NOFILTRO);
+		this.filtroPremium = new NoFiltro();
 	}
 
 	public Usuario(String login, String password) {
@@ -115,13 +108,10 @@ public class Usuario {
 
 	public Filtro getFiltro() {
 		if (!premium)
-			return filtros.get(Filtros.NOFILTRO);
+			return new NoFiltro();
 		return filtroPremium;
 	}
-	
-	public String getTituloFiltro(Filtros filtro) {
-		return titulosFiltros.get(filtro);
-	}
+
 
 	public List<ListaVideos> getListas() {
 		return Collections.unmodifiableList(listas);
@@ -175,10 +165,10 @@ public class Usuario {
 		return true;
 	}
 	
-	public boolean aplicarFiltro(Filtros filtro) {
+	public boolean setFiltro(Filtro filtro) {
 		if (!premium) return false;
 	
-		filtroPremium = filtros.get(filtro);
+		filtroPremium = filtro;
 		return true;
 	}
 	
@@ -211,18 +201,5 @@ public class Usuario {
 		return buffer.toString();
 	}
 	
-	// Funcionalidad auxiliar
-	private void inicializarFiltros() {
-		// Lo separamos en un método auxiliar para aumentar legibilidad
-		// Asimismo, si se desean añadir nuevos filtros, basta con agregar un elemento al enumerado e inicializarlo aquí
-		filtros = new HashMap<Filtros, Filtro>();
-		titulosFiltros = new HashMap<Filtros, String>();
-		filtros.put(Filtros.NOFILTRO, new NoFiltro());
-		filtros.put(Filtros.MISLISTASFILTRO, new MisListasFiltro());
-		
-		titulosFiltros.put(Filtros.NOFILTRO, "Ningún filtro");
-		titulosFiltros.put(Filtros.MISLISTASFILTRO, "Filtrar mis listas");
-		
-		// TODO: Añadir un filtro más
-	}
+
 }

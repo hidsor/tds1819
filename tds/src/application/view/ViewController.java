@@ -29,6 +29,7 @@ import com.jfoenix.controls.JFXTextField;
 
 import application.controller.AppVideo;
 import application.model.Etiqueta;
+import application.model.Filtro;
 import application.model.ListaVideos;
 import application.model.Usuario;
 import application.model.Video;

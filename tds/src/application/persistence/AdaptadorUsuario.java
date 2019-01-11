@@ -1,5 +1,6 @@
 package application.persistence;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -81,6 +82,7 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 						new Propiedad(propFecNac, localDateToString(usuario.getFechaNac())),
 						new Propiedad(propEmail, usuario.getEmail()),
 						new Propiedad(propPremium, String.valueOf(usuario.isPremium())),
+						new Propiedad(propFiltro, usuario.getFiltro().getClass().getName()),
 						new Propiedad(propListas, obtenerCodigosListasVideos(usuario.getListas())),
 						new Propiedad(propRecientes, String.valueOf(usuario.getListaRecientes().getCodigo()))
 					)));
@@ -119,6 +121,7 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 		actualizarPropiedadEntidad(eUsuario, propFecNac, localDateToString(usuario.getFechaNac()));		
 		actualizarPropiedadEntidad(eUsuario, propEmail, usuario.getEmail());
 		actualizarPropiedadEntidad(eUsuario, propPremium, premium);
+		actualizarPropiedadEntidad(eUsuario, propFiltro, usuario.getFiltro().getClass().getName());
 		actualizarPropiedadEntidad(eUsuario, propListas, listas);		
 		actualizarPropiedadEntidad(eUsuario, propRecientes, listaRecientes);
 	}
@@ -145,6 +148,10 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 		// Configuramos si es premium
 		usuario.setPremium(Boolean.parseBoolean(servPersistencia.recuperarPropiedadEntidad(eUsuario, propPremium)));
 		
+		// Si es premium, le asignamos el filtro con el que cerró sesión
+		if (usuario.isPremium()) {
+			usuario.setFiltro(crearFiltroDesdeNombre(servPersistencia.recuperarPropiedadEntidad(eUsuario, propFiltro)));
+		}
 
 		// IMPORTANTE: añadir el usuario al pool antes de llamar a otros adaptadores
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, usuario);
@@ -201,6 +208,16 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 	private void actualizarPropiedadEntidad(Entidad entidad, String propiedad, String nuevoValor) {
 		servPersistencia.eliminarPropiedadEntidad(entidad, propiedad);
 		servPersistencia.anadirPropiedadEntidad(entidad, propiedad, nuevoValor);
+	}
+	
+	private static Filtro crearFiltroDesdeNombre(String cadena) {
+		try {
+			return (Filtro) Class.forName(cadena).getConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException | ClassNotFoundException e) {
+			e.printStackTrace();
+			return new NoFiltro();
+		}
 	}
 	
 }
