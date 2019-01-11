@@ -16,7 +16,7 @@ VLAD:
 22/12/2018 - 1h (Avances en la vista: Reproductor de vídeo (SIN ETIQUETAS) funcional)
 22/12/2018 - 15 min (Avances en la vista: Fade in a todas las ventanas)
 22/12/2018 - 1h 15 min (Avances en la vista: Botón de cargar vídeos y etiquetas en los vídeos)
-23/12/2018 - 1h (Refactorización y limpieza de código)
+23/12/2018 - 1h (Refactorización y limpieza de código)asd
 26/12/2018 - 4h (Limpieza y refactorización de la vista)
 26/12/2018 - 2h (Avances en la vista: Ventana de nueva lista)
 27/12/2018 - 3h (Avances en la vista: Ventana de mis listas)
@@ -34,6 +34,7 @@ VLAD:
 04/01/2019 - 1h (Documentación: Apartados de diagrama de clases y arquitectura de aplicación)
 05/01/2019 - 1h 30 min (Documentación: Apartados de patrones de diseño y componentes utilizados)
 06/01/2019 - 2h 30 min (Documentación: Apartado de manual de usuario)
+11/01/2019 - 45 min (Documentación: Manual de usuario y conclusiones finales)
 
 ENRIQUE:
 - 17/11/2018 - 1 hora (Hacer UML)
