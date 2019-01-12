@@ -36,6 +36,7 @@ VLAD:
 06/01/2019 - 2h 30 min (Documentación: Apartado de manual de usuario)
 11/01/2019 - 45 min (Documentación: Manual de usuario y conclusiones finales)
 11/01/2019 - 45 min (Funcionalidad: Filtros y felicitación a usuarios premium)
+12/01/2019 - 1h (Documentación: Diagrama de secuencia (Y arreglos en el código))
 
 ENRIQUE:
 - 17/11/2018 - 1 hora (Hacer UML)

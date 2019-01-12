@@ -314,12 +314,12 @@ public class AppVideo implements VideosListener {
 		
 		Video video = catalogoVideos.getVideo(videoURL);
 		if (video == null) return false;
+	
+		if (!usuarioActual.addVideoALista(video, tituloLista)) return false;
 		
 		ListaVideos listaVideos = usuarioActual.getListaVideos(tituloLista);
-		if (listaVideos == null) return false;	
-		
-		if (!listaVideos.addVideo(video)) return false;
-		
+		// No comprobamos que sea nulo porque si la lista no existiese no podríamos haber añadido el vídeo
+
 		adaptadorListaVideos.modificarListaVideos(listaVideos);
 		return true;
 	}
@@ -331,10 +331,11 @@ public class AppVideo implements VideosListener {
 		Video video = catalogoVideos.getVideo(videoURL);
 		if (video == null) return false;
 		
-		ListaVideos listaVideos = usuarioActual.getListaVideos(tituloLista);
-		if (listaVideos == null) return false;	
+		if (!usuarioActual.removeVideoDeLista(video, tituloLista)) return false;
 		
-		listaVideos.removeVideo(video);
+		ListaVideos listaVideos = usuarioActual.getListaVideos(tituloLista);
+		// No comprobamos que sea nulo porque si la lista no existiese no podríamos haber borrado el vídeo
+		
 		adaptadorListaVideos.modificarListaVideos(listaVideos);
 		return true;
 	}

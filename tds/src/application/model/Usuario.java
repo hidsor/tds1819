@@ -140,7 +140,20 @@ public class Usuario {
 
 	public boolean borrarListaVideos(String titulo) {
 		ListaVideos lista = getListaVideos(titulo);
+		if (lista == null) return false;
 		return listas.remove(lista);
+	}
+	
+	public boolean addVideoALista(Video video, String tituloLista) {
+		ListaVideos lista = getListaVideos(tituloLista);
+		if (lista == null) return false;
+		return lista.addVideo(video);	
+	}
+	
+	public boolean removeVideoDeLista(Video video, String tituloLista) {
+		ListaVideos lista = getListaVideos(tituloLista);
+		if (lista == null) return false;
+		return lista.addVideo(video);	
 	}
 	
 	public boolean containsListaMismaTitulo(String titulo) {
