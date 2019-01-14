@@ -52,5 +52,6 @@ ENRIQUE:
 - 24/12/2018 - 6h (busqueda etiquetas, carga de video y añadir métodos variados)
 - 31/12/2018 - 30 min (separacion de etiquetas)
 - 31/12/2018 - 1h 45 min (HotKeys)
-- 03/01/2018 - 2 h (hacer recientes y cambios en la persistencia y usuario)
-- 11/01/2018 - 1.30 (aproximación en los filtros)
+- 03/01/2019 - 2 h (hacer recientes y cambios en la persistencia y usuario)
+- 11/01/2019 - 1h 30 min (aproximación en los filtros)
+- 14/01/2019 - 1h 30 min (filtros)

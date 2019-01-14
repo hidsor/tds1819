@@ -3,6 +3,7 @@ package application.model;
 import java.util.List;
 
 public class MisListasFiltro implements Filtro {
+	private static final String nombre = "En mis listas";
 
 	@Override
 	public boolean filtrarVideo(Usuario usuario, Video video) {
@@ -12,6 +13,11 @@ public class MisListasFiltro implements Filtro {
 				return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public String getNombre() {
+		return nombre;
 	}
 
 }

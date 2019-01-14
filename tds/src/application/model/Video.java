@@ -71,6 +71,10 @@ public class Video {
 		return etiquetas.contains(e);
 	}
 	
+	public boolean containsEtiqueta(String e) {
+		return containsEtiqueta(new Etiqueta(e));
+	}
+	
 	public boolean containsAllEtiquetas(Collection<Etiqueta> c) {
 		return etiquetas.containsAll(c);
 	}
@@ -107,6 +111,8 @@ public class Video {
 	public String toString() {
 		return "Titulo: " + titulo + " \t Reproducciones: " + numReproducciones;
 	}
+
+
 	
 
 }

@@ -33,6 +33,7 @@ public class AppVideo implements VideosListener {
 	private CatalogoUsuarios catalogoUsuarios;
 	private CatalogoVideos catalogoVideos;
 	private Map<Etiqueta, Integer> listaEtiquetas;
+	private Map<String, Filtro> filtros;
 	
 	// private ListaVideos topten;
 	
@@ -68,9 +69,11 @@ public class AppVideo implements VideosListener {
 				incrementarReferenciasEtiqueta(etiqueta);
 			}
 		}
-		
-		
 		etiquetasBusqueda = new HashSet<Etiqueta>();
+		
+		// Añadimos los filtros implementados:
+		filtros = new HashMap<String, Filtro>();
+		addAllFiltros();
 	}
 
 	// Patrón singleton
@@ -133,6 +136,15 @@ public class AppVideo implements VideosListener {
 	public Video getVideo(String URL) {
 		return catalogoVideos.getVideo(URL);
 	}
+	
+	public Set<String> getNombresFiltros() {
+		return filtros.keySet();
+	}
+	
+	public Filtro getFiltro(String nombre) {
+		return filtros.get(nombre);
+	}
+	
 
 	// Funcionalidad
 	public boolean verificarUsuario(String login, String password) {
@@ -413,6 +425,7 @@ public class AppVideo implements VideosListener {
 		return videosAdaptados;		
 	}
 	
+	
 	private void incrementarReferenciasEtiqueta(Etiqueta etiqueta) {
 		Integer contadorReferencias = listaEtiquetas.get(etiqueta);
 		if (contadorReferencias == null) contadorReferencias = 0;
@@ -429,5 +442,16 @@ public class AppVideo implements VideosListener {
 		}
 		
 	}
+	
+	private void addFiltro(Filtro filtro) {
+		filtros.put(filtro.getNombre(), filtro);
+	}
+	
+	private void addAllFiltros() {
+		addFiltro(new NoFiltro());
+		addFiltro(new MisListasFiltro());
+		addFiltro(new PopularesFiltro());
+	}
+	
 	
 }
