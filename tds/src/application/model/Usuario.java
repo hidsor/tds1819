@@ -1,15 +1,12 @@
 package application.model;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class Usuario {
-
-	
 	// Atributos
 	private int codigo; // Necesario para rescatar un usuario del servidor de persistencia
 	private String login;
@@ -20,7 +17,7 @@ public class Usuario {
 	private String email;
 	private boolean premium;
 	private Filtro filtroPremium;
-	private List<ListaVideos> listas;
+	private Map<String, ListaVideos> listas;
 	private ListaVideos listaRecientes;
 
 
@@ -35,7 +32,7 @@ public class Usuario {
 		this.email = email;
 		this.premium = false;
 		
-		listas = new LinkedList<ListaVideos>();
+		listas = new HashMap<String, ListaVideos>();
 		listaRecientes = new ListaVideos("Recientes");
 		this.filtroPremium = new NoFiltro();
 	}
@@ -111,17 +108,21 @@ public class Usuario {
 			return new NoFiltro();
 		return filtroPremium;
 	}
+	
+	public boolean setFiltro(Filtro filtro) {
+		if (!premium) return false;
+	
+		filtroPremium = filtro;
+		return true;
+	}
 
 
 	public List<ListaVideos> getListas() {
-		return Collections.unmodifiableList(listas);
+		return new LinkedList<ListaVideos>(listas.values());
 	}
 	
 	public ListaVideos getListaVideos(String titulo) {
-		for (ListaVideos lista : listas) {
-			if (lista.getNombre().equals(titulo)) return lista;
-		}
-		return null;
+		return listas.get(titulo.toLowerCase());
 	}
 
 	public ListaVideos getListaRecientes() {
@@ -132,16 +133,17 @@ public class Usuario {
 		this.listaRecientes = listaRecientes;
 	}
 
+	
 	// Funcionalidad
-
 	public boolean addListaVideos(ListaVideos listaVideos) {
-		return listas.add(listaVideos);
+		if (listaRecientes.getNombre().toLowerCase().equals(listaVideos.getNombre().toLowerCase()))
+			return false;
+		
+		return listas.put(listaVideos.getNombre().toLowerCase(), listaVideos) == null;
 	}
 
 	public boolean borrarListaVideos(String titulo) {
-		ListaVideos lista = getListaVideos(titulo);
-		if (lista == null) return false;
-		return listas.remove(lista);
+		return listas.remove(titulo.toLowerCase()) != null;
 	}
 	
 	public boolean addVideoALista(Video video, String tituloLista) {
@@ -155,36 +157,11 @@ public class Usuario {
 		if (lista == null) return false;
 		return lista.addVideo(video);	
 	}
-	
-	public boolean containsListaMismaTitulo(String titulo) {
-		if (listaRecientes.getNombre().toLowerCase().equals(titulo.toLowerCase()))
-			return true;
-		
-		for (ListaVideos i : listas) {
-			if (i.getNombre().toLowerCase().equals(titulo.toLowerCase()))
-				return true;
-		}
-		return false;
-	}
 
-	public boolean addVideoReciente(Video video) {
-		while (listaRecientes.removeVideo(video)) {};
-		listaRecientes.addVideo(0, video);
-		
-		// Si tras añadir hay más de 5 videos, quitamos el ultimo (posicion 5)
-		if (listaRecientes.getNumVideos() > 5) {
-			listaRecientes.removeVideo(5);
-		}
-		return true;
-	}
-	
-	public boolean setFiltro(Filtro filtro) {
-		if (!premium) return false;
-	
-		filtroPremium = filtro;
-		return true;
-	}
-	
+	public void reproducirVideo(Video video) {
+		video.reproducir();
+		addVideoReciente(video);
+	}	
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -207,11 +184,22 @@ public class Usuario {
 	
 	public String infoListasVideos() {
 		StringBuffer buffer = new StringBuffer("");
-		for (ListaVideos i : listas) {
+		for (ListaVideos i : listas.values()) {
 			buffer.append(i.toString() + "\n");
 		}
 		
 		return buffer.toString();
+	}
+	
+	private boolean addVideoReciente(Video video) {
+		while (listaRecientes.removeVideo(video)) {};
+		listaRecientes.addVideo(0, video);
+		
+		// Si tras añadir hay más de 5 videos, quitamos el ultimo (posicion 5)
+		if (listaRecientes.getNumVideos() > 5) {
+			listaRecientes.removeVideo(5);
+		}
+		return true;
 	}
 	
 

@@ -277,11 +277,9 @@ public class AppVideo implements VideosListener {
 
 	public boolean crearListaVideos(String titulo) {
 		if (usuarioActual == null) return false;
-		if (usuarioActual.containsListaMismaTitulo(titulo)) return false;
 		
 		ListaVideos listaVideos = new ListaVideos(titulo);
 		if (!usuarioActual.addListaVideos(listaVideos)) return false;
-		
 		adaptadorListaVideos.registrarListaVideos(listaVideos);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 		return true;
@@ -337,8 +335,7 @@ public class AppVideo implements VideosListener {
 		Video video = catalogoVideos.getVideo(URL);
 		if (video == null) return false;
 		
-		video.reproducir();
-		usuarioActual.addVideoReciente(video);
+		usuarioActual.reproducirVideo(video);
 		adaptadorVideo.modificarVideo(video);
 		adaptadorListaVideos.modificarListaVideos(usuarioActual.getListaRecientes());
 		return true;
@@ -431,6 +428,7 @@ public class AppVideo implements VideosListener {
 		addFiltro(new NoFiltro());
 		addFiltro(new MisListasFiltro());
 		addFiltro(new PopularesFiltro());
+		addFiltro(new MenoresFiltro());
 	}
 	
 	

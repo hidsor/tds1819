@@ -10,9 +10,9 @@ public class MisListasFiltro implements Filtro {
 		List<ListaVideos> listasVideos = usuario.getListas();
 		for (ListaVideos lv : listasVideos) {
 			if (lv.containsVideo(video))
-				return false;
+				return true;
 		}
-		return true;
+		return false;
 	}
 	
 	@Override

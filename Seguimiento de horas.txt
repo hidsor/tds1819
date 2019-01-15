@@ -56,3 +56,4 @@ ENRIQUE:
 - 03/01/2019 - 2 h (hacer recientes y cambios en la persistencia y usuario)
 - 11/01/2019 - 1h 30 min (aproximación en los filtros)
 - 14/01/2019 - 1h 30 min (filtros)
+- 15/01/2019 - 2h (Test Usuario + patrón experto)

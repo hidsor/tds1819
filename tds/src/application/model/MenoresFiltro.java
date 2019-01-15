@@ -14,8 +14,7 @@ public class MenoresFiltro implements Filtro {
 
 	@Override
 	public String getNombre() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Menores de edad";
 	}
 	
 	private static boolean esMayorEdad(Usuario usuario) {
@@ -24,7 +23,7 @@ public class MenoresFiltro implements Filtro {
 			return true;
 		}
 		else if (LocalDate.now().getYear() - fechaNacimiento.getYear() == 18) {
-			if (LocalDate.now().getDayOfYear() - fechaNacimiento.getDayOfYear() < 0) {
+			if (LocalDate.now().getDayOfYear() - fechaNacimiento.getDayOfYear() > 0) {
 				return true;
 			}
 		}

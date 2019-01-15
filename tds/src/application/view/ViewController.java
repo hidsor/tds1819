@@ -515,7 +515,6 @@ public class ViewController implements Initializable {
     
     @FXML
     void registerCancel(ActionEvent event) {
-    	//TODO: HACE LO MISMO QUE openLoginView pero lo dejo separado de mientras
     	openLoginView(event);
     }
     
@@ -833,7 +832,6 @@ public class ViewController implements Initializable {
     	myListsSearchView.setFitToHeight(false);
     	
     	// Hecho esto, buscamos
-    	// TODO: eso de crear un hashset vacío uf
     	Set<Video> videos = controller.buscarVideos(myListsTitle.getText(), new HashSet<Etiqueta>());
     	for (Video video : videos) {
     		Label element = createVideoThumbnail(video, 200, 150);
@@ -1304,12 +1302,7 @@ public class ViewController implements Initializable {
 		if (list == null) return;
 		
 		loadVideosToList(list, myListsList);
-		/*
-		//TODO: quitar
-		myListsList.setItems(list.getVideos().stream()
-											.map(v -> createSmallVideoThumbnail(v, 120, 70))
-											.collect(Collectors.toCollection(FXCollections::observableArrayList)));
-		*/
+
 		if (myListsList.getItems().size() == 0) myListsPlay.setDisable(true);
 			else myListsPlay.setDisable(false);
 		fadeIn(myListsList);
@@ -1327,15 +1320,13 @@ public class ViewController implements Initializable {
 	// Añadir vídeo a la lista actual de la ventana de mis listas
 	private void addVideoToCurrentList(Video video) {
 		// Comprobamos que el vídeo no esté ya en la lista
-		// TODO: Quita el for para permitir repeticiones
-		for (Label l : myListsList.getItems()) {
-			if (l.getId().equals(video.getURL())) 
-				return;
+		
+		if (controller.addVideoALista(video.getURL(), myListsComboBox.getSelectionModel().getSelectedItem())) {
+			Label label = createSmallVideoThumbnail(video, 120, 70);
+			myListsList.getItems().add(label);
+			fadeIn(myListsList);
 		}
-		controller.addVideoALista(video.getURL(), myListsComboBox.getSelectionModel().getSelectedItem());
-		Label label = createSmallVideoThumbnail(video, 120, 70);
-		myListsList.getItems().add(label);
-		fadeIn(myListsList);
+		else showDialog("Error", "Este vídeo ya está en la lista");
 	}
 	
 	
