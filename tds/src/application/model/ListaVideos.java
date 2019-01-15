@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javafx.scene.control.Label;
-
 public class ListaVideos {
 	
 	// Atributos
@@ -65,6 +63,10 @@ public class ListaVideos {
 		return videos.remove(video);
 	}
 	
+	public boolean removeVideo(String videoURL) {
+		return removeVideo(new Video(videoURL, "", 0));
+	}
+	
 	public boolean containsVideo(Video video) {
 		return videos.contains(video);
 	}
@@ -80,12 +82,5 @@ public class ListaVideos {
 		}
 		return buffer.toString();
 	}
-	
-	
-	
-	
-	
-	
-
 
 }

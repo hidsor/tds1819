@@ -86,7 +86,7 @@ public class TestUsuario {
 	}
 	
 	@Test
-	public void crearListasVideos() {
+	public void testCrearListasVideos() {
 		assertEquals("Numero de listas iniciales", 0, usuario.getListas().size());
 		
 		usuario.addListaVideos( new ListaVideos("Mi Lista"));

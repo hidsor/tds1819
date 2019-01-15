@@ -152,10 +152,10 @@ public class Usuario {
 		return lista.addVideo(video);	
 	}
 	
-	public boolean removeVideoDeLista(Video video, String tituloLista) {
+	public boolean removeVideoDeLista(String videoURL, String tituloLista) {
 		ListaVideos lista = getListaVideos(tituloLista);
 		if (lista == null) return false;
-		return lista.addVideo(video);	
+		return lista.removeVideo(videoURL);	
 	}
 
 	public void reproducirVideo(Video video) {

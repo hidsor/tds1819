@@ -318,10 +318,7 @@ public class AppVideo implements VideosListener {
 	public boolean removeVideoDeLista(String videoURL, String tituloLista) {
 		if (usuarioActual == null) return false;
 		
-		Video video = catalogoVideos.getVideo(videoURL);
-		if (video == null) return false;
-		
-		if (!usuarioActual.removeVideoDeLista(video, tituloLista)) return false;
+		if (!usuarioActual.removeVideoDeLista(videoURL, tituloLista)) return false;
 		
 		ListaVideos listaVideos = usuarioActual.getListaVideos(tituloLista);
 		// No comprobamos que sea nulo porque si la lista no existiese no podríamos haber borrado el vídeo
