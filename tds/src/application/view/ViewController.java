@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -171,9 +172,7 @@ public class ViewController implements Initializable {
     @FXML
     private JFXButton exploreSearch, exploreClear;
     @FXML 
-    private JFXListView<String> tagsView;	// Para visualizar todas las etiquetas disponibles
-    @FXML
-    private JFXListView<String> searchTagsView ; // Visualizar nuestras etiquetas de búsqueda utilizadas
+    private JFXListView<JFXCheckBox> exploreTags;	// Para visualizar todas las etiquetas disponibles
     @FXML
     private ComboBox<String> exploreFilters;
     @FXML
@@ -580,7 +579,7 @@ public class ViewController implements Initializable {
     	exploreScroll.setFitToHeight(false);
     	
     	// Hecho esto, buscamos
-    	Set<Video> videos = controller.buscarVideos(exploreTitle.getText());
+    	Set<Video> videos = controller.buscarVideos(exploreTitle.getText(), getSelectedTags());
     	for (Video video : videos) {
     		Label element = createVideoThumbnail(video, 200, 150);
     		element.getStyleClass().add("videothumbnail");
@@ -602,34 +601,7 @@ public class ViewController implements Initializable {
     	exploreContent.getChildren().clear();
     	exploreScroll.setFitToHeight(true);
     }
-    
-	// Añadir una etiqueta a las etiquetas utilizadas para la búsqueda
-	@FXML
-	boolean addSearchTag(MouseEvent event) {
-		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-			String tagName = tagsView.getSelectionModel().getSelectedItem();
-			if (controller.addEtiquetaBusqueda(tagName)) {
-				searchTagsView.getItems().add(tagName);
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	// Eliminar una etiqueta de las etiquetas utilizadas para la búsqueda
-	@FXML
-	boolean removeSearchTag(MouseEvent event) {
-		if (controller.isEtiquetasBusquedaEmpty())
-			return false;
-		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-			String tagName = searchTagsView.getSelectionModel().getSelectedItem();
-			controller.removeEtiquetaBusqueda(tagName);
-			searchTagsView.getItems().remove(tagName);
-			return true;
-		}
-		return false;
-	}
-       
+
     /* FUNCIONALIDAD VENTANA DE MIS LISTAS */
     
     @FXML
@@ -861,7 +833,8 @@ public class ViewController implements Initializable {
     	myListsSearchView.setFitToHeight(false);
     	
     	// Hecho esto, buscamos
-    	Set<Video> videos = controller.buscarVideos(myListsTitle.getText());
+    	// TODO: eso de crear un hashset vacío uf
+    	Set<Video> videos = controller.buscarVideos(myListsTitle.getText(), new HashSet<Etiqueta>());
     	for (Video video : videos) {
     		Label element = createVideoThumbnail(video, 200, 150);
     		element.getStyleClass().add("videothumbnail");
@@ -1040,24 +1013,7 @@ public class ViewController implements Initializable {
     	((Stage)((JFXButton)event.getSource()).getScene().getWindow()).close();
     	System.exit(0);
     }
-    
-    @FXML
-    // TODO: NOT USED
-    void saveWindowPosition(MouseEvent event) {
-        xOffset = event.getSceneX();
-        yOffset = event.getSceneY();
-    }
-    
-    @FXML
-    //TODO: NOT USED
-    void dragWindow(MouseEvent event) {
-    	Region rg = (Region) event.getSource();
-    	rg.getScene();
-    	Stage stg = (Stage) rg.getScene().getWindow();
-        stg.setX(event.getScreenX() - xOffset);
-        stg.setY(event.getScreenY() - yOffset);
-    }
-    
+  
     ////////////////////////////
     /* FUNCIONALIDAD AUXILIAR */
     ////////////////////////////
@@ -1148,7 +1104,7 @@ public class ViewController implements Initializable {
 			            	addTagToPane(tag, video.getURL(), tags);
 			            	// Si la etiqueta no existía en ningún vídeo, la añadimos al panel con las etiquetas disponibles
 			            	if (!TagExisted) {	
-				        		tagsView.getItems().add(tag.getNombre());
+				        		exploreTags.getItems().add(createCheckBoxTag(tag.getNombre()));
 			            	}
 			            }
 					}
@@ -1223,9 +1179,28 @@ public class ViewController implements Initializable {
 	
 	// Cargamos la lista con todas las etiquetas
 	private void loadTags(Set<Etiqueta> savedTags) {
-		tagsView.setItems(savedTags.stream()
+		exploreTags.setItems(savedTags.stream()
 				.map(Etiqueta::getNombre)
+				.map(t -> createCheckBoxTag(t))
 				.collect(Collectors.toCollection(FXCollections::observableArrayList)));
+	}
+	
+	// Crear un objeto JFXCheckBox para representar etiquetas a partir del título pasado de parámetro
+	private JFXCheckBox createCheckBoxTag(String title) {
+		JFXCheckBox tag = new JFXCheckBox();
+		tag.setText(title);
+		tag.setPrefWidth(exploreTags.getWidth());
+		tag.getStyleClass().add("myjfx-check-box");
+		return tag;
+	}
+	
+	// Devuelve un conjunto con las etiquetas seleccionadas de la lista de etiquetas del perfil de explorar
+	private Set<Etiqueta> getSelectedTags() {
+		Set<Etiqueta> selectedTags = new HashSet<Etiqueta>();
+		for (JFXCheckBox checkbox : exploreTags.getItems()) {
+			if (checkbox.isSelected()) selectedTags.add(new Etiqueta(checkbox.getText()));
+		}
+		return selectedTags;
 	}
 	
 	// Añadir una etiqueta a un contenedor pasado de parámetro
@@ -1236,10 +1211,17 @@ public class ViewController implements Initializable {
 		l.setOnMouseClicked(e -> {
 			tags.getChildren().remove(l);
 			controller.borrarEtiquetaVideo(tag, URL);
+			// Si era el último vídeo con esa etiqueta, la borramos de la lista de etiquetas disponibles para la búsqueda
 			if (!controller.containsEtiqueta(tag)) {
-				controller.removeEtiquetaBusqueda(tag.getNombre());
-				tagsView.getItems().remove(tag.getNombre());
-				searchTagsView.getItems().remove(tag.getNombre());
+				// Como tenemos una lista de checkboxes no podemos buscar directamene por nombre
+				// Recuperamos la etiqueta y luego la borramos
+				JFXCheckBox checkboxToDelete = null;
+				for (JFXCheckBox checkbox : exploreTags.getItems()) {
+					if (checkbox.getText().equals(tag.getNombre())) {
+						checkboxToDelete = checkbox;											
+					}
+				}
+				exploreTags.getItems().remove(checkboxToDelete);
 			}
 		});
 
@@ -1319,11 +1301,15 @@ public class ViewController implements Initializable {
 		if (title.equals("Recientes")) return;
 		
 		ListaVideos list = controller.getListaVideos(title);
-		if (list == null) 
-			return;
+		if (list == null) return;
+		
+		loadVideosToList(list, myListsList);
+		/*
+		//TODO: quitar
 		myListsList.setItems(list.getVideos().stream()
 											.map(v -> createSmallVideoThumbnail(v, 120, 70))
 											.collect(Collectors.toCollection(FXCollections::observableArrayList)));
+		*/
 		if (myListsList.getItems().size() == 0) myListsPlay.setDisable(true);
 			else myListsPlay.setDisable(false);
 		fadeIn(myListsList);

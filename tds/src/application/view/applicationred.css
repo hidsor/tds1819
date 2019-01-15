@@ -240,7 +240,6 @@
 .myscrollview .scroll-bar:horizontal .thumb,
 .myscrollview .scroll-bar:vertical .thumb {
     -fx-background-color: #f6444f;
-	-fx-background-insets: 2, 0, 0;
 	-fx-background-radius: 2em;
 }
 
@@ -256,7 +255,7 @@
 /* Propiedades genéricas de cualquier checkbox y combobox */
 .myjfx-check-box {
      -jfx-checked-color: #f51827;
-     -jfx-unchecked-color: black;
+     -jfx-unchecked-color: #6f6f6f;
 }
 
 .mycombo-box {

@@ -37,7 +37,6 @@ public class AppVideo implements VideosListener {
 	
 	// private ListaVideos topten;
 	
-	private Set<Etiqueta> etiquetasBusqueda;
 
 	private Usuario usuarioActual; // Para saber quiï¿½n estï¿½ usando la aplicaciï¿½n
 
@@ -68,8 +67,7 @@ public class AppVideo implements VideosListener {
 			for (Etiqueta etiqueta : video.getEtiquetas()) {
 				incrementarReferenciasEtiqueta(etiqueta);
 			}
-		}
-		etiquetasBusqueda = new HashSet<Etiqueta>();
+		}	
 		
 		// Añadimos los filtros implementados:
 		filtros = new HashMap<String, Filtro>();
@@ -124,9 +122,6 @@ public class AppVideo implements VideosListener {
 		Integer contadorReferencias = listaEtiquetas.get(etiqueta);
 		if (contadorReferencias == null) return false;
 		return true;
-	}
-	public Set<Etiqueta> getEtiquetasBusqueda() {
-		return Collections.unmodifiableSet(etiquetasBusqueda);
 	}
 
 	public Usuario getUsuarioActual() {
@@ -206,24 +201,9 @@ public class AppVideo implements VideosListener {
 	public void salirUsuario() {
 		usuarioActual = null;
 	}
-	
-	public boolean addEtiquetaBusqueda(String nombre) {
-		Etiqueta etiqueta = new Etiqueta(nombre);
-		return etiquetasBusqueda.add(etiqueta);
-	}
-	
-	public boolean removeEtiquetaBusqueda(String nombre) {
-		Etiqueta etiqueta = new Etiqueta(nombre);
-		return etiquetasBusqueda.remove(etiqueta);
-	}
-	
-	public boolean isEtiquetasBusquedaEmpty() {
-		return etiquetasBusqueda.isEmpty();
-	}
-	
 
-	// Buscar un vï¿½deo que contenga la cadena pasada de parï¿½metro (case insensitive)
-	public Set<Video> buscarVideos(String cadena) {
+	// Buscar un vï¿½deo que contenga la cadena (case insensitive) y etiquetas pasadas de parámetro
+	public Set<Video> buscarVideos(String cadena, Set<Etiqueta> etiquetas) {
 		if (usuarioActual == null) return null;
 		
 		Set<Video> resultados = new HashSet<>();
@@ -233,7 +213,7 @@ public class AppVideo implements VideosListener {
 		// y la condiciï¿½n del filtro se cumple, es un posible resultado.
 		for (Video i : catalogoVideos.getVideos()) {
 			if (i.contieneTitulo(cadena) && filtro.filtrarVideo(usuarioActual, i) 
-					&& ( etiquetasBusqueda.isEmpty() || i.containsAllEtiquetas(etiquetasBusqueda) )) {
+					&& ( etiquetas.isEmpty() || i.containsAllEtiquetas(etiquetas) )) {
 				resultados.add(i);
 			}
 		}
