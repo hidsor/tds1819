@@ -1,7 +1,6 @@
 package application.view;
 
 import java.awt.Graphics;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
@@ -33,12 +32,8 @@ import application.model.Filtro;
 import application.model.ListaVideos;
 import application.model.Usuario;
 import application.model.Video;
-import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -65,7 +60,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 
@@ -177,9 +171,13 @@ public class ViewController implements Initializable {
     @FXML
     private JFXButton exploreSearch, exploreClear;
     @FXML 
-    private JFXListView<String> tagsView = new JFXListView<String>();	// Para visualizar todas las etiquetas disponibles
+    private JFXListView<String> tagsView;	// Para visualizar todas las etiquetas disponibles
     @FXML
-    private JFXListView<String> searchTagsView = new JFXListView<String>(); // Visualizar nuestras etiquetas de búsqueda utilizadas
+    private JFXListView<String> searchTagsView ; // Visualizar nuestras etiquetas de búsqueda utilizadas
+    @FXML
+    private ComboBox<String> exploreFilters;
+    @FXML
+    private Label exploreFilterTag;
  
     
     /* VENTANA DE NUEVA LISTA */
@@ -292,6 +290,14 @@ public class ViewController implements Initializable {
     	exploreView.setVisible(true);
     	exploreView.toFront();
     	exploreContent.getChildren().clear();
+		loadFilters();
+		if (controller.getUsuarioActual().isPremium()) {
+			exploreFilterTag.setDisable(false);
+			exploreFilters.setDisable(false);		
+		} else {
+			exploreFilterTag.setDisable(true);
+			exploreFilters.setDisable(true);
+		}
     	fadeIn(exploreView);
     }
 
@@ -555,6 +561,13 @@ public class ViewController implements Initializable {
     	} else {
     		showDialog("Cambios inválidos", "Las contraseñas introducidas no coinciden");
     	}	
+    }
+    
+    @FXML
+    void chooseFilter(ActionEvent event) {
+    	if (exploreFilters.getValue() == null) return;
+    	Filtro selectedFilter = controller.getFiltro(exploreFilters.getSelectionModel().getSelectedItem());
+    	controller.aplicarFiltro(selectedFilter);
     }
 
     /* FUNCIONALIDAD VENTANA DE EXPLORAR */
@@ -1466,6 +1479,19 @@ public class ViewController implements Initializable {
 				showDialog("¡Felicidades!", "Acorde a tus datos introducidos en el sistema, ¡hoy es tu cumpleaños!");
 			}
 		}
+	}
+	
+	// Carga todos los filtros del sistema al combobox correspondiente
+	private void loadFilters() {
+		Set<String> filters = controller.getNombresFiltros();
+		// Convertimos los elementos al formato esperado del ComboBox
+		ObservableList<String> filterTitles = FXCollections.observableList(filters.stream()
+				.collect(Collectors.toList())
+				);
+
+		exploreFilters.setItems(filterTitles);
+		// Ponemos como seleccionado el filtro actualmente aplicado por el usuario
+		exploreFilters.setValue(controller.getUsuarioActual().getFiltro().getNombre());
 	}
 	
 	// Manejo de la clase Timer en la aplicación, para reproducir listas de vídeos
