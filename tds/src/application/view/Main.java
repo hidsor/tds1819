@@ -17,22 +17,6 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("Root.fxml"));
-			/*
-		      root.setOnMousePressed(new EventHandler<MouseEvent>() {
-		            public void handle(MouseEvent event) {
-		                xOffset = event.getSceneX();
-		                yOffset = event.getSceneY();
-		            }
-		        });
-		        
-		        //move around here
-		        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
-		            public void handle(MouseEvent event) {
-		                primaryStage.setX(event.getScreenX() - xOffset);
-		                primaryStage.setY(event.getScreenY() - yOffset);
-		            }
-		        });
-		    */
 			Scene scene = new Scene(root,800,600);
 			scene.getStylesheets().add(getClass().getResource("applicationred.css").toExternalForm());
 			primaryStage.initStyle(StageStyle.TRANSPARENT);
@@ -43,7 +27,7 @@ public class Main extends Application {
 			primaryStage.show();
 			
 		} catch(Exception e) {
-			System.out.println("No se puedo cargar el archivo fxml");
+			System.out.println("No se pudo cargar la aplicación");
 			e.printStackTrace();
 		}
 	}

@@ -631,16 +631,21 @@
                                     <String fx:value="myscrollview" />
                                  </styleClass>
                               </ComboBox>
-                              <Region prefHeight="10.0" prefWidth="100.0" />
+                              <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="150.0" VBox.vgrow="ALWAYS">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Region>
                               <Label alignment="CENTER" contentDisplay="CENTER" text="Etiquetas">
                                  <font>
                                     <Font name="System Bold" size="16.0" />
                                  </font></Label>
-                              <JFXListView id="exploreTags" fx:id="exploreTags" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" style="-fx-fit-to-width: true;" VBox.vgrow="ALWAYS">
+                              <JFXListView id="exploreTags" fx:id="exploreTags" onMouseClicked="#exploreTagsClicked" prefHeight="200.0" prefWidth="150.0" VBox.vgrow="ALWAYS">
                                  <styleClass>
                                     <String fx:value="myscrollview" />
                                     <String fx:value="myjfxlistview" />
-                                 </styleClass></JFXListView>
+                                 </styleClass>
+                              </JFXListView>
                            </children>
                            <BorderPane.margin>
                               <Insets bottom="10.0" right="10.0" />

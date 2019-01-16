@@ -26,7 +26,7 @@ import javafx.stage.Stage;
 public class ResizeHelper {
 
     public static void addResizeListener(Stage stage) {
-        addResizeListener(stage, 0, 0, Double.MAX_VALUE, Double.MAX_VALUE);
+        addResizeListener(stage, 800, 600, Double.MAX_VALUE, Double.MAX_VALUE);
     }
 
     public static void addResizeListener(Stage stage, double minWidth, double minHeight, double maxWidth, double maxHeight) {
@@ -36,7 +36,7 @@ public class ResizeHelper {
         stage.getScene().addEventHandler(MouseEvent.MOUSE_DRAGGED, resizeListener);
         stage.getScene().addEventHandler(MouseEvent.MOUSE_EXITED, resizeListener);
         stage.getScene().addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, resizeListener);
-
+        
         resizeListener.setMinWidth(minWidth);
         resizeListener.setMinHeight(minHeight);
         resizeListener.setMaxWidth(maxWidth);
@@ -100,7 +100,7 @@ public class ResizeHelper {
         public void handle(MouseEvent mouseEvent) {
             EventType<? extends MouseEvent> mouseEventType = mouseEvent.getEventType();
             Scene scene = stage.getScene();
-
+            
             double mouseEventX = mouseEvent.getSceneX(),
                     mouseEventY = mouseEvent.getSceneY(),
                     sceneWidth = scene.getWidth(),

@@ -51,6 +51,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -79,13 +80,11 @@ import tds.video.VideoWeb;
 import umu.tds.videos.ComponenteBuscadorVideos;
 
 public class ViewController implements Initializable {
+	
 	////////////////////////////
 	/* ATRIBUTOS Y CONSTANTES */
 	////////////////////////////
-	private double oldHeight = 0;
-	private double oldWidth = 0;
-	private double xOffset = 0; 
-	private double yOffset = 0;
+
 	private AppVideo controller;
 	private ComponenteBuscadorVideos buscador;
 	private boolean isProfileOpen;
@@ -96,11 +95,11 @@ public class ViewController implements Initializable {
 	private boolean editPlayListMode;
     private Timer globalTimer;
     
-	
+    private final static int DIALOG_BUTTON_WIDTH = 100;
+	private final static int DIALOG_BUTTON_HEIGHT = 25;
 	private final static String DIALOG_LABEL_STYLE = "-fx-text-fill: #000000;"
 														+ " -fx-font: 14 system;";
-
-	/* STACKPANE EXTERIOR PARA JFXDIALOG */
+	/* STACKPANE GLOBAL PARA JFXDIALOGS */
     @FXML
     private StackPane rootStackPane;
 	
@@ -178,7 +177,6 @@ public class ViewController implements Initializable {
     @FXML
     private Label exploreFilterTag;
  
-    
     /* VENTANA DE NUEVA LISTA */
     @FXML
     private BorderPane myListsView; // Contenedor de la vista de listas
@@ -209,8 +207,7 @@ public class ViewController implements Initializable {
     @FXML
     private VBox recentTopTenContainer;
     
-    /* VENTANA DDE PREMIUM */
-    
+    /* VENTANA DDE PREMIUM */ 
     @FXML
     private BorderPane premiumView; // Contenedor de la vista de premium
     @FXML
@@ -220,7 +217,8 @@ public class ViewController implements Initializable {
 
 	/////////////////
 	/* CONSTRUCTOR */
-	/////////////////	
+	/////////////////
+    
 	public ViewController() {
 		controller = AppVideo.getUnicaInstancia();
 		buscador = new ComponenteBuscadorVideos();
@@ -234,6 +232,7 @@ public class ViewController implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		// Este método se invoca después de cargar todos los elementos de JavaFX
 		assignEnterKeyToButton(loginView, loginButton);
 		
 		assignEnterKeyToButton(registerView, registerRegister);
@@ -246,7 +245,6 @@ public class ViewController implements Initializable {
 		openLoginView(null);
 	}
 
-	
     ///////////////////////
     /* MANEJO DE EVENTOS */
     ///////////////////////
@@ -278,17 +276,13 @@ public class ViewController implements Initializable {
 
     @FXML
     void openExplorarView(ActionEvent event) {	
-    	loadTags(controller.getListaEtiquetas());
-    	
     	// Ocultamos el elemento que hubiese en el frente
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
     	oldFront.setVisible(false);
-    	// Traemos la ventana al frente y la hacemos visible
-    	exploreView.setDisable(false);
-    	exploreView.setVisible(true);
-    	exploreView.toFront();
-    	exploreContent.getChildren().clear();
+    	
+    	// Cargamos los filtros y etiquetas
+    	loadTags(controller.getListaEtiquetas());
 		loadFilters();
 		if (controller.getUsuarioActual().isPremium()) {
 			exploreFilterTag.setDisable(false);
@@ -297,6 +291,13 @@ public class ViewController implements Initializable {
 			exploreFilterTag.setDisable(true);
 			exploreFilters.setDisable(true);
 		}
+		
+    	// Traemos la ventana al frente y la hacemos visible
+    	exploreView.setDisable(false);
+    	exploreView.setVisible(true);
+    	exploreView.toFront();
+    	exploreContent.getChildren().clear();
+
     	fadeIn(exploreView);
     }
 
@@ -306,15 +307,9 @@ public class ViewController implements Initializable {
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
     	oldFront.setVisible(false);
-    		
-    	// Traemos la ventana al frente y la hacemos visible
-    	myListsView.setDisable(false);
-    	myListsView.setVisible(true);
-    	myListsView.toFront();
-    	
+    	   	
     	// Limpiamos todos los elementos de la vista y cargamos las listas
 		myListsContent.getChildren().clear();
-		loadMyListsComboBox();
 		myListsEdit.setDisable(true);
 		myListsPlay.setDisable(true);
 		myListsDelete.setDisable(true);
@@ -328,49 +323,55 @@ public class ViewController implements Initializable {
 		myListsMainSideBar.setDisable(false);
 		myListsMainSideBar.setVisible(true);
 		editPlayListMode = false;
+		loadMyListsComboBox();
 		
+		// Comprobamos si el usuario es premium para activar o no la funcionalidad premium
 		if (controller.getUsuarioActual().isPremium()) {
 			myListsCreatePDF.setDisable(false);
 		} else {
 			myListsCreatePDF.setDisable(true);
-		}
+		}	
+		
+    	// Traemos la ventana al frente y la hacemos visible
+    	myListsView.setDisable(false);
+    	myListsView.setVisible(true);
+    	myListsView.toFront();
 		
     	fadeIn(myListsView);
     }
 
     @FXML
     void openRecientesView(ActionEvent event) {
-    	// Ocultamos el elemento que hubiese en el frente
-    	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
-    	oldFront.setDisable(true);
-    	oldFront.setVisible(false);
-    		
-    	// Traemos la ventana al frente y la hacemos visible
-    	recentView.setDisable(false);
-    	recentView.setVisible(true);
-    	recentView.toFront();
-    	
-    	// Cargamos las dos listas de vídeos
-    	loadVideosToList(controller.getRecientes(), recentVideosList);
-    	if (controller.getUsuarioActual().isPremium()) {
-    		recentTopTenContainer.setDisable(false);	
-    	} else {
-    		recentTopTenContainer.setDisable(true);
-    	}
-    	loadVideosToList(controller.getTopten(), recentTopTenList); 
-    	fadeIn(recentView);
+		// Ocultamos el elemento que hubiese en el frente
+		Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
+		oldFront.setDisable(true);
+		oldFront.setVisible(false);
+		
+		// Cargamos las dos listas de vídeos
+		loadVideosToList(controller.getRecientes(), recentVideosList);
+		if (controller.getUsuarioActual().isPremium()) {
+			recentTopTenContainer.setDisable(false);	
+		} else {
+			recentTopTenContainer.setDisable(true);
+		}
+		// Cargamos la lista de top 10 vídeos independientemente de si el usuario es premium o no
+		// Principalmente para motivar al usuario a convertirse en premium
+		loadVideosToList(controller.getTopten(), recentTopTenList); 
+			
+		// Traemos la ventana al frente y la hacemos visible
+		recentView.setDisable(false);
+		recentView.setVisible(true);
+		recentView.toFront();
+		
+		fadeIn(recentView);
     }
 
     @FXML
     void openPremiumView(ActionEvent event) {
+    	// Ocultamos el elemento que hubiese en el frente
     	Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
     	oldFront.setDisable(true);
     	oldFront.setVisible(false);
-    		
-    	// Traemos la ventana al frente y la hacemos visible
-    	premiumView.setDisable(false);
-    	premiumView.setVisible(true);
-    	premiumView.toFront();
     	
     	if (controller.getUsuarioActual().isPremium()) {
     		premiumActivate.setDisable(true);
@@ -379,6 +380,12 @@ public class ViewController implements Initializable {
     		premiumActivate.setDisable(false);
     		premiumLabel.setText("¡Por un módico precio de 0.00€*!");
     	}
+    	
+    	// Traemos la ventana al frente y la hacemos visible
+    	premiumView.setDisable(false);
+    	premiumView.setVisible(true);
+    	premiumView.toFront();
+    	
     	fadeIn(premiumView);
     }
         	
@@ -397,41 +404,41 @@ public class ViewController implements Initializable {
     	registerSurname.clear();
     	registerDatePicker.setValue(null);
     	registerEmail.clear();   
+    	hideRegisterLabels();
     	
     	// Traemos la ventana al frente y la hacemos visible
     	registerView.setDisable(false);
     	registerView.setVisible(true);
     	registerView.toFront(); 	
     	
-    	hideRegisterLabels();
     	fadeIn(registerView);
     }
 
     void openProfileView() {
-    	// Actualizamos al usuario actual por si se han producido cambios
-		Usuario usuarioActual = controller.getUsuarioActual();
-		isProfileOpen = true;
-		
 		// Ocultamos el elemento que hubiese en el frente
 		Node oldFront = stackpane.getChildren().get(stackpane.getChildren().size() - 1);
 		oldFront.setDisable(true);
 		oldFront.setVisible(false);
-
-		// Hacemos la vista visible
-		profileView.setVisible(true);
-		profileView.setDisable(false);
-		profileView.toFront();
-		fadeIn(profileView);
+		
+    	// Actualizamos al usuario actual por si se han producido cambios
+		Usuario usuarioActual = controller.getUsuarioActual();
+		isProfileOpen = true;
 		
 		// Actualizamos elementos de la vista de perfil
 		profileNick.setText(usuarioActual.getLogin());
 		profileEmail.setPromptText(usuarioActual.getEmail());
 		profileDatePicker.setPromptText(usuarioActual.getFechaNac().toString());
 		profileTitle.setText("Bienvenido, " + usuarioActual.getNombre());
-		
+
 		// Limpiamos los elementos a introducir
 		profileEmail.clear();
 		profileDatePicker.setValue(null);
+		
+		// Hacemos la vista visible
+		profileView.setVisible(true);
+		profileView.setDisable(false);
+		profileView.toFront();
+		fadeIn(profileView);
 	}
       
     /* FUNCIONALIDAD VENTANA LOGIN */
@@ -440,6 +447,7 @@ public class ViewController implements Initializable {
     void loginEnter(ActionEvent event) {
     	boolean valid = true;
     	// Comprobamos que ambos campos hayan sido introducidos
+    	// Si alguno no lo está, activamos su etiqueta de "*Este campo obligatorio"
     	if (loginNick.getText().equals("")) {
     		loginLabelNick.setVisible(true);
     		valid = false;
@@ -453,10 +461,11 @@ public class ViewController implements Initializable {
     		if (controller.verificarUsuario(loginNick.getText(), loginPassword.getText())) {
     			// Login válido
     			openRecientesView(event);
-    			setProfileFunctionsTo(true);
+    			
+    			setProfileFunctionsTo(true); // Cambiamos el botón de login por el de mi perfil
+    			setUserFunctionsTo(true); // Desbloqueamos la funcionalidad disponible para usuarios
+    			
     			checkForUserBirthday();
-    			// Desbloqueamos la funcionalidad disponible para usuarios
-    			setUserFunctionsTo(true);
     		} else {
     			// Login inválido
     			showDialog("Login inválido", "El nombre y/o la contraseña son incorrectas");
@@ -466,10 +475,10 @@ public class ViewController implements Initializable {
 
     /* FUNCIONALIDAD VENTANA DE REGISTRO */
     @FXML
-    // Registrar un usuario
+    // Registrar un usuario en el sistema
     void registerUser(ActionEvent event) {
     	// Comprobamos que ninguno de los campos obligatorios esté vacío.
-    	// Si alguno lo está, activamos su etiqueta de "*Campo obligatorio"
+    	// Si alguno lo está, activamos su etiqueta de "*Este campo obligatorio"
     	boolean valid = true;
     	if (registerNick.getText().equals("")) {
     		registerLabelNick.setVisible(true);
@@ -503,9 +512,9 @@ public class ViewController implements Initializable {
 					registerSurname.getText(), registerDatePicker.getValue(), registerEmail.getText())) {
     			// Registro válido
 				openRecientesView(event);
-				setProfileFunctionsTo(true);
-    			// Desbloqueamos la funcionalidad disponible para usuarios
-				setUserFunctionsTo(true);
+				
+				setProfileFunctionsTo(true); // Cambiamos el botón de login por el de mi perfil
+				setUserFunctionsTo(true); // Desbloqueamos la funcionalidad disponible para usuarios
     		} else {
     			// Registro inválido (shouldn't happen)
     			showDialog("Registro inválido", "No se ha podido registrar al usuario");
@@ -515,6 +524,7 @@ public class ViewController implements Initializable {
     
     @FXML
     void registerCancel(ActionEvent event) {
+    	// Hace lo mismo que el evento openLoginView pero lo separamos por legibilidad y escalabilidad
     	openLoginView(event);
     }
     
@@ -523,8 +533,9 @@ public class ViewController implements Initializable {
     // Salir de la cuenta actualmente utilizada
     void profileLogout(ActionEvent event) {
     	controller.salirUsuario();
+    	// Cambiamos el botón de mi perfil por el de login
     	setProfileFunctionsTo(false);
-    	
+   	
     	// Bloqueamos la funcionalidad disponible para usuarios
     	setUserFunctionsTo(false);
 		
@@ -534,7 +545,7 @@ public class ViewController implements Initializable {
     @FXML
     void loadVideos(ActionEvent event) {
     	FileChooser fileChooser = new FileChooser();
-    	fileChooser.setTitle("Abrir XML con videos");
+    	fileChooser.setTitle("Abrir fichero XML con vídeos");
     	try {
 	    	File file = fileChooser.showOpenDialog(( (Node) event.getSource()).getScene().getWindow());
 	    	buscador.buscarVideo(file.getAbsolutePath());
@@ -542,7 +553,6 @@ public class ViewController implements Initializable {
     	}
     	catch (Exception e) {
     		showDialog("Error", "No se ha elegido ningún fichero o el fichero indicado es inválido");
-			//System.out.println("Error: Abra un archivo valido");
 		}
     }
      
@@ -561,21 +571,13 @@ public class ViewController implements Initializable {
     	}	
     }
     
-    @FXML
-    void chooseFilter(ActionEvent event) {
-    	if (exploreFilters.getValue() == null) return;
-    	Filtro selectedFilter = controller.getFiltro(exploreFilters.getSelectionModel().getSelectedItem());
-    	controller.aplicarFiltro(selectedFilter);
-    }
-
     /* FUNCIONALIDAD VENTANA DE EXPLORAR */
     @FXML
     // Busqueda de vídeos
-    void exploreSearch(ActionEvent event) {
-    	 	
+    void exploreSearch(ActionEvent event) { 	
     	// Borramos el resultado de la busqueda anterior
     	exploreContent.getChildren().clear();
-    	exploreScroll.setFitToHeight(false);
+    	exploreScroll.setFitToHeight(false); // Permite el scroll vertical
     	
     	// Hecho esto, buscamos
     	Set<Video> videos = controller.buscarVideos(exploreTitle.getText(), getSelectedTags());
@@ -598,11 +600,32 @@ public class ViewController implements Initializable {
     // Limpiar la búsqueda actual de vídeos
     void exploreClear(ActionEvent event) {
     	exploreContent.getChildren().clear();
-    	exploreScroll.setFitToHeight(true);
+    	// Desactivamos el scroll vertical temporalmente porque el contenedor no se redimensiona al limpiar sus elementos
+    	exploreScroll.setFitToHeight(true); 
+    }
+    
+    @FXML
+    // Aplicar un filtro premium al usuario actual
+    void chooseFilter(ActionEvent event) {
+    	if (exploreFilters.getValue() == null) return; // Comprobamos que el evento no se haya disparado sobre un elemento vacío
+    	Filtro selectedFilter = controller.getFiltro(exploreFilters.getSelectionModel().getSelectedItem());
+    	controller.aplicarFiltro(selectedFilter);
+    }
+
+    @FXML
+    void exploreTagsClicked(MouseEvent event) {
+    	// Este evento no se corresponde con ninguna funcionalidad de la especificación
+    	// Por la estructura del JFXListView y JFXCheckBox, es posible hacer click sobre la celda de la lista sin hacer click sobre el checkbox
+    	// Por tanto, disparamos el checkbox independientemente
+    	JFXCheckBox selectedTag = exploreTags.getSelectionModel().getSelectedItem();
+    	if (selectedTag != null) exploreTags.getSelectionModel().getSelectedItem().fire();
+    	
+    	// Limpiamos el elemento seleccionado porque el .css es diabólico
+    	// No conseguimos modificar el color del texto del elemento seleccionado ni a patadas
+    	exploreTags.getSelectionModel().clearSelection();
     }
 
     /* FUNCIONALIDAD VENTANA DE MIS LISTAS */
-    
     @FXML
     // Añadir un efecto visual al despliegue de las opciones del panel lateral de la vista
     void displayOptions(ActionEvent event) {
@@ -619,8 +642,7 @@ public class ViewController implements Initializable {
     	rt.setAutoReverse(true);
     	rt.play();
     }
-    
-    
+ 
     @FXML
     // Proporcionamos al usuario la interfaz necesaria para añadir una nueva lista
     void addVideoList(ActionEvent event) {
@@ -628,21 +650,19 @@ public class ViewController implements Initializable {
     	myListsMainSideBar.setDisable(true);
     	myListsMainSideBar.setVisible(false);
     	
-    	// Mostramos el panel lateral secundario para añadir nuevas listas
-    	
-    	myListsSecondarySideBar.setDisable(false);
-    	myListsSecondarySideBar.setVisible(true);
-    	
+    	// Limpiamos el contenedor para añadir una nueva lista
     	myListsNewListTitle.clear();
     	
+    	// Mostramos el panel lateral secundario para añadir nuevas listas 	
+    	myListsSecondarySideBar.setDisable(false);
+    	myListsSecondarySideBar.setVisible(true);
+
     	fadeIn(myListsSecondarySideBar);
     }
-    
-    
+   
     @FXML
     // Validamos la lista introducida
     void acceptNewList(ActionEvent event) {
-    	
     	// Si se ha introducido un título, lo registramos
     	// Si no se ha introducido ningún título, lo interpretamos como que el usuario no quiere crear ninguna lista
     	if (!myListsNewListTitle.getText().equals("")) {
@@ -654,7 +674,7 @@ public class ViewController implements Initializable {
         		myListsDelete.setDisable(false);
     		}
     		else {
-    			showDialog("Error", "Ya existe una lista con ese nombre");
+    			showDialog("Error al crear una lista", "Ya existe una lista con ese nombre.\nDeja de intentar rompernos el sistema, gracias.");
     		}
     	}
     	
@@ -668,7 +688,6 @@ public class ViewController implements Initializable {
     	 	
     	fadeIn(myListsMainSideBar);
     }    
-    
 
     @FXML
     // Elegir una lista de las listas disponibles
@@ -709,12 +728,12 @@ public class ViewController implements Initializable {
     		// Botones de la ventana emergente
     		JFXButton cancel = new JFXButton("Cancelar");
     		cancel.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
-    		cancel.setPrefSize(100, 25);
+    		cancel.setPrefSize(DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT);
     		cancel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
     		
     		JFXButton accept = new JFXButton("Aceptar");
     		accept.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
-    		accept.setPrefSize(100, 25);
+    		accept.setPrefSize(DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT);
     		accept.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
     		dialogContent.setActions(accept, cancel);
 
@@ -727,23 +746,14 @@ public class ViewController implements Initializable {
     		
     		accept.setOnAction(e -> {
     			showDeleteNotification = !dialogCheckBox.isSelected();
-            	controller.removeListaVideos(myListsComboBox.getSelectionModel().getSelectedItem());
-            	loadMyListsComboBox();
-        		myListsEdit.setDisable(true);
-        		myListsPlay.setDisable(true);
-        		myListsDelete.setDisable(true);
-        		myListsList.getItems().clear();
+    			deleteVideoListAndRefresh(myListsComboBox.getSelectionModel().getSelectedItem()); 		
     			dialog.close();
     		});
 		
     		dialog.show();
     	} else {
-        	controller.removeListaVideos(myListsComboBox.getSelectionModel().getSelectedItem());
-        	loadMyListsComboBox();
-    		myListsEdit.setDisable(true);
-    		myListsPlay.setDisable(true);
-    		myListsDelete.setDisable(true);
-    		myListsList.getItems().clear();
+    		// Si el usuario ha elegido no volver a mostrar la ventana emergente, eliminamos la lista directamente
+    		deleteVideoListAndRefresh(myListsComboBox.getSelectionModel().getSelectedItem());
     	}
     }
     
@@ -781,7 +791,7 @@ public class ViewController implements Initializable {
 	    		// Botones de la ventana emergente
 	    		JFXButton close = new JFXButton("Cerrar");
 	    		close.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
-	    		close.setPrefSize(100, 25);
+	    		close.setPrefSize(DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT);
 	    		close.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 	    		dialogContent.setActions(close);
 	    		
@@ -794,6 +804,7 @@ public class ViewController implements Initializable {
 			
 	    		dialog.show();    		
 	    	} 
+	    	// Desactivamos el resto de la funcionalidad mientras se está en el modo de edición
 	    	myListsDelete.setDisable(true);
 	    	myListsNew.setDisable(true);
 	    	myListsPlay.setDisable(true);
@@ -805,6 +816,7 @@ public class ViewController implements Initializable {
 	    	myListsClear.setDisable(false);
 	    	
     	} else {
+    		// Volvemos a activar el resto de la funcionalidad de la misma ventana
 	    	myListsDelete.setDisable(false);
 	    	myListsNew.setDisable(false);
 	    	myListsPlay.setDisable(false);
@@ -820,25 +832,29 @@ public class ViewController implements Initializable {
     }    
 
     @FXML
+    // Limpiar la búsqueda actual de vídeos
     void myListsClearVideos(ActionEvent event) {
     	myListsContent.getChildren().clear();
     	myListsSearchView.setFitToHeight(true); // Evita que la barra de scroll se quede
     }
 
     @FXML 
+    // Realizar una búsqueda (sin etiquetas)
     void myListsSearchVideos(ActionEvent event) {
     	// Borramos el resultado de la busqueda anterior
     	myListsContent.getChildren().clear();
     	myListsSearchView.setFitToHeight(false);
     	
     	// Hecho esto, buscamos
-    	Set<Video> videos = controller.buscarVideos(myListsTitle.getText(), new HashSet<Etiqueta>());
+    	Set<Video> videos = controller.buscarVideos(myListsTitle.getText(), null);
+    	// Añadimos todos los vídeos encontrados al contenedor correspondiente
     	for (Video video : videos) {
     		Label element = createVideoThumbnail(video, 200, 150);
     		element.getStyleClass().add("videothumbnail");
     		element.setOnMouseClicked(e -> {
 			        if(e.getButton().equals(MouseButton.PRIMARY)){
 			            if(e.getClickCount() == 2){
+			            	// Si se hace doble click sobre la miniatura del vídeo, lo añadimos a la lista
 			            	addVideoToCurrentList(video);
 			            }
 			        }
@@ -848,7 +864,7 @@ public class ViewController implements Initializable {
     }
 
     @FXML
-    void playVideoList(ActionEvent event) { 	 	
+    void playVideoList(ActionEvent event) { 
 		String listName = myListsComboBox.getSelectionModel().getSelectedItem();
 		ListaVideos listToPlay = controller.getListaVideos(listName);  
 		playAllVideosFromList(listToPlay);
@@ -857,23 +873,24 @@ public class ViewController implements Initializable {
     @FXML
     // Manejo de la interacción con la lista de reproducción actual
     void playOrRemoveVideoFromList(MouseEvent event) {
+    	// Si el evento se dispara sobre una lista vacía, no hacemos nada
 		if (myListsList.getItems().isEmpty())
 			return;
 		Label label = myListsList.getSelectionModel().getSelectedItem();
-    	// Si estamos en modo de edición, borramos el vídeo seleccionado
+    	// Si estamos en modo de edición, borramos el vídeo seleccionado con doble click
 		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
 			if (editPlayListMode) {	
 				controller.removeVideoDeLista(label.getId(), myListsComboBox.getSelectionModel().getSelectedItem());
 				myListsList.getItems().remove(label);
 				fadeIn(myListsList);
 			} else {	
+				// Sino, reproducimos el vídeo
 				Video video = controller.getVideo(label.getId());
 	        	showVideoDialog(video, "videoDialog");		
 	    	}
 		}
     }
     
-
     @FXML
     // Generar archivo PDF con todas las listas disponibles
     void generateListPDF(ActionEvent event) {
@@ -915,13 +932,13 @@ public class ViewController implements Initializable {
     		// Botones de la ventana emergente
     		JFXButton cancel = new JFXButton("Cancelar");
     		cancel.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
-    		cancel.setPrefSize(100, 25);
+    		cancel.setPrefSize(DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT);
     		cancel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
     		dialogContent.setActions(cancel);
     		
     		JFXButton accept = new JFXButton("Aceptar");
     		accept.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
-    		accept.setPrefSize(100, 25);
+    		accept.setPrefSize(DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT);
     		accept.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
     		
     		dialogContent.setActions(accept, cancel);		
@@ -961,13 +978,16 @@ public class ViewController implements Initializable {
     // Reproducir un vídeo de alguna de las dos listas de la ventana de recientes
     void playVideoFromList(MouseEvent event) {	
     	if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+    		// Extraemos del evento la lista que ha sido presionada
     		@SuppressWarnings("unchecked")
 			JFXListView<Label> list = (JFXListView<Label>) event.getSource();
+    		// Extraemos el vídeo que ha sido seleccionado, si existe
         	Label label = list.getSelectionModel().getSelectedItem();
         	if (label == null)
         		return;
     		Video video = controller.getVideo(label.getId());
         	showVideoDialog(video, "videoDialog");	
+        	// Refrescamos la lista de recientes
         	loadVideosToList(controller.getRecientes(), recentVideosList);
     	}
     }
@@ -994,13 +1014,9 @@ public class ViewController implements Initializable {
 		Stage stg = ((Stage) ((JFXButton) event.getSource()).getScene().getWindow());
 		// Si la ventana estaba maximizada, restauramos su tamaño anterior
 		if (stg.isMaximized()) {
-			stg.setWidth(oldWidth);
-			stg.setHeight(oldHeight);
 			stg.setMaximized(false);
 		} else {
-			// Sino, la maximizamos y almacenamos el tamaño anterior
-			oldWidth = stg.getWidth();
-			oldHeight = stg.getHeight();
+			// Sino, la maximizamos
 			stg.setMaximized(true);
 		}
 	}
@@ -1015,7 +1031,39 @@ public class ViewController implements Initializable {
     ////////////////////////////
     /* FUNCIONALIDAD AUXILIAR */
     ////////////////////////////
-    
+
+	// Método para hacer una transición de un nodo pasado de parámetro
+	// La duración no está parametrizada pero podría parametrizarse también
+	private void fadeIn(Node node) {
+		FadeTransition ft = new FadeTransition(Duration.millis(200), node);
+		ft.setFromValue(0.0);
+		ft.setToValue(1.0);
+		ft.play();
+	}  
+
+	// Generar un JFXDialog textual sobre la aplicación
+	private void showDialog(String title, String content) {		
+		JFXDialogLayout dialogContent = new JFXDialogLayout();
+
+		// Título y cuerpo de la ventana emergente
+		dialogContent.setHeading(new Text(title));
+		dialogContent.setBody(new Text(content));
+		dialogContent.setStyle(DIALOG_LABEL_STYLE);
+
+		// Botones de la ventana emergente
+		JFXButton close = new JFXButton("Cerrar");
+		close.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
+		close.setPrefSize(DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT);
+		close.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+
+		dialogContent.setActions(close);
+
+		JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.BOTTOM);
+
+		close.setOnAction(e -> dialog.close());
+		dialog.show();
+	}
+	
     // Ocultar todas las labels de "*Este campo es obligatorio" de la vista del login
     private void hideLoginLabels() {
     	loginLabelNick.setVisible(false);
@@ -1039,6 +1087,7 @@ public class ViewController implements Initializable {
 		premium.setDisable(!value);
     }
     
+    // Indicar si el usuario está logeado o no
     private void setProfileFunctionsTo(boolean value) {
     	isProfileOpen = value;
     	
@@ -1055,11 +1104,13 @@ public class ViewController implements Initializable {
 		// Incrementamos el número de visitas del vídeo
 		controller.reproducir(video.getURL());
 		
+		// Creamos los elementos del diálogo
 		JFXDialogLayout dialogContent = new JFXDialogLayout();
 		Text dialogTitle = new Text(video.getTitulo());
 		dialogTitle.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
 		dialogContent.setHeading(dialogTitle);
 
+		// Dado que el componente proporcionado es sobre Swing, necesitamos usar un contenedor especial
 		SwingNode videoComponent = new SwingNode();
 		videoComponent.setContent(videoWeb);
 		
@@ -1093,11 +1144,17 @@ public class ViewController implements Initializable {
 		add.setPrefSize(30, 30);
 		add.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		add.setOnMouseClicked(e -> {
+				// Separamos cada una de las etiquetas por espacios
+				/* NOTA:
+				 *	Esto se debe a que el servicio de persistencia separa las etiquetas por espacios
+				 *	Evidentemente, la capa de la vista no debería de ser consciente de ello pero lo dejamos así por simplicidad de código
+				 */
 				String[] allTags = addTagsTextField.getText().split("\\s+");
 				for (String i : allTags) {
 					if (!i.equals("")) {
 			            Etiqueta tag =  new Etiqueta(i);
 			            boolean TagExisted = controller.containsEtiqueta(tag);
+			            // Añadimos la etiqueta creada al sistema
 			            if (controller.addEtiquetaVideo(tag, video.getURL())) {
 			            	addTagToPane(tag, video.getURL(), tags);
 			            	// Si la etiqueta no existía en ningún vídeo, la añadimos al panel con las etiquetas disponibles
@@ -1107,7 +1164,7 @@ public class ViewController implements Initializable {
 			            }
 					}
 				}
-	            addTagsTextField.clear();
+	            addTagsTextField.clear(); // Limpiamos la etiqueta introducida
 			}
 		);
 
@@ -1126,7 +1183,7 @@ public class ViewController implements Initializable {
 		// Botones de la ventana emergente
 		JFXButton close = new JFXButton("Cerrar");
 		close.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
-		close.setPrefSize(100, 25);
+		close.setPrefSize(DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT);
 		close.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		dialogContent.setActions(close);
 
@@ -1144,55 +1201,26 @@ public class ViewController implements Initializable {
 		dialog.show();
 	}
 
-	// Generar un JFXDialog textual sobre la aplicación
-	private void showDialog(String title, String content) {
-		JFXDialogLayout dialogContent = new JFXDialogLayout();
-
-		dialogContent.setHeading(new Text(title));
-		dialogContent.setBody(new Text(content));
-		dialogContent.setStyle(DIALOG_LABEL_STYLE);
-
-		// Botones de la ventana emergente
-		JFXButton close = new JFXButton("Cerrar");
-		close.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
-		close.setPrefSize(100, 25);
-		close.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-
-		dialogContent.setActions(close);
-
-		JFXDialog dialog = new JFXDialog(rootStackPane, dialogContent, JFXDialog.DialogTransition.BOTTOM);
-
-		close.setOnAction(e -> dialog.close());
-		dialog.show();
-	}
-
-	// Método para hacer una transición de un nodo pasado de parámetro
-	// La duración no está parametrizada pero podría parametrizarse también
-	private void fadeIn(Node node) {
-		FadeTransition ft = new FadeTransition(Duration.millis(200), node);
-		ft.setFromValue(0.0);
-		ft.setToValue(1.0);
-		ft.play();
-	}
-	
-	// Cargamos la lista con todas las etiquetas
+	// Cargamos la lista de la ventana de explorar con todas las etiquetas pasadas de parámetro
 	private void loadTags(Set<Etiqueta> savedTags) {
 		exploreTags.setItems(savedTags.stream()
-				.map(Etiqueta::getNombre)
-				.map(t -> createCheckBoxTag(t))
-				.collect(Collectors.toCollection(FXCollections::observableArrayList)));
+				.map(Etiqueta::getNombre) // Obtenemos el nombre de las etiquetas
+				.map(t -> createCheckBoxTag(t)) // Creamos un checkbox a partir de estos nombres de etiqueta
+				.collect(Collectors.toCollection(FXCollections::observableArrayList))); // Convertimos el conjunto en el formato esperado por el contenedor
 	}
 	
 	// Crear un objeto JFXCheckBox para representar etiquetas a partir del título pasado de parámetro
 	private JFXCheckBox createCheckBoxTag(String title) {
 		JFXCheckBox tag = new JFXCheckBox();
+		
 		tag.setText(title);
-		tag.setPrefWidth(exploreTags.getWidth());
+		tag.setMaxWidth(Control.USE_PREF_SIZE);
 		tag.getStyleClass().add("myjfx-check-box");
+		
 		return tag;
 	}
 	
-	// Devuelve un conjunto con las etiquetas seleccionadas de la lista de etiquetas del perfil de explorar
+	// Devuelve un conjunto con las etiquetas seleccionadas de la lista de etiquetas de la ventana de explorar
 	private Set<Etiqueta> getSelectedTags() {
 		Set<Etiqueta> selectedTags = new HashSet<Etiqueta>();
 		for (JFXCheckBox checkbox : exploreTags.getItems()) {
@@ -1201,7 +1229,9 @@ public class ViewController implements Initializable {
 		return selectedTags;
 	}
 	
-	// Añadir una etiqueta a un contenedor pasado de parámetro
+	// Añadir una etiqueta al contenedor pasado de parámetro
+	// A partir de cada etiqueta se crea un label que contiene su título y la funcionalidad necesaria para poder borrarla
+	// Necesitamos la URL del vídeo al que pertenece para poder eliminar la etiqueta posteriormente
 	private boolean addTagToPane(Etiqueta tag, String URL, Pane tags) {
 		Label l = new Label(tag.getNombre());
 		l.getStyleClass().add("videotag");
@@ -1211,8 +1241,8 @@ public class ViewController implements Initializable {
 			controller.borrarEtiquetaVideo(tag, URL);
 			// Si era el último vídeo con esa etiqueta, la borramos de la lista de etiquetas disponibles para la búsqueda
 			if (!controller.containsEtiqueta(tag)) {
-				// Como tenemos una lista de checkboxes no podemos buscar directamene por nombre
-				// Recuperamos la etiqueta y luego la borramos
+				// Como tenemos una lista de checkboxes no podemos buscar la etiqueta directamente por nombre
+				// Recuperamos la label con la etiqueta y luego la borramos
 				JFXCheckBox checkboxToDelete = null;
 				for (JFXCheckBox checkbox : exploreTags.getItems()) {
 					if (checkbox.getText().equals(tag.getNombre())) {
@@ -1222,15 +1252,15 @@ public class ViewController implements Initializable {
 				exploreTags.getItems().remove(checkboxToDelete);
 			}
 		});
-
 		return tags.getChildren().add(l);
 	}
 	
-	// Crear una miniatura de vídeo en nuestro formato
+	// Crear una miniatura de vídeo en nuestro formato personal
 	// Contiene la miniatura y su título
 	private Label createVideoThumbnail(Video video, int width, int height) {		
 		Label label = new Label();
 		label.setId(video.getURL());
+		
 		// Propiedades de la label que contiene la miniatura y el título del vídeo
 		label.setMaxWidth(width);
 		label.setMaxHeight(height);
@@ -1251,7 +1281,9 @@ public class ViewController implements Initializable {
 		icon.paintIcon(null, g, 0,0);
 		g.dispose();
 		Image thumbnail = SwingFXUtils.toFXImage(bi, null);
+		
 		label.setGraphic(new ImageView(thumbnail));
+		
 		return label;
 	}
 	
@@ -1288,39 +1320,39 @@ public class ViewController implements Initializable {
 		List<ListaVideos> playlists = controller.getUsuarioActual().getListas();
 		
 		ObservableList<String> playlistsTitles = FXCollections.observableList(playlists.stream()
-																			.map(ListaVideos::getNombre)
-																			.collect(Collectors.toList())
-																			);
+																			.map(ListaVideos::getNombre) // Obtenemos los títulos de las listas
+																			.collect(Collectors.toList()) // Lo convertimos al formato esperado
+																			); 
 		myListsComboBox.setItems(playlistsTitles);
 	}
 	
-	// Cargar la lista pasada de parámetro (su título) al listView del panel de mis listas
-	private void loadListToListView(String title) {
-		if (title.equals("Recientes")) return;
-		
+	// Cargar la lista pasada de parámetro (su título) al JFXlistView del panel de mis listas
+	private void loadListToListView(String title) {	
 		ListaVideos list = controller.getListaVideos(title);
 		if (list == null) return;
 		
-		loadVideosToList(list, myListsList);
+		myListsList.setItems(list.getVideos().stream() 
+											.map(v -> createSmallVideoThumbnail(v, 120, 70)) // Creamos una label a partir del vídeo
+											.collect(Collectors.toCollection(FXCollections::observableArrayList)));  // Convertimos al formato esperado
 
+		// Si la lista no contiene ningún vídeo, no permitimos reproducir la lista
 		if (myListsList.getItems().size() == 0) myListsPlay.setDisable(true);
 			else myListsPlay.setDisable(false);
+		
 		fadeIn(myListsList);
 	}
 	
 	// Cargar la lista pasada de parámetro a la lista especificada
 	private void loadVideosToList(ListaVideos videos, JFXListView<Label> list) {
-		// System.out.println(list.toString());
 		list.setItems((videos.getVideos().stream()
-				.map(v -> createVideoThumbnail(v, 120, 80))
-				.peek(l -> l.setStyle("-fx-font-weight: bold"))
-				.collect(Collectors.toCollection(FXCollections::observableArrayList))));
+				.map(v -> createVideoThumbnail(v, 120, 80)) // Creamos una label a partir del vídeo
+				.peek(l -> l.setStyle("-fx-font-weight: bold")) // Le aplicamos un estilo concreto
+				.collect(Collectors.toCollection(FXCollections::observableArrayList)))); // Convertimos al formado esperado
 	}
 	
 	// Añadir vídeo a la lista actual de la ventana de mis listas
 	private void addVideoToCurrentList(Video video) {
 		// Comprobamos que el vídeo no esté ya en la lista
-		
 		if (controller.addVideoALista(video.getURL(), myListsComboBox.getSelectionModel().getSelectedItem())) {
 			Label label = createSmallVideoThumbnail(video, 120, 70);
 			myListsList.getItems().add(label);
@@ -1329,9 +1361,11 @@ public class ViewController implements Initializable {
 		else showDialog("Error", "Este vídeo ya está en la lista");
 	}
 	
-	
+	// Reproducir todos los vídeos de la lista pasada de parámetros
 	private void playAllVideosFromList(ListaVideos listToPlay) {
+		// Si no hay vídeos, no hay nada que reproducir
 		if (listToPlay.getVideos().size() == 0) return;
+		
     	// Generamos una ventana emergente para preguntar el usuario el tiempo que quiere dejar entre vídeo y vídeo
 		JFXDialogLayout dialogContent = new JFXDialogLayout();
 
@@ -1346,6 +1380,7 @@ public class ViewController implements Initializable {
 		
 		Text dialogMessage = new Text("Introduzca el intervalo entre vídeo y vídeo (en segundos)");
 		
+		// TextField para introducir el intervalo de tiempo entre vídeo y vídeo
 		JFXTextField interval = new JFXTextField();
 		interval.getStyleClass().add("jfxtextfield");
 		interval.setPrefWidth(50);
@@ -1370,13 +1405,13 @@ public class ViewController implements Initializable {
 		// Botones de la ventana emergente
 		JFXButton cancel = new JFXButton("Cancelar");
 		cancel.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
-		cancel.setPrefSize(100, 25);
+		cancel.setPrefSize(DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT);
 		cancel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		dialogContent.setActions(cancel);
 		
 		JFXButton accept = new JFXButton("Aceptar");
 		accept.getStyleClass().addAll("jfxbutton", "jfxdialogbutton");
-		accept.setPrefSize(100, 25);
+		accept.setPrefSize(DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT);
 		accept.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		
 		dialogContent.setActions(accept, cancel);		
@@ -1385,8 +1420,7 @@ public class ViewController implements Initializable {
 		cancel.setOnAction(e -> dialog.close()); 
 		
 		accept.setOnAction(e -> {
-			dialog.close();	
-			
+			dialog.close();		
 			// No comprobamos que el texto incluya únicamente números porque ya hemos prohibido que se introduzca algo que no sea un número
 			if (interval.getText().equals("") || Integer.parseInt(interval.getText()) == 0) {
 				showDialog("Error", "No se ha introducido un intervalo o no es un intervalo válido");
@@ -1396,12 +1430,12 @@ public class ViewController implements Initializable {
 				Iterator<Video> it = new LinkedList<Video>(listToPlay.getVideos()).iterator();
 				showVideoDialog(it.next(), "videoDialog"); 
 				
+				// Creamos una tarea para nuestro temporizador global
 				TimerTask timerTask = new TimerTask() {
 		            @Override
 		            public void run() {
 		            	// Como estamos usando diálogos sobre toda la interfaz, miramos si se está reproduciendo un vídeo
-		            	// Si cerramos el vídeo, el temporizador no se dará cuenta hasta su siguiente llamada
-		            	
+		            	// Si cerramos el vídeo, el temporizador no se dará cuenta hasta su siguiente llamada	            	
 		            	Node frontItem = rootStackPane.getChildren().get(rootStackPane.getChildren().size() - 1);
 		            	if (frontItem.getId().equals("videoDialog")) {
 		            		// Si se está reproduciendo un vídeo, lo cerramos y cargamos el siguiente
@@ -1469,6 +1503,18 @@ public class ViewController implements Initializable {
 		exploreFilters.setItems(filterTitles);
 		// Ponemos como seleccionado el filtro actualmente aplicado por el usuario
 		exploreFilters.setValue(controller.getUsuarioActual().getFiltro().getNombre());
+	}
+	
+	// Eliminamos la lista de vídeos pasada de parámetro y refrescamos todos los elementos y botones relacionados
+	// de la ventana de mis listas
+	private void deleteVideoListAndRefresh(String listTitle) {
+    	controller.removeListaVideos(listTitle);      
+    	
+    	loadMyListsComboBox();    	
+		myListsEdit.setDisable(true);
+		myListsPlay.setDisable(true);
+		myListsDelete.setDisable(true);
+		myListsList.getItems().clear();	
 	}
 	
 	// Manejo de la clase Timer en la aplicación, para reproducir listas de vídeos

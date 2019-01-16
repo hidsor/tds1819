@@ -213,7 +213,7 @@ public class AppVideo implements VideosListener {
 		// y la condici�n del filtro se cumple, es un posible resultado.
 		for (Video i : catalogoVideos.getVideos()) {
 			if (i.contieneTitulo(cadena) && filtro.filtrarVideo(usuarioActual, i) 
-					&& ( etiquetas.isEmpty() || i.containsAllEtiquetas(etiquetas) )) {
+					&& ( etiquetas != null && (etiquetas.isEmpty() || i.containsAllEtiquetas(etiquetas)))) {
 				resultados.add(i);
 			}
 		}

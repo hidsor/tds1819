@@ -38,6 +38,7 @@ VLAD:
 11/01/2019 - 45 min (Funcionalidad: Filtros y felicitación a usuarios premium)
 15/01/2019 - 45 min (Avances en la vista: Filtros)
 15/01/2019 - 1h 30 min (Refactorización interfaz de etiquetas)
+16/01/2019 - 2h 30 min (Arreglos del .css del diablo, refactorización y documentación de la clase ViewController)
 
 ENRIQUE:
 - 17/11/2018 - 1 hora (Hacer UML)

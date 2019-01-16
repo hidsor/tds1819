@@ -196,8 +196,8 @@
 .myjfxlistview .jfx-list-cell:selected {
 	-fx-background-color: #fb7a80;
 	-fx-text-fill: #FFFFFF;
-	
 }
+
 /* Propiedades genéricas de cualquier panel o elemento que pueda tener un scroll */
 .myscrollview {
 	-fx-border-color: #dfdfdf;
