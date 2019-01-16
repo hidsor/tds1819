@@ -1,0 +1,7 @@
+		
+		//TODO: EL MEGA FLUSH POR SI LA VUELVO A LIAR
+		List<Entidad> eListaVideoss = servPersistencia.recuperarEntidades("listaVideos");
+		for (Entidad e : eListaVideoss) {
+			servPersistencia.borrarEntidad(e);
+		}
+		
