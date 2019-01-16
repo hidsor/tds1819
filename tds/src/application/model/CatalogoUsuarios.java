@@ -11,7 +11,6 @@ public class CatalogoUsuarios {
 	// Atributos
 	private Map<String, Usuario> usuarios;
 	private static CatalogoUsuarios unicaInstancia = null;
-	private Map<String, Filtro> filtros;
 
 	// Necesarios para la persistencia
 	private FactoriaDAO dao;
@@ -31,7 +30,6 @@ public class CatalogoUsuarios {
 			dao = FactoriaDAO.getInstancia();
 			adaptadorUsuario = dao.getUsuarioDAO();
 			usuarios = new HashMap<String, Usuario>();
-			inicializarFiltros();
 			this.cargarCatalogo();
 		} catch (DAOException eDAO) {
 			eDAO.printStackTrace();
@@ -60,17 +58,6 @@ public class CatalogoUsuarios {
 		List<Usuario> usuariosBD = adaptadorUsuario.recuperarTodosUsuarios();
 		for (Usuario u : usuariosBD)
 			usuarios.put(u.getLogin(), u);
-	}
-	
-	// Funcionalidad auxiliar
-	private void inicializarFiltros() {
-		// Lo separamos en un método auxiliar para aumentar legibilidad
-		// Asimismo, si se desean añadir nuevos filtros, basta con agregar un elemento al enumerado e inicializarlo aquí
-		filtros = new HashMap<String, Filtro>();
-		filtros.put("NoFiltro", new NoFiltro());
-		filtros.put("MisListasFiltro", new MisListasFiltro());
-		
-		// TODO: Añadir un filtro más
 	}
 
 }

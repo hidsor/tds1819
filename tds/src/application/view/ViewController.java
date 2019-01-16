@@ -1465,7 +1465,8 @@ public class ViewController implements Initializable {
 		dialog.show();    	
 	}
 	
-	// TODO: Comenta esto Enrique
+	// Asigna a un botón una hotkey. View especifica el objeto visual sobre el que se aplicará (fuera
+	// de ese objeto, no tendrá efecto.
 	private static void assignKeyToButton(Node view, KeyCode key, ButtonBase button) {
 		view.setOnKeyPressed(e -> {
             if (e.getCode() == key) {
@@ -1475,7 +1476,8 @@ public class ViewController implements Initializable {
 	    });	
 	}
 	
-	// TODO: Comenta esto Enrique
+	// Asigna a un botón una la hotkey INTRO. View especifica el objeto visual sobre el que se aplicará (fuera
+	// de ese objeto, no tendrá efecto.
 	private static void assignEnterKeyToButton(Node view, ButtonBase button) {
 		assignKeyToButton(view, KeyCode.ENTER, button);
 	}

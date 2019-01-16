@@ -42,13 +42,6 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 
 	private AdaptadorUsuario() { 
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia(); 
-		/*
-		//TODO: EL MEGA FLUSH POR SI LA VUELVO A LIAR
-		List<Entidad> eUsuarios = servPersistencia.recuperarEntidades("usuario");
-		for (Entidad e : eUsuarios) {
-			servPersistencia.borrarEntidad(e);
-		}
-		*/
 	}
 
 	public void registrarUsuario(Usuario usuario) {
