@@ -1,5 +1,6 @@
 package application.controller;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.time.LocalDate;
@@ -20,11 +21,10 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import application.model.*;
 import application.persistence.*;
+import umu.tds.videos.ComponenteBuscadorVideos;
 import umu.tds.videos.Videos;
-import umu.tds.videos.VideosEvent;
-import umu.tds.videos.VideosListener;
 
-public class AppVideo implements VideosListener {
+public class AppVideo {
 	// Atributos
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
 	private IAdaptadorVideoDAO adaptadorVideo;
@@ -34,6 +34,7 @@ public class AppVideo implements VideosListener {
 	private CatalogoVideos catalogoVideos;
 	private Map<Etiqueta, Integer> listaEtiquetas;
 	private Map<String, Filtro> filtros;
+	private ComponenteBuscadorVideos buscador;
 	
 	// private ListaVideos topten;
 	
@@ -72,6 +73,17 @@ public class AppVideo implements VideosListener {
 		// Añadimos los filtros implementados:
 		filtros = new HashMap<String, Filtro>();
 		addAllFiltros();
+		
+		buscador = new ComponenteBuscadorVideos();
+		buscador.addVideosListener(ev -> {
+			List<Video> videos = adaptarVideos(ev.getVideos());
+			for (Video video : videos) {
+				registrarVideo(video);
+				for (Etiqueta etiqueta : video.getEtiquetas()) {
+					incrementarReferenciasEtiqueta(etiqueta);
+				}
+			}
+		});
 	}
 
 	// Patrón singleton
@@ -379,15 +391,8 @@ public class AppVideo implements VideosListener {
 		return false;
 	}
 
-	@Override
-	public void nuevosVideos(VideosEvent evento) {
-		List<Video> videos = adaptarVideos(evento.getVideos());
-		for (Video video : videos) {
-			registrarVideo(video);
-			for (Etiqueta etiqueta : video.getEtiquetas()) {
-				incrementarReferenciasEtiqueta(etiqueta);
-			}
-		}
+	public void cargarVideos(File file) {
+		buscador.buscarVideo(file.getAbsolutePath());
 	}
 
 	// Funcionalidad auxiliar

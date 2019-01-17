@@ -77,7 +77,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import tds.video.VideoWeb;
-import umu.tds.videos.ComponenteBuscadorVideos;
 
 public class ViewController implements Initializable {
 	
@@ -86,7 +85,6 @@ public class ViewController implements Initializable {
 	////////////////////////////
 
 	private AppVideo controller;
-	private ComponenteBuscadorVideos buscador;
 	private boolean isProfileOpen;
 	private static VideoWeb videoWeb;
 	private boolean areOptionsOpened;
@@ -221,9 +219,7 @@ public class ViewController implements Initializable {
     
 	public ViewController() {
 		controller = AppVideo.getUnicaInstancia();
-		buscador = new ComponenteBuscadorVideos();
 		videoWeb = new VideoWeb();
-    	buscador.addVideosListener(controller);
 		isProfileOpen = false;	
 		showDeleteNotification = true;
 		showEditNotification = true;
@@ -561,7 +557,7 @@ public class ViewController implements Initializable {
     	fileChooser.setTitle("Abrir fichero XML con vídeos");
     	try {
 	    	File file = fileChooser.showOpenDialog(( (Node) event.getSource()).getScene().getWindow());
-	    	buscador.buscarVideo(file.getAbsolutePath());
+	    	controller.cargarVideos(file);
 	    	showDialog("Boop!", "Vídeos cargados :)");
     	}
     	catch (Exception e) {
