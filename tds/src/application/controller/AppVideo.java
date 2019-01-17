@@ -202,19 +202,23 @@ public class AppVideo implements VideosListener {
 		usuarioActual = null;
 	}
 
-	// Buscar un vï¿½deo que contenga la cadena (case insensitive) y etiquetas pasadas de parámetro
-	public Set<Video> buscarVideos(String cadena, Set<Etiqueta> etiquetas) {
+	// Buscar un vídeo que contenga la cadena (case insensitive) y etiquetas pasadas de parámetro
+	// Además, se puede elegir si aplicar el filtro del usuario o no sobre la búsqueda
+	public Set<Video> buscarVideos(String cadena, Set<Etiqueta> etiquetas, boolean aplicarFiltro) {
 		if (usuarioActual == null) return null;
+		
+		boolean aplicarEtiquetas = (etiquetas != null) && !(etiquetas.isEmpty());
 		
 		Set<Video> resultados = new HashSet<>();
 		Filtro filtro = usuarioActual.getFiltro();
 
 		// Recorremos todos los videos. Si el video contiene la cadena que buscamos
 		// y la condiciï¿½n del filtro se cumple, es un posible resultado.
-		for (Video i : catalogoVideos.getVideos()) {
-			if (i.contieneTitulo(cadena) && filtro.filtrarVideo(usuarioActual, i) 
-					&& ( etiquetas != null && (etiquetas.isEmpty() || i.containsAllEtiquetas(etiquetas)))) {
-				resultados.add(i);
+		for (Video video : catalogoVideos.getVideos()) {
+			if (video.contieneTitulo(cadena) 
+					&& (!aplicarFiltro || filtro.filtrarVideo(usuarioActual, video))
+					&& (!aplicarEtiquetas || video.containsAllEtiquetas(etiquetas))) {
+				resultados.add(video);
 			}
 		}
 		return resultados;

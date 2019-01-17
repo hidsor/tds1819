@@ -177,7 +177,7 @@ public class ViewController implements Initializable {
     @FXML
     private Label exploreFilterTag;
  
-    /* VENTANA DE NUEVA LISTA */
+    /* VENTANA DE MIS LISTAS */
     @FXML
     private BorderPane myListsView; // Contenedor de la vista de listas
     @FXML
@@ -292,12 +292,16 @@ public class ViewController implements Initializable {
 			exploreFilters.setDisable(true);
 		}
 		
+		// Limpiamos la búsqueda anterior, si la hubiese
+		exploreContent.getChildren().clear();
+		
     	// Traemos la ventana al frente y la hacemos visible
     	exploreView.setDisable(false);
     	exploreView.setVisible(true);
     	exploreView.toFront();
-    	exploreContent.getChildren().clear();
-
+    	
+    	exploreScroll.setFitToHeight(true);
+    	
     	fadeIn(exploreView);
     }
 
@@ -310,18 +314,27 @@ public class ViewController implements Initializable {
     	   	
     	// Limpiamos todos los elementos de la vista y cargamos las listas
 		myListsContent.getChildren().clear();
+		myListsNew.setDisable(false);
 		myListsEdit.setDisable(true);
 		myListsPlay.setDisable(true);
 		myListsDelete.setDisable(true);
+		
+		myListsTitle.setDisable(true);
 		myListsSearch.setDisable(true);
 		myListsClear.setDisable(true);
 		myListsTitle.clear();
+		
 		myListsList.getItems().clear();
 		myListsComboBox.getSelectionModel().clearSelection();
+		
 		myListsSecondarySideBar.setDisable(true);
 		myListsSecondarySideBar.setVisible(false);
+		
 		myListsMainSideBar.setDisable(false);
 		myListsMainSideBar.setVisible(true);
+		
+		myListsSearchView.setFitToHeight(true);
+		
 		editPlayListMode = false;
 		loadMyListsComboBox();
 		
@@ -580,7 +593,7 @@ public class ViewController implements Initializable {
     	exploreScroll.setFitToHeight(false); // Permite el scroll vertical
     	
     	// Hecho esto, buscamos
-    	Set<Video> videos = controller.buscarVideos(exploreTitle.getText(), getSelectedTags());
+    	Set<Video> videos = controller.buscarVideos(exploreTitle.getText(), getSelectedTags(), true);
     	for (Video video : videos) {
     		Label element = createVideoThumbnail(video, 200, 150);
     		element.getStyleClass().add("videothumbnail");
@@ -846,7 +859,7 @@ public class ViewController implements Initializable {
     	myListsSearchView.setFitToHeight(false);
     	
     	// Hecho esto, buscamos
-    	Set<Video> videos = controller.buscarVideos(myListsTitle.getText(), null);
+    	Set<Video> videos = controller.buscarVideos(myListsTitle.getText(), null, false);
     	// Añadimos todos los vídeos encontrados al contenedor correspondiente
     	for (Video video : videos) {
     		Label element = createVideoThumbnail(video, 200, 150);
