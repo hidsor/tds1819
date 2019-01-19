@@ -1,8 +1,9 @@
 package application.model;
 
 public class NoFiltro implements Filtro {
-	private static final String nombre = "Sin filtro";
 	
+	private static final String nombre = "Sin filtro";
+
 	@Override
 	public boolean filtrarVideo(Usuario usuario, Video video) {
 		// No hace nada, no hay que filtrar
@@ -13,7 +14,5 @@ public class NoFiltro implements Filtro {
 	public String getNombre() {
 		return nombre;
 	}
-	
-	
 
 }

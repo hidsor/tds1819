@@ -15,11 +15,11 @@ public class PoolDAO {
 
 	// Patrón singleton
 	public static PoolDAO getUnicaInstancia() {
-		if (unicaInstancia == null) unicaInstancia = new PoolDAO();
+		if (unicaInstancia == null)
+			unicaInstancia = new PoolDAO();
 		return unicaInstancia;
-		
 	}
-	
+
 	// Métodos de consulta
 	public Object getObjeto(int id) {
 		return pool.get(id);
@@ -32,5 +32,5 @@ public class PoolDAO {
 	public boolean contiene(int id) {
 		return pool.containsKey(id);
 	}
-	
+
 }

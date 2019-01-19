@@ -112,7 +112,4 @@ public class Video {
 		return "Titulo: " + titulo + " \t Reproducciones: " + numReproducciones;
 	}
 
-
-	
-
 }

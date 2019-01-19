@@ -58,11 +58,10 @@ public class CatalogoVideos {
 		return true;
 	}
 	
-	public boolean addAllVideos(List<Video> videos) {
+	public void addAllVideos(List<Video> videos) {
 		for (Video v : videos) {
 			addVideo(v);
 		}
-		return true;
 	}
 	
 	public boolean borrarVideo(Video video) {
@@ -75,6 +74,5 @@ public class CatalogoVideos {
 		for (Video v : videosBD)
 			videos.put(v.getURL(), v);
 	}
-
 
 }

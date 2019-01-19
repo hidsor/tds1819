@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 public class MenoresFiltro implements Filtro {
 
+	private static final String nombre = "En mis listas";
+
 	@Override
 	public boolean filtrarVideo(Usuario usuario, Video video) {
 		if (!esMayorEdad(usuario) && video.containsEtiqueta("Adultos")) {
@@ -14,15 +16,14 @@ public class MenoresFiltro implements Filtro {
 
 	@Override
 	public String getNombre() {
-		return "Menores de edad";
+		return nombre;
 	}
-	
+
 	private static boolean esMayorEdad(Usuario usuario) {
 		LocalDate fechaNacimiento = usuario.getFechaNac();
-		if (LocalDate.now().getYear()-fechaNacimiento.getYear() > 18) {
+		if (LocalDate.now().getYear() - fechaNacimiento.getYear() > 18) {
 			return true;
-		}
-		else if (LocalDate.now().getYear() - fechaNacimiento.getYear() == 18) {
+		} else if (LocalDate.now().getYear() - fechaNacimiento.getYear() == 18) {
 			if (LocalDate.now().getDayOfYear() - fechaNacimiento.getDayOfYear() > 0) {
 				return true;
 			}

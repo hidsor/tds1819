@@ -3,6 +3,7 @@ package application.model;
 import java.util.List;
 
 public class MisListasFiltro implements Filtro {
+	
 	private static final String nombre = "En mis listas";
 
 	@Override
@@ -14,7 +15,7 @@ public class MisListasFiltro implements Filtro {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public String getNombre() {
 		return nombre;

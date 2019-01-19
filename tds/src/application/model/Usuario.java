@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Usuario {
+	
 	// Atributos
 	private int codigo; // Necesario para rescatar un usuario del servidor de persistencia
 	private String login;
@@ -19,7 +20,6 @@ public class Usuario {
 	private Filtro filtroPremium;
 	private Map<String, ListaVideos> listas;
 	private ListaVideos listaRecientes;
-
 
 	// Constructores
 	public Usuario(String login, String password, String nombre, String apellidos, LocalDate fechaNac, String email) {
@@ -41,7 +41,7 @@ public class Usuario {
 		this(login, password, "", "", null, "");
 	}
 
-	// Mï¿½todos de consulta y modificado
+	// Métodos de consulta y modificado
 	public int getCodigo() {
 		return codigo;
 	}
@@ -94,7 +94,6 @@ public class Usuario {
 		return premium;
 	}
 
-	// Hacemos premium al usuario asignï¿½ndole un rol premium
 	public void setPremium(boolean valor) {
 		this.premium = valor;
 	}
@@ -116,7 +115,6 @@ public class Usuario {
 		return true;
 	}
 
-
 	public List<ListaVideos> getListas() {
 		return new LinkedList<ListaVideos>(listas.values());
 	}
@@ -133,7 +131,6 @@ public class Usuario {
 		this.listaRecientes = listaRecientes;
 	}
 
-	
 	// Funcionalidad
 	public boolean addListaVideos(ListaVideos listaVideos) {
 		if (listaRecientes.getNombre().toLowerCase().equals(listaVideos.getNombre().toLowerCase()))
@@ -148,12 +145,14 @@ public class Usuario {
 	
 	public boolean addVideoALista(Video video, String tituloLista) {
 		ListaVideos lista = getListaVideos(tituloLista);
+		
 		if (lista == null) return false;
 		return lista.addVideo(video);	
 	}
 	
 	public boolean removeVideoDeLista(String videoURL, String tituloLista) {
 		ListaVideos lista = getListaVideos(tituloLista);
+		
 		if (lista == null) return false;
 		return lista.removeVideo(videoURL);	
 	}
@@ -162,6 +161,27 @@ public class Usuario {
 		video.reproducir();
 		addVideoReciente(video);
 	}	
+	
+	public String infoListasVideos() {
+		StringBuffer buffer = new StringBuffer("");
+		for (ListaVideos i : listas.values()) {
+			buffer.append(i.toString() + "\n");
+		}
+		
+		return buffer.toString();
+	}
+	
+	private boolean addVideoReciente(Video video) {
+		// Eliminamos todas las repeticiones del vídeo
+		while (listaRecientes.removeVideo(video)) {};
+		listaRecientes.addVideo(0, video);
+		
+		// Si tras añadir hay más de 5 videos, quitamos el ultimo (posición 5)
+		if (listaRecientes.getNumVideos() > 5) {
+			listaRecientes.removeVideo(5);
+		}
+		return true;
+	}
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -181,26 +201,5 @@ public class Usuario {
 	public int hashCode() {
 		return login.hashCode();
 	}
-	
-	public String infoListasVideos() {
-		StringBuffer buffer = new StringBuffer("");
-		for (ListaVideos i : listas.values()) {
-			buffer.append(i.toString() + "\n");
-		}
-		
-		return buffer.toString();
-	}
-	
-	private boolean addVideoReciente(Video video) {
-		while (listaRecientes.removeVideo(video)) {};
-		listaRecientes.addVideo(0, video);
-		
-		// Si tras añadir hay más de 5 videos, quitamos el ultimo (posicion 5)
-		if (listaRecientes.getNumVideos() > 5) {
-			listaRecientes.removeVideo(5);
-		}
-		return true;
-	}
-	
 
 }

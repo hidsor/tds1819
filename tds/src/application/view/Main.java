@@ -10,19 +10,21 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class Main extends Application {
-	//private double xOffset = 0; 
-	//private double yOffset = 0;
+	
+	// Constantes
+	private final static double SCENE_WIDTH = 800;
+	private final static double SCENE_HEIGHT = 600;
 	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("Root.fxml"));
-			Scene scene = new Scene(root,800,600);
+			Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
 			scene.getStylesheets().add(getClass().getResource("applicationred.css").toExternalForm());
 			primaryStage.initStyle(StageStyle.TRANSPARENT);
 			primaryStage.setScene(scene);
-			primaryStage.setMinHeight(600);
-			primaryStage.setMinWidth(800);
+			primaryStage.setMinWidth(SCENE_WIDTH);
+			primaryStage.setMinHeight(SCENE_HEIGHT);
 			ResizeHelper.addResizeListener(primaryStage);
 			primaryStage.show();
 			

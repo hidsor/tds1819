@@ -127,9 +127,11 @@
 .sidebarjfxbutton .jfx-rippler {
 	-jfx-rippler-fill: #f51827;
 }
+
 .sidebarjfxbutton:hover {
 	-fx-background-color: #fdc7c3;
 }
+
 .sidebarjfxbutton:pressed {
 	-fx-text-fill: #ffffff;
 }
@@ -164,6 +166,7 @@
 .videothumbnail:hover {
 	-fx-background-color: #cfcfcf;
 }
+
 /* Propiedades genéricas de cualquier etiqueta de un vídeo */
 .videotag {
 	-fx-font: 14 system;
@@ -184,10 +187,12 @@
 .myjfxlistview .jfx-list-cell {
 	-fx-font-size: 14;
 }
+
 .myjfxlistview .jfx-list-cell .jfx-rippler {
 	-jfx-rippler-fill: #f51827;
 	
 }
+
 .myjfxlistview .jfx-list-cell:hover {
 	-fx-background-color: #fdc7c3;
 	-fx-font-size: 14;
@@ -271,9 +276,7 @@
 	-fx-background-color: #fdc7c3;
 }
 
-
 /* Estilo genérico de cualquier contenedor que queramos que tenga un borde y color de fondo */
-
 .mybordercontainer {
 	-fx-border-color: #dfdfdf;
 	-fx-background-color: #f4f4f4;

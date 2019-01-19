@@ -13,12 +13,12 @@ import beans.Entidad;
 import beans.Propiedad;
 
 public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
-	
+
 	// Constantes y atributos
 	private static final String propNombre = "nombre";
 	private static final String propNum = "numero de videos";
-	private static final  String propVideos = "videos";
-	
+	private static final String propVideos = "videos";
+
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorListaVideos unicaInstancia;
 
@@ -30,7 +30,7 @@ public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
 		return unicaInstancia;
 	}
 
-	private AdaptadorListaVideos() { 
+	private AdaptadorListaVideos() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
 
@@ -38,34 +38,35 @@ public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
 		// Cuando se registra una listaVideos se le asigna un identificador único
 		Entidad eListaVideos;
 		// Si la entidad está registrada no la registra de nuevo
-		boolean existe = true; 
+		boolean existe = true;
 		try {
 			eListaVideos = servPersistencia.recuperarEntidad(listaVideos.getCodigo());
 		} catch (NullPointerException e) {
 			existe = false;
 		}
-		if (existe) return;
-		
+		if (existe)
+			return;
+
 		// Crear entidad listaVideos
 		eListaVideos = new Entidad();
 
 		eListaVideos.setNombre("listaVideos");
-		eListaVideos.setPropiedades(new ArrayList<Propiedad>(
-				Arrays.asList(new Propiedad(propNombre, listaVideos.getNombre()),
+		eListaVideos.setPropiedades(
+				new ArrayList<Propiedad>(Arrays.asList(new Propiedad(propNombre, listaVideos.getNombre()),
 						new Propiedad(propNum, String.valueOf(listaVideos.getNumVideos())),
 						new Propiedad(propVideos, obtenerCodigosVideos(listaVideos.getVideos())))));
-		
+
 		// Registrar entidad listaVideos
 		eListaVideos = servPersistencia.registrarEntidad(eListaVideos);
-		
+
 		// Se aprovecha el identificador único que genera el servicio de persistencia
-		listaVideos.setCodigo(eListaVideos.getId()); 	
+		listaVideos.setCodigo(eListaVideos.getId());
 	}
 
-	public void borrarListaVideos(ListaVideos listaVideos) {		
-		// No hay que borrar los videos de la lista		
+	public void borrarListaVideos(ListaVideos listaVideos) {
+		// No hay que borrar los videos de la lista
 		Entidad eListaVideos = servPersistencia.recuperarEntidad(listaVideos.getCodigo());
-		
+
 		servPersistencia.borrarEntidad(eListaVideos);
 
 	}
@@ -73,8 +74,8 @@ public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
 	public void modificarListaVideos(ListaVideos listaVideos) {
 		Entidad eListaVideos;
 		eListaVideos = servPersistencia.recuperarEntidad(listaVideos.getCodigo());
-		
-		actualizarPropiedadEntidad(eListaVideos, propNombre,listaVideos.getNombre());
+
+		actualizarPropiedadEntidad(eListaVideos, propNombre, listaVideos.getNombre());
 		actualizarPropiedadEntidad(eListaVideos, propNum, String.valueOf(listaVideos.getNumVideos()));
 		actualizarPropiedadEntidad(eListaVideos, propVideos, obtenerCodigosVideos(listaVideos.getVideos()));
 	}
@@ -93,11 +94,13 @@ public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
 		ListaVideos listaVideos = new ListaVideos(nombre);
 		listaVideos.setCodigo(codigo);
 
-		// IMPORTANTE: añadir la lista de vídeos al pool antes de llamar a otros adaptadores
+		// IMPORTANTE: añadir la lista de vídeos al pool antes de llamar a otros
+		// adaptadores
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, listaVideos);
 
 		// Recuperar propiedades que son objetos llamando a adaptadores
-		List<Video> videos = obtenerVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eListaVideos, propVideos));
+		List<Video> videos = obtenerVideosDesdeCodigos(
+				servPersistencia.recuperarPropiedadEntidad(eListaVideos, propVideos));
 		for (Video video : videos)
 			listaVideos.addVideo(video);
 
@@ -133,7 +136,7 @@ public class AdaptadorListaVideos implements IAdaptadorListaVideosDAO {
 		}
 		return videos;
 	}
-	
+
 	private void actualizarPropiedadEntidad(Entidad entidad, String propiedad, String nuevoValor) {
 		servPersistencia.eliminarPropiedadEntidad(entidad, propiedad);
 		servPersistencia.anadirPropiedadEntidad(entidad, propiedad, nuevoValor);

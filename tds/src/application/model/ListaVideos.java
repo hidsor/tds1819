@@ -18,7 +18,7 @@ public class ListaVideos {
 		this.videos = new LinkedList<Video>();
 	}
 	
-	// Mï¿½todos de consulta y modificado
+	// Métodos de consulta y modificado
 	public int getCodigo() {
 		return codigo;
 	}
@@ -62,17 +62,15 @@ public class ListaVideos {
 	public boolean removeVideo(Video video) {
 		return videos.remove(video);
 	}
-	
+
 	public boolean removeVideo(String videoURL) {
 		return removeVideo(new Video(videoURL, "", 0));
 	}
-	
+
 	public boolean containsVideo(Video video) {
 		return videos.contains(video);
 	}
-	
 
-	
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer("");

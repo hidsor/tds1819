@@ -40,6 +40,7 @@ VLAD:
 15/01/2019 - 1h 30 min (Refactorización interfaz de etiquetas)
 16/01/2019 - 2h 30 min (Arreglos del .css del diablo, refactorización y documentación de la clase ViewController)
 17/01/2019 - 1h 15 min (Arreglos, documentación)
+19/01/2019 - 30 min (Revisión final del código)
 
 ENRIQUE:
 - 17/11/2018 - 1 hora (Hacer UML)
