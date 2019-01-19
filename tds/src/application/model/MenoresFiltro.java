@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class MenoresFiltro implements Filtro {
 
-	private static final String nombre = "En mis listas";
+	private static final String nombre = "Menores de edad";
 
 	@Override
 	public boolean filtrarVideo(Usuario usuario, Video video) {
